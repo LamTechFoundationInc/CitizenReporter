@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ripoti.ui.main.MainActivity;
 import org.wordpress.android.ui.prefs.SettingsFragment;
 import org.wordpress.android.util.ToastUtils;
 
@@ -36,7 +36,7 @@ public class WPLaunchActivity extends Activity {
             return;
         }
 
-        Intent intent = new Intent(this, WPMainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();

@@ -1,4 +1,4 @@
-package org.wordpress.android.ripoti.ui;
+package org.wordpress.android.ripoti.ui.main;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -6,9 +6,6 @@ import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-
-import org.wordpress.android.ui.main.MySiteFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
 
 /**
  * pager adapter containing tab fragments used by WPMainActivity
@@ -18,7 +15,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_TABS = 2;
 
     static final int TAB_ASSIGNMENTS = 0;
-    static final int TAB_MY_POSTS  = 1;
+    static final int TAB_MY_POSTS = 1;
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 

@@ -365,7 +365,6 @@ public class WPMainActivity extends Activity
     private ReaderPostListFragment getReaderListFragment() {
         return getFragmentByPosition(WPMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
     }
-
     /*
      * returns the notification list fragment from the notification tab
      */

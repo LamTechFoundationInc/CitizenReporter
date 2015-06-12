@@ -62,7 +62,7 @@
         </activity>
 
         <!-- Main tab activity -->
-        <activity android:name=".ripoti.ui.MainActivity"
+        <activity android:name=".ripoti.ui.main.MainActivity"
             android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Account activities -->

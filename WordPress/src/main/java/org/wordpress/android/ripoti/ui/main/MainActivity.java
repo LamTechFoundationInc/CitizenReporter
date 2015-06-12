@@ -1,4 +1,4 @@
-package org.wordpress.android.ripoti.ui;
+package org.wordpress.android.ripoti.ui.main;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -24,6 +24,7 @@ import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.main.MySiteFragment;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -37,7 +38,6 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.AuthenticationDialogUtils;
 import org.wordpress.android.util.CoreEvents;
-import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DisplayUtils;
@@ -47,16 +47,12 @@ import org.wordpress.android.widgets.SlidingTabLayout;
 import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
-
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-
 public class MainActivity extends Activity
         implements ViewPager.OnPageChangeListener,
-        SlidingTabLayout.SingleTabClickListener,
-        MediaAddFragment.MediaAddFragmentCallback,
-        Bucket.Listener<Note> {
+        SlidingTabLayout.SingleTabClickListener{
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private RipotiMainTabAdapter mTabAdapter;
@@ -76,7 +72,7 @@ public class MainActivity extends Activity
         setStatusBarColor();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.ripoti_main_screen);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new RipotiMainTabAdapter(getFragmentManager());
@@ -89,16 +85,13 @@ public class MainActivity extends Activity
         mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
 
         Integer icons[] = {R.drawable.main_tab_sites,
-                R.drawable.main_tab_reader,
-                R.drawable.main_tab_me,
-                R.drawable.main_tab_notifications};
+                R.drawable.main_tab_reader};
+
         mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
 
         // content descriptions
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MY_SITE, getString(R.string.tabbar_accessibility_label_my_site));
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_READER, getString(R.string.reader));
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ME, getString(R.string.tabbar_accessibility_label_me));
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_NOTIFS, getString(R.string.notifications));
+        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.tabbar_accessibility_label_my_site));
+        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MY_POSTS, getString(R.string.reader));
 
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);
@@ -108,19 +101,12 @@ public class MainActivity extends Activity
 
         if (savedInstanceState == null) {
             if (AccountHelper.isSignedIn()) {
-                // open note detail if activity called from a push, otherwise return to the tab
-                // that was showing last time
-                boolean openedFromPush = (getIntent() != null && getIntent().getBooleanExtra(ARG_OPENED_FROM_PUSH,
-                        false));
-                if (openedFromPush) {
-                    getIntent().putExtra(ARG_OPENED_FROM_PUSH, false);
-                    launchWithNoteId();
-                } else {
+
                     int position = AppPrefs.getMainTabIndex();
                     if (mTabAdapter.isValidPosition(position) && position != mViewPager.getCurrentItem()) {
                         mViewPager.setCurrentItem(position);
                     }
-                }
+
             } else {
                 ActivityLauncher.showSignInForResult(this);
             }
@@ -138,47 +124,9 @@ public class MainActivity extends Activity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(T.MAIN, "main activity > new intent");
-        if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
-            launchWithNoteId();
-        }
+
     }
 
-    /*
-     * called when app is launched from a push notification, switches to the notification tab
-     * and opens the desired note detail
-     */
-    private void launchWithNoteId() {
-        if (isFinishing() || getIntent() == null) return;
-
-        // Check for push authorization request
-        if (getIntent().hasExtra(NotificationsUtils.ARG_PUSH_AUTH_TOKEN)) {
-            Bundle extras = getIntent().getExtras();
-            String token = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TOKEN, "");
-            String title = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_TITLE, "");
-            String message = extras.getString(NotificationsUtils.ARG_PUSH_AUTH_MESSAGE, "");
-            long expires = extras.getLong(NotificationsUtils.ARG_PUSH_AUTH_EXPIRES, 0);
-
-            long now = System.currentTimeMillis() / 1000;
-            if (expires > 0 && now > expires) {
-                // Show a toast if the user took too long to open the notification
-                ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
-            } else {
-                NotificationsUtils.showPushAuthAlert(this, token, title, message);
-            }
-        }
-
-        mViewPager.setCurrentItem(RipotiMainTabAdapter.TAB_NOTIFS);
-
-        String noteId = getIntent().getStringExtra(NotificationsListFragment.NOTE_ID_EXTRA);
-        boolean shouldShowKeyboard = getIntent().getBooleanExtra(NotificationsListFragment.NOTE_INSTANT_REPLY_EXTRA, false);
-
-        if (!TextUtils.isEmpty(noteId)) {
-            NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
-            GCMIntentService.clearNotificationsMap();
-        }
-    }
 
     @Override
     public void onPageSelected(int position) {
@@ -186,12 +134,6 @@ public class MainActivity extends Activity
         AppPrefs.setMainTabIndex(position);
 
         switch (position) {
-            case RipotiMainTabAdapter.TAB_NOTIFS:
-                if (getNotificationListFragment() != null) {
-                    getNotificationListFragment().updateLastSeenTime();
-                    mTabs.setBadge(RipotiMainTabAdapter.TAB_NOTIFS, false);
-                }
-                break;
         }
     }
 
@@ -202,11 +144,14 @@ public class MainActivity extends Activity
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        /*TODO: Do we still need this?
         // fire event if the "My Site" page is being scrolled so the fragment can
+
         // animate its fab to match
-        if (position == RipotiMainTabAdapter.TAB_MY_SITE) {
+        if (position == WPMainTabAdapter.TAB_MY_SITE) {
             EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
         }
+         */
     }
 
     /*
@@ -225,9 +170,7 @@ public class MainActivity extends Activity
 
     @Override
     protected void onPause() {
-        if (SimperiumUtils.getNotesBucket() != null) {
-            SimperiumUtils.getNotesBucket().removeListener(this);
-        }
+
 
         super.onPause();
     }
@@ -248,11 +191,6 @@ public class MainActivity extends Activity
     protected void onResume() {
         super.onResume();
 
-        // Start listening to Simperium Note bucket
-        if (SimperiumUtils.getNotesBucket() != null) {
-            SimperiumUtils.getNotesBucket().addListener(this);
-        }
-        checkNoteBadge();
     }
 
     /*
@@ -277,23 +215,10 @@ public class MainActivity extends Activity
         }
     }
 
-    private void moderateCommentOnActivityResult(Intent data) {
-        try {
-            if (SimperiumUtils.getNotesBucket() != null) {
-                Note note = SimperiumUtils.getNotesBucket().get(StringUtils.notNullStr(data.getStringExtra
-                        (NotificationsListFragment.NOTE_MODERATE_ID_EXTRA)));
-                CommentStatus status = CommentStatus.fromString(data.getStringExtra(
-                        NotificationsListFragment.NOTE_MODERATE_STATUS_EXTRA));
-                NotificationsUtils.moderateCommentForNote(note, status, this);
-            }
-        } catch (BucketObjectMissingException e) {
-            AppLog.e(T.NOTIFS, e);
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        /*
         switch (requestCode) {
             case RequestCodes.EDIT_POST:
                 if (resultCode == RESULT_OK) {
@@ -304,11 +229,6 @@ public class MainActivity extends Activity
                 }
                 break;
             case RequestCodes.READER_SUBS:
-            case RequestCodes.READER_REBLOG:
-                ReaderPostListFragment readerFragment = getReaderListFragment();
-                if (readerFragment != null) {
-                    readerFragment.onActivityResult(requestCode, resultCode, data);
-                }
                 break;
             case RequestCodes.ADD_ACCOUNT:
                 if (resultCode == RESULT_OK) {
@@ -357,28 +277,22 @@ public class MainActivity extends Activity
                     }
                 }
                 break;
-        }
+        }*/
     }
 
     /*
-     * returns the reader list fragment from the reader tab
+     * returns the assignments fragment from the sites tab
      */
-    private ReaderPostListFragment getReaderListFragment() {
-        return getFragmentByPosition(RipotiMainTabAdapter.TAB_READER, ReaderPostListFragment.class);
+    public AssignmentsFragment getAssignmentsFragment() {
+        return getFragmentByPosition(RipotiMainTabAdapter.TAB_ASSIGNMENTS, AssignmentsFragment.class);
     }
 
     /*
-     * returns the notification list fragment from the notification tab
-     */
-    private NotificationsListFragment getNotificationListFragment() {
-        return getFragmentByPosition(RipotiMainTabAdapter.TAB_NOTIFS, NotificationsListFragment.class);
-    }
+    * returns the myPosts fragment from the sites tab
+    */
 
-    /*
-     * returns the my site fragment from the sites tab
-     */
-    public MySiteFragment getMySiteFragment() {
-        return getFragmentByPosition(RipotiMainTabAdapter.TAB_MY_SITE, MySiteFragment.class);
+    public MyPostsFragment getMyPostsFragment() {
+        return getFragmentByPosition(RipotiMainTabAdapter.TAB_MY_POSTS, MyPostsFragment.class);
     }
 
     private <T> T getFragmentByPosition(int position, Class<T> type) {
@@ -389,48 +303,6 @@ public class MainActivity extends Activity
         }
 
         return null;
-    }
-
-    /*
-     * badges the notifications tab depending on whether there are unread notes
-     */
-    private boolean mIsCheckingNoteBadge;
-    private void checkNoteBadge() {
-        if (mIsCheckingNoteBadge) {
-            AppLog.v(AppLog.T.MAIN, "main activity > already checking note badge");
-            return;
-        } else if (isViewingNotificationsTab()) {
-            // Don't show the badge if the notifications tab is active
-            if (mTabs.isBadged(RipotiMainTabAdapter.TAB_NOTIFS)) {
-                mTabs.setBadge(RipotiMainTabAdapter.TAB_NOTIFS, false);
-            }
-
-            return;
-        }
-
-        mIsCheckingNoteBadge = true;
-        new Thread() {
-            @Override
-            public void run() {
-                final boolean hasUnreadNotes = SimperiumUtils.hasUnreadNotes();
-                boolean isBadged = mTabs.isBadged(RipotiMainTabAdapter.TAB_NOTIFS);
-                if (hasUnreadNotes != isBadged) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTabs.setBadge(RipotiMainTabAdapter.TAB_NOTIFS, hasUnreadNotes);
-                            mIsCheckingNoteBadge = false;
-                        }
-                    });
-                } else {
-                    mIsCheckingNoteBadge = false;
-                }
-            }
-        }.start();
-    }
-
-    private boolean isViewingNotificationsTab() {
-        return mViewPager.getCurrentItem() == RipotiMainTabAdapter.TAB_NOTIFS;
     }
 
     // Events
@@ -470,37 +342,4 @@ public class MainActivity extends Activity
         ToastUtils.showToast(this, R.string.limit_reached, ToastUtils.Duration.LONG);
     }
 
-    @SuppressWarnings("unused")
-    public void onEventMainThread(NotificationEvents.NotificationsChanged event) {
-        checkNoteBadge();
-    }
-
-    /*
-     * Simperium Note bucket listeners
-     */
-    @Override
-    public void onNetworkChange(Bucket<Note> noteBucket, Bucket.ChangeType changeType, String s) {
-        if (changeType == Bucket.ChangeType.INSERT || changeType == Bucket.ChangeType.MODIFY) {
-            checkNoteBadge();
-        }
-    }
-
-    @Override
-    public void onBeforeUpdateObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onDeleteObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onSaveObject(Bucket<Note> noteBucket, Note note) {
-        // noop
-    }
-
-    @Override
-    public void onMediaAdded(String mediaId) {
-    }
 }
