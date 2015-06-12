@@ -16,7 +16,13 @@
 
     <color name="fab_normal">@color/color_accent</color>
     <color name="fab_pressed">@color/orange_fire</color>
-    <color name="list_selected">@color/semi_transparent_blue_light</color>
+    <color name="fab_normal_camera">#ff008f69</color>
+    <color name="fab_pressed_camera">#ff00a57b</color>
+    <color name="fab_normal_video">#ff005a8f</color>
+    <color name="fab_pressed_video">#ff0069a5</color>
+    <color name="fab_normal_audio">#ff8f6e00</color>
+    <color name="fab_pressed_audio">#ffa58400</color>
+    <color name="list_selected">#000000</color>
 
     <!-- Default Colors -->
     <color name="translucent">#80000000</color>
