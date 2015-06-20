@@ -36,6 +36,7 @@ import android.graphics.Typeface;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -97,6 +98,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private Integer[] mIcons;
     private int mTabViewIconViewId;
     private int mTabBadgeViewId;
+    private Integer[] mTitles;
 
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
@@ -174,6 +176,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
     public void setCustomTabView(int layoutResId, int textViewId) {
         mTabViewLayoutId = layoutResId;
         mTabViewTextViewId = textViewId;
+    }
+    /**
+     * Set the custom layout to be inflated for the tab views.
+     *
+     * @param layoutResId Layout id to be inflated
+     * @param textViewId id of the {@link TextView} in the inflated view
+     * @param titles page titles
+     */
+    public void setCustomTabView(int layoutResId, int textViewId, Integer[] titles) {
+        mTabViewLayoutId = layoutResId;
+        mTabViewTextViewId = textViewId;
+        mTitles = titles;
     }
 
     /*
@@ -309,7 +323,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 }
 
                 if (tabTitleView != null) {
-                    tabTitleView.setText(adapter.getPageTitle(i));
+                    if(mTitles!=null) {
+                        tabTitleView.setText(getContext().getResources().getString(mTitles[i]));
+                    }
                 }
             }
 

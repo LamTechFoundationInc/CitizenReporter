@@ -96,12 +96,14 @@ public class RipotiMainActivity extends ActionBarActivity
         mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
 
         Integer icons[] = {R.drawable.main_tab_sites,
-                           R.drawable.main_tab_reader,};
-        mTabs.setCustomTabView(R.layout.tab_icon, R.id.tab_icon, R.id.tab_badge, icons);
+                           R.drawable.main_tab_reader};
 
+        Integer titles[] = {R.string.assignments, R.string.my_ripoti};
         // content descriptions
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.tabbar_accessibility_label_my_site));
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYRIPOTI, getString(R.string.reader));
+        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.assignments));
+        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYRIPOTI, getString(R.string.my_ripoti));
+
+        mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab, titles);
 
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);

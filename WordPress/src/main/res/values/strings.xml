@@ -71,6 +71,8 @@
     <string name="posting_post">Posting \"%s\"</string>
     <string name="language">Language</string>
     <string name="signout">Disconnect</string>
+    <string name="assignments">Assignments</string>
+    <string name="my_ripoti">Me</string>
 
     <!-- MediaPicker -->
     <string name="add_to_post">Add to Post</string>
