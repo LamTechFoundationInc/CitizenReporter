@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
-
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar" />
     <org.wordpress.android.widgets.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"

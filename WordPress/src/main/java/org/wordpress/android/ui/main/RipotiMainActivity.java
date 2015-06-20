@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -53,7 +55,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
-public class RipotiMainActivity extends Activity
+public class RipotiMainActivity extends ActionBarActivity
     implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
         MediaAddFragment.MediaAddFragmentCallback,
@@ -78,6 +80,11 @@ public class RipotiMainActivity extends Activity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ripoti_main_screen);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new RipotiMainTabAdapter(getFragmentManager());
