@@ -48,11 +48,6 @@ public class MyRipotiFragment extends Fragment
     private WPTextView mBlogSubtitleTextView;
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
-    private View mFabView;
-
-    private int mFabTargetYTranslation;
-    private int mBlavatarSz;
-
     private Blog mBlog;
 
     public static MyRipotiFragment newInstance() {
@@ -86,24 +81,12 @@ public class MyRipotiFragment extends Fragment
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
 
-        int fabHeight = getResources().getDimensionPixelSize(com.getbase.floatingactionbutton.R.dimen.fab_size_normal);
-        int fabMargin = getResources().getDimensionPixelSize(R.dimen.fab_margin);
-        mFabTargetYTranslation = (fabHeight + fabMargin) * 2;
-        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
-
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
         mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
         mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
-        mFabView = rootView.findViewById(R.id.fab_button);
 
-        mFabView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.addNewBlogPostOrPageForResult(getActivity(), mBlog, false);
-            }
-        });
 
         rootView.findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +167,6 @@ public class MyRipotiFragment extends Fragment
 
     private void showSitePicker() {
         if (isAdded()) {
-            AniUtils.showFab(mFabView, false);
             int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
             ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
         }
@@ -207,21 +189,6 @@ public class MyRipotiFragment extends Fragment
                 // RESULT_OK = site picker changed the current blog
                 if (resultCode == Activity.RESULT_OK) {
                     setBlog(WordPress.getCurrentBlogEvenIfNotVisible());
-                }
-                // redisplay the hidden fab after a short delay
-                long delayMs = getResources().getInteger(android.R.integer.config_shortAnimTime);
-                AniUtils.showFabDelayed(mFabView, true, delayMs);
-                break;
-
-            case RequestCodes.EDIT_POST:
-                // if user returned from adding a post via the FAB and it was saved as a local
-                // draft, briefly animate the background of the "Blog posts" view to give the
-                // user a cue as to where to go to return to that post
-                if (resultCode == Activity.RESULT_OK
-                        && getView() != null
-                        && data != null
-                        && data.getBooleanExtra(EditPostActivity.EXTRA_SAVED_AS_LOCAL_DRAFT, false)) {
-                    showAlert(getView().findViewById(R.id.postsGlowBackground));
                 }
                 break;
         }
@@ -289,12 +256,6 @@ public class MyRipotiFragment extends Fragment
         super.onStart();
         EventBus.getDefault().register(this);
     }
-
-    /*
-     * animate the fab as the users scrolls the "My Site" page in the main activity's ViewPager
-     */
-    @SuppressWarnings("unused")
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
-        mFabView.setTranslationY(mFabTargetYTranslation * event.mXOffset);
     }
 }
