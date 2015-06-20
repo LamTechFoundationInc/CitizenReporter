@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--
-    Custom view used when showing icons in main activity's SlidingTabLayout
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/toolbar_height"
+    android:layout_height="wrap_content"
     android:background="?android:selectableItemBackground"
+    android:padding="@dimen/tabstrip_padding"
     android:paddingLeft="@dimen/tabstrip_icon_spacing"
     android:paddingRight="@dimen/tabstrip_icon_spacing"
     tools:background="@color/color_primary">
@@ -15,7 +12,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="blabla"
-        android:id="@+id/text_tab"/>
+        android:textSize="@dimen/text_sz_large"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:id="@+id/text_tab"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

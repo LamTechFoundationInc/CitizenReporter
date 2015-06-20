@@ -5,6 +5,7 @@
     <dimen name="category_row_height">60dp</dimen>
     <dimen name="category_parent_spinner_row_height">40dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+    <dimen name="toolbar_height_text">35dp</dimen>
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
@@ -46,7 +47,7 @@
     <dimen name="tabstrip_icon_spacing">@dimen/tabstrip_icon_spacing_normal</dimen>
 
     <!-- spacing between first tab and left edge -->
-    <dimen name="tabstrip_padding_normal">0dp</dimen>
+    <dimen name="tabstrip_padding_normal">10dp</dimen>
     <dimen name="tabstrip_padding_tablet">@dimen/content_margin</dimen>
     <dimen name="tabstrip_padding_landscape">@dimen/content_margin</dimen>
     <dimen name="tabstrip_padding">@dimen/tabstrip_padding_normal</dimen>
