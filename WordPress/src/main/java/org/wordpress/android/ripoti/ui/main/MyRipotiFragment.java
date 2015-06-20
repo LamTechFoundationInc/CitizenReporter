@@ -36,8 +36,7 @@ import org.wordpress.android.widgets.WPTextView;
 
 import de.greenrobot.event.EventBus;
 
-public class MyRipotiFragment extends Fragment
-        implements WPMainActivity.OnScrollToTopListener {
+public class MyRipotiFragment extends Fragment{
 
     public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
     private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
@@ -49,7 +48,7 @@ public class MyRipotiFragment extends Fragment
     private LinearLayout mLookAndFeelHeader;
     private RelativeLayout mThemesContainer;
     private Blog mBlog;
-
+    private int mBlavatarSz;
     public static MyRipotiFragment newInstance() {
         return new MyRipotiFragment();
     }
@@ -80,7 +79,7 @@ public class MyRipotiFragment extends Fragment
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
-
+        mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
         mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
         mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
         mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
@@ -235,14 +234,6 @@ public class MyRipotiFragment extends Fragment
 
         mBlogTitleTextView.setText(blogTitle);
         mBlogSubtitleTextView.setText(hostName);
-    }
-
-    @Override
-    public void onScrollToTop() {
-        if (isAdded()) {
-            ScrollView scrollView = (ScrollView) getView().findViewById(R.id.scroll_view);
-            scrollView.smoothScrollTo(0, 0);
-        }
     }
 
     @Override

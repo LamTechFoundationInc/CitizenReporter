@@ -7,24 +7,22 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import org.wordpress.android.ui.notifications.NotificationsListFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
+import org.wordpress.android.ripoti.ui.main.AssignmentsFragment;
+import org.wordpress.android.ripoti.ui.main.MyRipotiFragment;
 
 /**
  * pager adapter containing tab fragments used by WPMainActivity
  */
-public class WPMainTabAdapter extends FragmentStatePagerAdapter {
+class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
 
-    private static final int NUM_TABS = 4;
+    private static final int NUM_TABS = 2;
 
-    static final int TAB_MY_SITE = 0;
-    static final int TAB_READER  = 1;
-    static final int TAB_ME      = 2;
-    static final int TAB_NOTIFS  = 3;
+    static final int TAB_ASSIGNMENTS = 0;
+    static final int TAB_MYRIPOTI = 1;
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
-    public WPMainTabAdapter(FragmentManager fm) {
+    public RipotiMainTabAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -52,14 +50,10 @@ public class WPMainTabAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (position) {
-            case TAB_MY_SITE:
-                return MySiteFragment.newInstance();
-            case TAB_READER:
-                return ReaderPostListFragment.newInstance();
-            case TAB_ME:
-                return MeFragment.newInstance();
-            case TAB_NOTIFS:
-                return NotificationsListFragment.newInstance();
+            case TAB_ASSIGNMENTS:
+                return AssignmentsFragment.newInstance();
+            case TAB_MYRIPOTI:
+                return MyRipotiFragment.newInstance();
             default:
                 return null;
         }

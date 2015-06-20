@@ -62,8 +62,6 @@
         </activity>
 
         <!-- Main tab activity -->
-        <activity android:name=".ripoti.ui.main.MainActivity"
-            android:theme="@style/Calypso.NoActionBar"/>
 
         <!-- Account activities -->
         <activity
@@ -145,6 +143,9 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.main.RipotiMainActivity"
+            android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.PagesActivity"
             android:theme="@style/Calypso.NoActionBar" />

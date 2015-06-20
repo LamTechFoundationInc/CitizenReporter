@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
@@ -29,7 +28,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/">
+                    android:id="@+id/user_blog_info">
 
                     <org.wordpress.android.widgets.WPNetworkImageView
                         android:id="@+id/my_site_blavatar"
@@ -318,6 +317,6 @@
             </RelativeLayout>
 
         </LinearLayout>
-
     </ScrollView>
+
 </FrameLayout>
