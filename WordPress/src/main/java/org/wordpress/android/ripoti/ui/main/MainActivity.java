@@ -291,8 +291,8 @@ public class MainActivity extends Activity
     * returns the myPosts fragment from the sites tab
     */
 
-    public MyPostsFragment getMyPostsFragment() {
-        return getFragmentByPosition(RipotiMainTabAdapter.TAB_MY_POSTS, MyPostsFragment.class);
+    public MySiteFragment getMySiteFragment() {
+        return getFragmentByPosition(RipotiMainTabAdapter.TAB_MY_POSTS, MySiteFragment.class);
     }
 
     private <T> T getFragmentByPosition(int position, Class<T> type) {
