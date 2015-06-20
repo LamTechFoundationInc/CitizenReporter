@@ -83,6 +83,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.dashicon_lock);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
