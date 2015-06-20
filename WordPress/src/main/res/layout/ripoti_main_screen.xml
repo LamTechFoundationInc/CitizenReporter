@@ -3,7 +3,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
 
     <org.wordpress.android.widgets.SlidingTabLayout
         android:id="@+id/sliding_tabs"
@@ -13,10 +14,63 @@
         android:elevation="@dimen/tabs_elevation"
         android:paddingLeft="@dimen/tabstrip_padding"
         android:paddingRight="@dimen/tabstrip_padding" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <org.wordpress.android.widgets.WPMainViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_button_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/fab_normal_camera"
+            fab:fab_colorPressed="@color/fab_pressed_camera"
+            fab:fab_icon="@drawable/ic_action_camera" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_button_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/fab_normal_video"
+            fab:fab_colorPressed="@color/fab_pressed_video"
+            fab:fab_icon="@drawable/ic_action_video"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/fab_button_audio"
+            android:layout_toEndOf="@+id/fab_button_audio" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_button_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/fab_normal_audio"
+            fab:fab_colorPressed="@color/fab_pressed_audio"
+            fab:fab_icon="@drawable/ic_action_mic"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/fab_button_camera"
+            android:layout_toEndOf="@+id/fab_button_camera" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/fab_normal"
+            fab:fab_colorPressed="@color/fab_pressed"
+            fab:fab_icon="@drawable/ic_create_white_24dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    </RelativeLayout>
 </LinearLayout>
