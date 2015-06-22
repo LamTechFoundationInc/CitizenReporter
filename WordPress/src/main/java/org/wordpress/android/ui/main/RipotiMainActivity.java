@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
@@ -171,8 +172,10 @@ public class RipotiMainActivity extends ActionBarActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //toolbar.inflateMenu(R.menu.home_menu);
         toolbar.setNavigationIcon(R.drawable.dashicon_lock);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new RipotiMainTabAdapter(getFragmentManager(), RipotiMainActivity.this);
@@ -236,7 +239,11 @@ public class RipotiMainActivity extends ActionBarActivity
 
         //attemptToSelectPost();
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return true;
+    }
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
