@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import org.wordpress.android.ripoti.ui.main.AssignmentsFragment;
 import org.wordpress.android.ripoti.ui.main.MyRipotiFragment;
+import org.wordpress.android.ui.posts.RipotiPostsListFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;
 
@@ -55,7 +56,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
             case TAB_ASSIGNMENTS:
                 return AssignmentsFragment.newInstance();
             case TAB_MYRIPOTI:
-                return MyRipotiFragment.newInstance();
+                return RipotiPostsListFragment.newInstance();
             default:
                 return null;
         }

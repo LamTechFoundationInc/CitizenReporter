@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
@@ -22,6 +24,7 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -30,6 +33,9 @@ import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.RipotiPostsListFragment;
+import org.wordpress.android.ui.posts.ViewPostFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
@@ -45,6 +51,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.SlidingTabLayout;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
@@ -56,6 +63,7 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
+
 public class RipotiMainActivity extends ActionBarActivity
     implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
@@ -67,6 +75,83 @@ public class RipotiMainActivity extends ActionBarActivity
     private RipotiMainTabAdapter mTabAdapter;
 
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
+
+    /*
+    posts list variables
+     */
+    public static final String EXTRA_VIEW_PAGES = "viewPages";
+    public static final String EXTRA_ERROR_MSG = "errorMessage";
+    public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
+    public static final String EXTRA_ERROR_INFO_LINK = "errorInfoLink";
+
+    public static final int POST_DELETE = 0;
+    public static final int POST_SHARE = 1;
+    public static final int POST_EDIT = 2;
+    private static final int POST_CLEAR = 3;
+    public static final int POST_VIEW = 5;
+    private static final int ID_DIALOG_DELETING = 1, ID_DIALOG_SHARE = 2;
+    private ProgressDialog mLoadingDialog;
+    private boolean mIsPage = false;
+    private String mErrorMsg = "";
+    private RipotiPostsListFragment mPostList;
+
+    @Override
+    public void onDetailPostAction(int action, Post post) {
+
+    }
+
+    @Override
+    public void onDialogConfirm() {
+
+    }
+
+    @Override
+    public void onPostAction(int action, Post post) {
+
+    }
+
+    @Override
+    public void onPostSelected(Post post) {
+
+    }
+
+    @Override
+    public void onSinglePostLoaded() {
+
+    }
+    private void popPostDetail() {
+
+    }
+    public boolean isDualPane() {
+        return true;
+    }
+    public void newPost() {
+        if (WordPress.getCurrentBlog() == null) {
+            if (!isFinishing())
+                Toast.makeText(this, R.string.blog_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Create a new post object
+        Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
+        WordPress.wpDB.savePost(newPost);
+        Intent i = new Intent(this, EditPostActivity.class);
+        i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
+        i.putExtra(EditPostActivity.EXTRA_IS_PAGE, mIsPage);
+        i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
+        startActivityForResult(i, RequestCodes.EDIT_POST);
+    }
+    public void requestPosts() {
+        if (WordPress.getCurrentBlog() == null) {
+            return;
+        }
+        // If user has local changes, don't refresh
+        if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
+            popPostDetail();
+            mPostList.requestPosts(false);
+            mPostList.setRefreshing(true);
+        }
+    }
+
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user
@@ -98,8 +183,7 @@ public class RipotiMainActivity extends ActionBarActivity
         // tabs are left-aligned rather than evenly distributed in landscape
         mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
 
-        Integer icons[] = {R.drawable.main_tab_sites,
-                           R.drawable.main_tab_reader};
+        Integer icons[] = {R.drawable.main_tab_sites,R.drawable.main_tab_reader};
         Integer titles[] = {R.string.assignments, R.string.my_ripoti};
 
         // content descriptions
@@ -133,6 +217,23 @@ public class RipotiMainActivity extends ActionBarActivity
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+
+        FragmentManager fm = getFragmentManager();
+        mPostList = (RipotiPostsListFragment) fm.findFragmentById(R.id.postList);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mIsPage = extras.getBoolean(EXTRA_VIEW_PAGES);
+            //showErrorDialogIfNeeded(extras);
+        }
+
+        WordPress.currentPost = null;
+
+        if (savedInstanceState != null) {
+            popPostDetail();
+        }
+
+        //attemptToSelectPost();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

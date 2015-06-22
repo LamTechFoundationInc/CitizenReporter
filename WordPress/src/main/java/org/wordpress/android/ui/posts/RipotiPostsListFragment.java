@@ -69,6 +69,10 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
     private boolean mCanLoadMorePosts = true;
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
+    public static ListFragment newInstance(){
+        return new RipotiPostsListFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
