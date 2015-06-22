@@ -15,7 +15,6 @@
         android:textSize="@dimen/text_sz_large"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:textAllCaps="true"
         android:id="@+id/text_tab"
         android:layout_centerInParent="true" />
 
