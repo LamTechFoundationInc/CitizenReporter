@@ -24,7 +24,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
-    public RipotiMainTabAdapter(FragmentManager fm) {
+    public RipotiMainTabAdapter(FragmentManager fm, RipotiMainActivity ripotiMainActivity) {
         super(fm);
     }
 

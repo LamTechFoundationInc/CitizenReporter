@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.main;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -24,8 +23,6 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.ripoti.ui.main.AssignmentsFragment;
-import org.wordpress.android.ripoti.ui.main.MyRipotiFragment;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
@@ -87,7 +84,7 @@ public class RipotiMainActivity extends ActionBarActivity
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
-        mTabAdapter = new RipotiMainTabAdapter(getFragmentManager());
+        mTabAdapter = new RipotiMainTabAdapter(getFragmentManager(), RipotiMainActivity.this);
         mViewPager.setAdapter(mTabAdapter);
 
         mTabs = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
@@ -98,8 +95,8 @@ public class RipotiMainActivity extends ActionBarActivity
 
         Integer icons[] = {R.drawable.main_tab_sites,
                            R.drawable.main_tab_reader};
-
         Integer titles[] = {R.string.assignments, R.string.my_ripoti};
+
         // content descriptions
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.assignments));
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYRIPOTI, getString(R.string.my_ripoti));
@@ -274,7 +271,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
         // remember the current tab position, then recreate the adapter so new fragments are created
         int position = mViewPager.getCurrentItem();
-        mTabAdapter = new RipotiMainTabAdapter(getFragmentManager());
+        mTabAdapter = new RipotiMainTabAdapter(getFragmentManager(), RipotiMainActivity.this);
         mViewPager.setAdapter(mTabAdapter);
 
         // restore previous position
