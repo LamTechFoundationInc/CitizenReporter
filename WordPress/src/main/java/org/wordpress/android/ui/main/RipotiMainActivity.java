@@ -49,6 +49,10 @@ import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
 
+import org.wordpress.android.ui.posts.RipotiPostsListFragment.OnPostActionListener;
+import org.wordpress.android.ui.posts.RipotiPostsListFragment.OnPostSelectedListener;
+import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
  */
@@ -56,7 +60,8 @@ public class RipotiMainActivity extends ActionBarActivity
     implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
         MediaAddFragment.MediaAddFragmentCallback,
-        Bucket.Listener<Note> {
+        Bucket.Listener<Note>,OnPostSelectedListener, RipotiPostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
+        OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private RipotiMainTabAdapter mTabAdapter;
