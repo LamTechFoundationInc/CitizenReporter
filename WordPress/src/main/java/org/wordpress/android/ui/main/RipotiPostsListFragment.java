@@ -467,32 +467,32 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
             mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
                     new ApiHelper.FetchSinglePostTask.Callback() {
-                @Override
-                public void onSuccess() {
-                    mCurrentFetchSinglePostTask = null;
-                    mIsFetchingPosts = false;
-                    if (!isAdded() || !reloadPosts) {
-                        return;
-                    }
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                    getPostListAdapter().loadPosts();
-                    mOnSinglePostLoadedListener.onSinglePostLoaded();
-                }
+                        @Override
+                        public void onSuccess() {
+                            mCurrentFetchSinglePostTask = null;
+                            mIsFetchingPosts = false;
+                            if (!isAdded() || !reloadPosts) {
+                                return;
+                            }
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                            getPostListAdapter().loadPosts();
+                            mOnSinglePostLoadedListener.onSinglePostLoaded();
+                        }
 
-                @Override
-                public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
-                    mCurrentFetchSinglePostTask = null;
-                    mIsFetchingPosts = false;
-                    if (!isAdded() || !reloadPosts) {
-                        return;
-                    }
-                    if (errorType != ErrorType.TASK_CANCELLED) {
-                        ToastUtils.showToast(getActivity(),
-                                mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
-                    }
-                    mSwipeToRefreshHelper.setRefreshing(false);
-                }
-            });
+                        @Override
+                        public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
+                            mCurrentFetchSinglePostTask = null;
+                            mIsFetchingPosts = false;
+                            if (!isAdded() || !reloadPosts) {
+                                return;
+                            }
+                            if (errorType != ErrorType.TASK_CANCELLED) {
+                                ToastUtils.showToast(getActivity(),
+                                        mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts, Duration.LONG);
+                            }
+                            mSwipeToRefreshHelper.setRefreshing(false);
+                        }
+                    });
 
             mSwipeToRefreshHelper.setRefreshing(true);
             mIsFetchingPosts = true;

@@ -65,7 +65,7 @@ import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListene
  */
 
 public class RipotiMainActivity extends ActionBarActivity
-    implements ViewPager.OnPageChangeListener,
+        implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
         MediaAddFragment.MediaAddFragmentCallback,
         Bucket.Listener<Note>,OnPostSelectedListener, RipotiPostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
@@ -93,7 +93,8 @@ public class RipotiMainActivity extends ActionBarActivity
     private ProgressDialog mLoadingDialog;
     private boolean mIsPage = false;
     private String mErrorMsg = "";
-    private RipotiPostsListFragment mPostList;
+
+    public RipotiPostsListFragment mPostList;
 
     @Override
     public void onDetailPostAction(int action, Post post) {

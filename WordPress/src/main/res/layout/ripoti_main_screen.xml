@@ -5,10 +5,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
+
     <include
         layout="@layout/toolbar"
         android:id="@+id/toolbar" />
+
     <org.wordpress.android.widgets.SlidingTabLayout
+
+        android:layout_below="@+id/toolbar"
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,21 +20,26 @@
         android:elevation="@dimen/tabs_elevation"
         android:paddingLeft="@dimen/tabstrip_padding"
         android:paddingRight="@dimen/tabstrip_padding" />
+
     <RelativeLayout
+        android:layout_below="@+id/sliding_tabs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-    <org.wordpress.android.widgets.WPMainViewPager
+        <org.wordpress.android.widgets.WPMainViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
         <fragment
             android:name="org.wordpress.android.ui.posts.RipotiPostsListFragment"
             android:id="@+id/postList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
+
     </org.wordpress.android.widgets.WPMainViewPager>
+
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
