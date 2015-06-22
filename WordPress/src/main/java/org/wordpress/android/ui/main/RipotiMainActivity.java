@@ -175,7 +175,7 @@ public class RipotiMainActivity extends ActionBarActivity
         //toolbar.inflateMenu(R.menu.home_menu);
         toolbar.setNavigationIcon(R.drawable.dashicon_lock);
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         mViewPager = (WPMainViewPager) findViewById(R.id.viewpager_main);
         mTabAdapter = new RipotiMainTabAdapter(getFragmentManager(), RipotiMainActivity.this);
