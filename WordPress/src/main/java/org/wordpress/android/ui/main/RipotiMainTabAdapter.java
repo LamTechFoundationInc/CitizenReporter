@@ -21,7 +21,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_TABS = 2;
 
     static final int TAB_ASSIGNMENTS = 0;
-    static final int TAB_MYRIPOTI = 1;
+    static final int TAB_MYPOSTS = 1;
 
     private final SparseArray<Fragment> mFragments = new SparseArray<>(NUM_TABS);
 
@@ -55,7 +55,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case TAB_ASSIGNMENTS:
                 return AssignmentsFragment.newInstance();
-            case TAB_MYRIPOTI:
+            case TAB_MYPOSTS:
                 return RipotiPostsListFragment.newInstance();
             default:
                 return null;

@@ -185,11 +185,11 @@ public class RipotiMainActivity extends ActionBarActivity
         mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
 
         Integer icons[] = {R.drawable.main_tab_sites,R.drawable.main_tab_reader};
-        Integer titles[] = {R.string.assignments, R.string.my_ripoti};
+        Integer titles[] = {R.string.assignments, R.string.my_posts};
 
         // content descriptions
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.assignments));
-        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYRIPOTI, getString(R.string.my_ripoti));
+        mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYPOSTS, getString(R.string.my_posts));
 
         mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab, titles);
 
@@ -314,7 +314,7 @@ public class RipotiMainActivity extends ActionBarActivity
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // fire event if the "My Site" page is being scrolled so the fragment can
         // animate its fab to match
-        if (position == RipotiMainTabAdapter.TAB_MYRIPOTI) {
+        if (position == RipotiMainTabAdapter.TAB_MYPOSTS) {
             EventBus.getDefault().post(new MainViewPagerScrolled(positionOffset));
         }
     }

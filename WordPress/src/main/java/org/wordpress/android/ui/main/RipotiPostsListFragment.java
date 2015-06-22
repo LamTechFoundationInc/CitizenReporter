@@ -52,7 +52,6 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
-    private FloatingActionButton mFabButton;
     private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
@@ -91,7 +90,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.post_listview, container, false);
+        View view = inflater.inflate(R.layout.ripoti_post_listview, container, false);
         mEmptyView = view.findViewById(R.id.empty_view);
         mEmptyViewImage = view.findViewById(R.id.empty_tags_box_top);
         mEmptyViewTitle = (TextView) view.findViewById(R.id.title_empty);
@@ -248,14 +247,6 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
         initSwipeToRefreshHelper();
 
-        mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newPost();
-            }
-        });
-
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -299,9 +290,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if (mFabButton != null) {
-            mFabButton.setVisibility(hidden ? View.GONE : View.VISIBLE);
-        }
+
     }
 
     public boolean isRefreshing() {
