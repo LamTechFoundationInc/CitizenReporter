@@ -81,6 +81,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_BOUNTY               = "bounty";
     private static final String COLUMN_NAME_DEADLINE             = "deadline";
     private static final String COLUMN_NAME_MEDIA_TYPES          = "media_types";
+    private static final String COLUMN_NAME_RESPONSES            = "responses";
 
     private static final int DATABASE_VERSION = 31;
 
@@ -100,6 +101,15 @@ public class WordPressDB {
             + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
 
     private static final String POSTS_TABLE = "posts";
+
+    private static final String CREATE_TABLE_ASSIGNMENTS = "create table if not exists assignments (id integer primary key autoincrement, blogID text, "
+            + "postid text, title text default '', dateCreated date, date_created_gmt date, categories text default '', custom_fields text default '', "
+            + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
+            + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
+            + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, location text, bounty text, deadline date, media_types text, responses integer default 0);";
+
+    private static final String ASSIGNMENTS_TABLE = "assignments";
 
     private static final String THEMES_TABLE = "themes";
     private static final String CREATE_TABLE_THEMES = "create table if not exists themes (_id integer primary key autoincrement, "
@@ -190,6 +200,7 @@ public class WordPressDB {
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_BLOGS);
         db.execSQL(CREATE_TABLE_POSTS);
+        db.execSQL(CREATE_TABLE_ASSIGNMENTS);
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
