@@ -77,7 +77,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         PostsListPost post = mPosts.get(position);
         PostViewWrapper wrapper;
         if (view == null) {
-            view = mLayoutInflater.inflate(R.layout.post_list_row, parent, false);
+            view = mLayoutInflater.inflate(R.layout.assignment_cardview, parent, false);
             wrapper = new PostViewWrapper(view);
             view.setTag(wrapper);
         } else {
@@ -96,49 +96,6 @@ public class AssignmentsListAdapter extends BaseAdapter {
         } else {
             wrapper.getDate().setText(date);
             wrapper.getDate().setVisibility(View.VISIBLE);
-        }
-
-        String formattedStatus = "";
-        if ((post.getStatusEnum() == PostStatus.PUBLISHED) && !post.isLocalDraft() && !post.hasLocalChanges()) {
-            wrapper.getStatus().setVisibility(View.GONE);
-        } else {
-            wrapper.getStatus().setVisibility(View.VISIBLE);
-            if (post.isUploading()) {
-                formattedStatus = mContext.getResources().getString(R.string.post_uploading);
-            } else if (post.isLocalDraft()) {
-                formattedStatus = mContext.getResources().getString(R.string.local_draft);
-            } else if (post.hasLocalChanges()) {
-                formattedStatus = mContext.getResources().getString(R.string.local_changes);
-            } else {
-                switch (post.getStatusEnum()) {
-                    case DRAFT:
-                        formattedStatus = mContext.getResources().getString(R.string.draft);
-                        break;
-                    case PRIVATE:
-                        formattedStatus = mContext.getResources().getString(R.string.post_private);
-                        break;
-                    case PENDING:
-                        formattedStatus = mContext.getResources().getString(R.string.pending_review);
-                        break;
-                    case SCHEDULED:
-                        formattedStatus = mContext.getResources().getString(R.string.scheduled);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            // Set post status TextView color
-            if (post.isLocalDraft() || post.getStatusEnum() == PostStatus.DRAFT || post.hasLocalChanges() ||
-                    post.isUploading()) {
-                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.orange_fire));
-            } else {
-                wrapper.getStatus().setTextColor(mContext.getResources().getColor(R.color.grey_darken_10));
-            }
-
-            // Make status upper-case and add line break to stack vertically
-            formattedStatus = formattedStatus.toUpperCase(Locale.getDefault()).replace(" ", "\n");
-            wrapper.getStatus().setText(formattedStatus);
         }
 
         // load more posts when we near the end
@@ -178,23 +135,16 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
         TextView getTitle() {
             if (title == null) {
-                title = (TextView) base.findViewById(R.id.post_list_title);
+                title = (TextView) base.findViewById(R.id.text_title);
             }
             return (title);
         }
 
         TextView getDate() {
             if (date == null) {
-                date = (TextView) base.findViewById(R.id.post_list_date);
+                date = (TextView) base.findViewById(R.id.assignment_list_deadline);
             }
             return (date);
-        }
-
-        TextView getStatus() {
-            if (status == null) {
-                status = (TextView) base.findViewById(R.id.post_list_status);
-            }
-            return (status);
         }
     }
 
