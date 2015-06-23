@@ -41,6 +41,10 @@ public class Post implements Serializable {
     private String password;
     private String postFormat;
     private String slug;
+    private String location;
+    private String bounty;
+    private String media_types;
+    private String deadline;
     private boolean localDraft;
     private boolean uploaded;
     private boolean mIsUploading;
@@ -256,6 +260,33 @@ public class Post implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    public void setBounty(String bounty) {
+        this.bounty = bounty;
+    }
+    public void setMedia_types(String media_types) {
+        this.media_types = media_types;
+    }
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getStringLocation() {
+        return location;
+    }
+    public String getBounty() {
+        return bounty;
+    }
+
+    public String getMedia_types() {
+        return media_types;
+    }
+    public String getDeadline() {
+        return deadline;
     }
 
     public String getUserId() {
