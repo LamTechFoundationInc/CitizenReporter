@@ -82,7 +82,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_DEADLINE             = "deadline";
     private static final String COLUMN_NAME_MEDIA_TYPES          = "media_types";
 
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
