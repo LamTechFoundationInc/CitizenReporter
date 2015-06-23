@@ -8,7 +8,6 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import org.wordpress.android.ripoti.ui.main.AssignmentsFragment;
-import org.wordpress.android.ripoti.ui.main.MyRipotiFragment;
 import org.wordpress.android.ui.posts.RipotiPostsListFragment;
 import org.wordpress.android.ui.reader.ReaderBlogFragment;
 import org.wordpress.android.ui.reader.ReaderPostListFragment;

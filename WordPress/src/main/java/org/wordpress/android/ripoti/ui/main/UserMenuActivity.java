@@ -5,8 +5,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
@@ -36,7 +39,7 @@ import org.wordpress.android.widgets.WPTextView;
 
 import de.greenrobot.event.EventBus;
 
-public class MyRipotiFragment extends Fragment{
+public class UserMenuActivity extends ActionBarActivity{
 
     public static final String ADD_MEDIA_FRAGMENT_TAG = "add-media-fragment";
     private static final long ALERT_ANIM_OFFSET_MS   = 1000l;
@@ -49,9 +52,6 @@ public class MyRipotiFragment extends Fragment{
     private RelativeLayout mThemesContainer;
     private Blog mBlog;
     private int mBlavatarSz;
-    public static MyRipotiFragment newInstance() {
-        return new MyRipotiFragment();
-    }
 
     public void setBlog(Blog blog) {
         mBlog = blog;
@@ -59,118 +59,126 @@ public class MyRipotiFragment extends Fragment{
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mBlog = WordPress.getCurrentBlog();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        if (ServiceUtils.isServiceRunning(getActivity(), StatsService.class)) {
-            getActivity().stopService(new Intent(getActivity(), StatsService.class));
+        if (ServiceUtils.isServiceRunning(UserMenuActivity.this, StatsService.class)) {
+            UserMenuActivity.this.stopService(new Intent(UserMenuActivity.this, StatsService.class));
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.my_ripoti_fragment, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBlog = WordPress.getCurrentBlog();
+
+        setContentView(R.layout.my_ripoti_fragment);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.my_ripoti));
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().add(new MediaAddFragment(), ADD_MEDIA_FRAGMENT_TAG).commit();
+        
         mBlavatarSz = getResources().getDimensionPixelSize(R.dimen.blavatar_sz_small);
-        mBlavatarImageView = (WPNetworkImageView) rootView.findViewById(R.id.my_site_blavatar);
-        mBlogTitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_title_label);
-        mBlogSubtitleTextView = (WPTextView) rootView.findViewById(R.id.my_site_subtitle_label);
-        mLookAndFeelHeader = (LinearLayout) rootView.findViewById(R.id.my_site_look_and_feel_header);
-        mThemesContainer = (RelativeLayout) rootView.findViewById(R.id.row_themes);
+        mBlavatarImageView = (WPNetworkImageView) findViewById(R.id.my_site_blavatar);
+        mBlogTitleTextView = (WPTextView) findViewById(R.id.my_site_title_label);
+        mBlogSubtitleTextView = (WPTextView) findViewById(R.id.my_site_subtitle_label);
+        mLookAndFeelHeader = (LinearLayout) findViewById(R.id.my_site_look_and_feel_header);
+        mThemesContainer = (RelativeLayout) findViewById(R.id.row_themes);
 
 
-        rootView.findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.switch_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showSitePicker();
             }
         });
 
-        rootView.findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_view_site).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentSite(getActivity());
+                ActivityLauncher.viewCurrentSite(UserMenuActivity.this);
             }
         });
 
-        rootView.findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mBlog != null) {
-                    ActivityLauncher.viewBlogStats(getActivity(), mBlog.getLocalTableBlogId());
+                    ActivityLauncher.viewBlogStats(UserMenuActivity.this, mBlog.getLocalTableBlogId());
                 }
             }
         });
 
-        rootView.findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_blog_posts).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPosts(getActivity());
+                ActivityLauncher.viewCurrentBlogPosts(UserMenuActivity.this);
             }
         });
 
-        rootView.findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_media).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogMedia(getActivity());
+                ActivityLauncher.viewCurrentBlogMedia(UserMenuActivity.this);
             }
         });
 
-        rootView.findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_pages).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogPages(getActivity());
+                ActivityLauncher.viewCurrentBlogPages(UserMenuActivity.this);
             }
         });
 
-        rootView.findViewById(R.id.row_comments).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_comments).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogComments(getActivity());
+                ActivityLauncher.viewCurrentBlogComments(UserMenuActivity.this);
             }
         });
 
         mThemesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewCurrentBlogThemes(getActivity());
+                ActivityLauncher.viewCurrentBlogThemes(UserMenuActivity.this);
             }
         });
 
-        rootView.findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(getActivity(), mBlog);
+                ActivityLauncher.viewBlogSettingsForResult(UserMenuActivity.this, mBlog);
             }
         });
 
-        rootView.findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_admin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogAdmin(getActivity(), mBlog);
+                ActivityLauncher.viewBlogAdmin(UserMenuActivity.this, mBlog);
             }
         });
 
         refreshBlogDetails();
-
-        return rootView;
     }
 
     private void showSitePicker() {
-        if (isAdded()) {
-            int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
-            ActivityLauncher.showSitePickerForResult(getActivity(), localBlogId);
-        }
-    }
 
+            int localBlogId = (mBlog != null ? mBlog.getLocalTableBlogId() : 0);
+            ActivityLauncher.showSitePickerForResult(UserMenuActivity.this, localBlogId);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -194,7 +202,7 @@ public class MyRipotiFragment extends Fragment{
     }
 
     private void showAlert(View view) {
-        if (isAdded() && view != null) {
+        if (view != null) {
             Animation highlightAnimation = new AlphaAnimation(0.0f, 1.0f);
             highlightAnimation.setInterpolator(new Interpolator() {
                 private float bounce(float t) {
@@ -218,7 +226,7 @@ public class MyRipotiFragment extends Fragment{
     }
 
     private void refreshBlogDetails() {
-        if (!isAdded() || mBlog == null) {
+        if (mBlog == null) {
             return;
         }
 

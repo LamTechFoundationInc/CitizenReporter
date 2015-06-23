@@ -50,7 +50,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
             case TAB_ASSIGNMENTS:
                 return AssignmentsFragment.newInstance();
             case TAB_MY_POSTS:
-                return MyRipotiFragment.newInstance();
+                return AssignmentsFragment.newInstance();
             default:
                 return null;
         }

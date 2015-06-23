@@ -147,6 +147,9 @@
             android:name=".ui.main.RipotiMainActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
+            android:name=".ripoti.ui.main.UserMenuActivity"
+            android:theme="@style/Calypso.NoActionBar" />
+        <activity
             android:name=".ui.posts.PagesActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity

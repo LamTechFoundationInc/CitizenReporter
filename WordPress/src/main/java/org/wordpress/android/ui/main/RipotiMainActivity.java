@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.ripoti.ui.main.UserMenuActivity;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.media.MediaAddFragment;
@@ -243,6 +245,21 @@ public class RipotiMainActivity extends ActionBarActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch(item.getItemId()){
+
+            case R.id.user_menu:
+                //show user menu
+                Intent userMenuIntent = new Intent(RipotiMainActivity.this, UserMenuActivity.class);
+                startActivity(userMenuIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor() {
