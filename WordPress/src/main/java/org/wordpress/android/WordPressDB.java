@@ -816,7 +816,7 @@ public class WordPressDB {
     }
 
     public List<Map<String, Object>> loadDrafts(int blogID,
-            boolean loadPages) {
+            boolean loadPages, boolean loadAssignments) {
         List<Map<String, Object>> returnVector = new Vector<Map<String, Object>>();
         Cursor c;
         if (loadPages)
@@ -826,11 +826,18 @@ public class WordPressDB {
                     + " AND localDraft=1 AND uploaded=0 AND isPage=1", null,
                     null, null, null);
         else
-            c = db.query(POSTS_TABLE, new String[] { "id", "title",
-                    "post_status", "uploaded", "date_created_gmt",
-                    "post_status" }, "blogID=" + blogID
-                    + " AND localDraft=1 AND uploaded=0 AND isPage=0", null,
-                    null, null, null);
+            if(loadAssignments)
+                c = db.query(ASSIGNMENTS_TABLE, new String[] { "id", "title",
+                                "post_status", "uploaded", "date_created_gmt",
+                                "post_status" }, "blogID=" + blogID
+                                + " AND localDraft=1 AND uploaded=0 AND isPage=0", null,
+                        null, null, null);
+            else
+                c = db.query(POSTS_TABLE, new String[] { "id", "title",
+                        "post_status", "uploaded", "date_created_gmt",
+                        "post_status" }, "blogID=" + blogID
+                        + " AND localDraft=1 AND uploaded=0 AND isPage=0", null,
+                        null, null, null);
 
         int numRows = c.getCount();
         c.moveToFirst();
@@ -865,9 +872,18 @@ public class WordPressDB {
         return (result == 1);
     }
 
+    public boolean deleteAssignment(Post post) {
+        int result = db.delete(ASSIGNMENTS_TABLE,
+                "blogID=? AND id=?",
+                new String[]{String.valueOf(post.getLocalTableBlogId()), String.valueOf(post.getLocalTablePostId())});
+
+        return (result == 1);
+    }
+
     // Deletes all posts for the given blogId
     private void deleteAllPostsForLocalTableBlogId(int localBlogId) {
         db.delete(POSTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
+        db.delete(ASSIGNMENTS_TABLE, "blogID=?", new String[]{String.valueOf(localBlogId)});
     }
 
     public Object[] arrayListToArray(Object array) {
@@ -883,7 +899,7 @@ public class WordPressDB {
      * @param localBlogId: the posts table blog id
      * @param isPage: boolean to save as pages
      */
-    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean shouldOverwrite) {
+    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean isAssignment, boolean shouldOverwrite) {
         if (postsList != null && postsList.size() != 0) {
             db.beginTransaction();
             try {
@@ -977,10 +993,24 @@ public class WordPressDB {
                         whereClause += " AND NOT isLocalChange=1";
                     }
 
-                    int result = db.update(POSTS_TABLE, values, whereClause,
-                            new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
-                    if (result == 0)
-                        db.insert(POSTS_TABLE, null, values);
+                    int result;
+                    if(isAssignment){
+
+                        values.put("location", MapUtils.getMapStr(postMap, "location"));
+                        values.put("bounty", MapUtils.getMapStr(postMap, "bounty"));
+                        values.put("media_types", MapUtils.getMapStr(postMap, "media_types"));
+                        values.put("deadline", MapUtils.getMapStr(postMap, "deadline"));
+
+                        result = db.update(ASSIGNMENTS_TABLE, values, whereClause,
+                                new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
+                        if (result == 0)
+                            db.insert(ASSIGNMENTS_TABLE, null, values);
+                    }else{
+                        result = db.update(POSTS_TABLE, values, whereClause,
+                                new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
+                        if (result == 0)
+                            db.insert(POSTS_TABLE, null, values);
+                    }
                 }
 
                 db.setTransactionSuccessful();
