@@ -25,7 +25,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.PostUploadService;

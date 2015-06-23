@@ -33,8 +33,13 @@
             android:layout_alignParentBottom="true">
 
         <fragment
-            android:name="org.wordpress.android.ui.posts.RipotiPostsListFragment"
+            android:name="org.wordpress.android.ui.main.RipotiPostsListFragment"
             android:id="@+id/postList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <fragment
+            android:name="org.wordpress.android.ui.main.AssignmentsListFragment"
+            android:id="@+id/assignmentList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

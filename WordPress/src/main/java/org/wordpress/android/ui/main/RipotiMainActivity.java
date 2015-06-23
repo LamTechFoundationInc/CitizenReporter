@@ -37,8 +37,6 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.main.RipotiPostsListFragment;
-import org.wordpress.android.ui.posts.ViewPostFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
@@ -59,8 +57,6 @@ import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
 
-import org.wordpress.android.ui.main.RipotiPostsListFragment.OnPostActionListener;
-import org.wordpress.android.ui.main.RipotiPostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 
 /**
@@ -71,8 +67,15 @@ public class RipotiMainActivity extends ActionBarActivity
         implements ViewPager.OnPageChangeListener,
         SlidingTabLayout.SingleTabClickListener,
         MediaAddFragment.MediaAddFragmentCallback,
-        Bucket.Listener<Note>,OnPostSelectedListener, RipotiPostsListFragment.OnSinglePostLoadedListener, OnPostActionListener,
-        OnDetailPostActionListener, WPAlertDialogFragment.OnDialogConfirmListener {
+        Bucket.Listener<Note>,
+        RipotiPostsListFragment.OnPostSelectedListener,
+        RipotiPostsListFragment.OnSinglePostLoadedListener,
+        RipotiPostsListFragment.OnPostActionListener,
+        AssignmentsListFragment.OnPostSelectedListener,
+        AssignmentsListFragment.OnSinglePostLoadedListener,
+        AssignmentsListFragment.OnPostActionListener,
+        OnDetailPostActionListener,
+        WPAlertDialogFragment.OnDialogConfirmListener {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
     private RipotiMainTabAdapter mTabAdapter;
