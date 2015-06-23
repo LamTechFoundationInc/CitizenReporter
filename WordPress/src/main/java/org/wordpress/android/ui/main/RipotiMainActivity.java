@@ -37,7 +37,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.RipotiPostsListFragment;
+import org.wordpress.android.ui.main.RipotiPostsListFragment;
 import org.wordpress.android.ui.posts.ViewPostFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
@@ -59,8 +59,8 @@ import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
 
-import org.wordpress.android.ui.posts.RipotiPostsListFragment.OnPostActionListener;
-import org.wordpress.android.ui.posts.RipotiPostsListFragment.OnPostSelectedListener;
+import org.wordpress.android.ui.main.RipotiPostsListFragment.OnPostActionListener;
+import org.wordpress.android.ui.main.RipotiPostsListFragment.OnPostSelectedListener;
 import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
 
 /**

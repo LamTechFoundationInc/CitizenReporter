@@ -16,8 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
-
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
@@ -25,7 +23,6 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostsListPost;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.PostUploadService;
@@ -46,15 +43,15 @@ import java.util.Vector;
 
 import de.greenrobot.event.EventBus;
 
-public class RipotiPostsListFragment extends ListFragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
+public class AssignmentsListFragment extends ListFragment implements EmptyViewAnimationHandler.OnAnimationProgressListener {
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private PostsListAdapter mPostsListAdapter;
-    private ApiHelper.FetchPostsTask mCurrentFetchPostsTask;
-    private ApiHelper.FetchSinglePostTask mCurrentFetchSinglePostTask;
+    private ApiHelper.FetchAssignmentsTask mCurrentFetchAssignmentsTask;
+    private ApiHelper.FetchSingleAssignmentTask mCurrentFetchSingleAssignmentTask;
     private View mProgressFooterView;
 
     private View mEmptyView;
@@ -70,7 +67,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
     private boolean mIsPage, mShouldSelectFirstPost, mIsFetchingPosts;
 
     public static ListFragment newInstance(){
-        return new RipotiPostsListFragment();
+        return new AssignmentsListFragment();
     }
 
     @Override
@@ -351,10 +348,10 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
             mProgressFooterView.setVisibility(View.VISIBLE);
         }
 
-        mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
+        mCurrentFetchAssignmentsTask = new ApiHelper.FetchAssignmentsTask(new ApiHelper.FetchAssignmentsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
-                mCurrentFetchPostsTask = null;
+                mCurrentFetchAssignmentsTask = null;
                 mIsFetchingPosts = false;
                 if (!isAdded())
                     return;
@@ -381,7 +378,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
             @Override
             public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
-                mCurrentFetchPostsTask = null;
+                mCurrentFetchAssignmentsTask = null;
                 mIsFetchingPosts = false;
                 if (!isAdded()) {
                     return;
@@ -412,7 +409,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
         });
 
         mIsFetchingPosts = true;
-        mCurrentFetchPostsTask.execute(apiArgs);
+        mCurrentFetchAssignmentsTask.execute(apiArgs);
     }
 
     protected void clear() {
@@ -455,11 +452,11 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
             apiArgs.add(event.mRemotePostId);
             apiArgs.add(event.mIsPage);
 
-            mCurrentFetchSinglePostTask = new ApiHelper.FetchSinglePostTask(
-                    new ApiHelper.FetchSinglePostTask.Callback() {
+            mCurrentFetchSingleAssignmentTask = new ApiHelper.FetchSingleAssignmentTask(
+                    new ApiHelper.FetchSingleAssignmentTask.Callback() {
                         @Override
                         public void onSuccess() {
-                            mCurrentFetchSinglePostTask = null;
+                            mCurrentFetchSingleAssignmentTask = null;
                             mIsFetchingPosts = false;
                             if (!isAdded() || !reloadPosts) {
                                 return;
@@ -471,7 +468,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
                         @Override
                         public void onFailure(ErrorType errorType, String errorMessage, Throwable throwable) {
-                            mCurrentFetchSinglePostTask = null;
+                            mCurrentFetchSingleAssignmentTask = null;
                             mIsFetchingPosts = false;
                             if (!isAdded() || !reloadPosts) {
                                 return;
@@ -486,7 +483,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
             mSwipeToRefreshHelper.setRefreshing(true);
             mIsFetchingPosts = true;
-            mCurrentFetchSinglePostTask.execute(apiArgs);
+            mCurrentFetchSingleAssignmentTask.execute(apiArgs);
         }
     }
 
@@ -514,11 +511,11 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
     }
 
     public void onBlogChanged() {
-        if (mCurrentFetchPostsTask != null) {
-            mCurrentFetchPostsTask.cancel(true);
+        if (mCurrentFetchAssignmentsTask != null) {
+            mCurrentFetchAssignmentsTask.cancel(true);
         }
-        if (mCurrentFetchSinglePostTask != null) {
-            mCurrentFetchSinglePostTask.cancel(true);
+        if (mCurrentFetchSingleAssignmentTask != null) {
+            mCurrentFetchSingleAssignmentTask.cancel(true);
         }
         mIsFetchingPosts = false;
         mSwipeToRefreshHelper.setRefreshing(false);
