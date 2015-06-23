@@ -7,11 +7,6 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import org.wordpress.android.ripoti.ui.main.AssignmentsFragment;
-import org.wordpress.android.ui.main.RipotiPostsListFragment;
-import org.wordpress.android.ui.reader.ReaderBlogFragment;
-import org.wordpress.android.ui.reader.ReaderPostListFragment;
-
 /**
  * pager adapter containing tab fragments used by WPMainActivity
  */
@@ -53,7 +48,7 @@ class RipotiMainTabAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_ASSIGNMENTS:
-                return AssignmentsFragment.newInstance();
+                return AssignmentsListFragment.newInstance();
             case TAB_MYPOSTS:
                 return RipotiPostsListFragment.newInstance();
             default:

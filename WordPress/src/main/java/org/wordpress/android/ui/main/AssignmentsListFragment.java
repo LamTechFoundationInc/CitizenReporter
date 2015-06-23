@@ -26,7 +26,7 @@ import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadSucceed;
 import org.wordpress.android.ui.posts.PostUploadService;
-import org.wordpress.android.ui.posts.adapters.PostsListAdapter;
+import org.wordpress.android.ui.posts.adapters.AssignmentsListAdapter;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -49,7 +49,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
-    private PostsListAdapter mPostsListAdapter;
+    private AssignmentsListAdapter mAssignmentsListAdapter;
     private ApiHelper.FetchAssignmentsTask mCurrentFetchAssignmentsTask;
     private ApiHelper.FetchSingleAssignmentTask mCurrentFetchSingleAssignmentTask;
     private View mProgressFooterView;
@@ -149,9 +149,9 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
         }
     }
 
-    public PostsListAdapter getPostListAdapter() {
-        if (mPostsListAdapter == null) {
-            PostsListAdapter.OnLoadMoreListener loadMoreListener = new PostsListAdapter.OnLoadMoreListener() {
+    public AssignmentsListAdapter getPostListAdapter() {
+        if (mAssignmentsListAdapter == null) {
+            AssignmentsListAdapter.OnLoadMoreListener loadMoreListener = new AssignmentsListAdapter.OnLoadMoreListener() {
                 @Override
                 public void onLoadMore() {
                     if (mCanLoadMorePosts && !mIsFetchingPosts)
@@ -159,7 +159,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                 }
             };
 
-            PostsListAdapter.OnPostsLoadedListener postsLoadedListener = new PostsListAdapter.OnPostsLoadedListener() {
+            AssignmentsListAdapter.OnPostsLoadedListener postsLoadedListener = new AssignmentsListAdapter.OnPostsLoadedListener() {
                 @Override
                 public void onPostsLoaded(int postCount) {
                     if (!isAdded()) {
@@ -190,8 +190,8 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                     } else if (mShouldSelectFirstPost) {
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
-                        if (mPostsListAdapter.getCount() > 0) {
-                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
+                        if (mAssignmentsListAdapter.getCount() > 0) {
+                            PostsListPost postsListPost = (PostsListPost) mAssignmentsListAdapter.getItem(0);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                                 getListView().setItemChecked(0, true);
@@ -200,8 +200,8 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                     } else if (isAdded() && ((RipotiMainActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
-                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
-                            PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(selectedPosition);
+                        if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mAssignmentsListAdapter.getCount()) {
+                            PostsListPost postsListPost = (PostsListPost) mAssignmentsListAdapter.getItem(selectedPosition);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                             }
@@ -209,10 +209,10 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                     }
                 }
             };
-            mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
+            mAssignmentsListAdapter = new AssignmentsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
         }
 
-        return mPostsListAdapter;
+        return mAssignmentsListAdapter;
     }
 
     @Override
@@ -522,7 +522,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
     }
 
     private void updateEmptyView(final EmptyViewMessageType emptyViewMessageType) {
-        if (mPostsListAdapter != null && mPostsListAdapter.getCount() == 0) {
+        if (mAssignmentsListAdapter != null && mAssignmentsListAdapter.getCount() == 0) {
             // Handle animation display
             if (mEmptyViewMessage == EmptyViewMessageType.NO_CONTENT &&
                     emptyViewMessageType == EmptyViewMessageType.LOADING) {

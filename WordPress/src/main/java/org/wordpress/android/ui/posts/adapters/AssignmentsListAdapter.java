@@ -12,6 +12,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.ui.main.AssignmentsListFragment;
 import org.wordpress.android.ui.main.RipotiPostsListFragment;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.Locale;
 /**
  * Adapter for Posts/Pages list
  */
-public class PostsListAdapter extends BaseAdapter {
+public class AssignmentsListAdapter extends BaseAdapter {
     public static interface OnLoadMoreListener {
         public void onLoadMore();
     }
@@ -39,7 +40,7 @@ public class PostsListAdapter extends BaseAdapter {
     private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
 
 
-    public PostsListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
+    public AssignmentsListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
         mContext = context;
         mIsPage = isPage;
         mOnLoadMoreListener = onLoadMoreListener;
@@ -142,7 +143,7 @@ public class PostsListAdapter extends BaseAdapter {
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
-                && position >= RipotiPostsListFragment.POSTS_REQUEST_COUNT - 1) {
+                && position >= AssignmentsListFragment.POSTS_REQUEST_COUNT - 1) {
             mOnLoadMoreListener.onLoadMore();
         }
 
@@ -202,7 +203,7 @@ public class PostsListAdapter extends BaseAdapter {
 
         @Override
         protected Boolean doInBackground(Void... nada) {
-            loadedPosts = WordPress.wpDB.getPostsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
+            loadedPosts = WordPress.wpDB.getAssignmentsListPosts(WordPress.getCurrentLocalTableBlogId(), mIsPage);
             if (postsListMatch(loadedPosts)) {
                 return false;
             }

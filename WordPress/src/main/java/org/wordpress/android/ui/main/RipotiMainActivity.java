@@ -102,6 +102,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
     public RipotiPostsListFragment mPostList;
 
+    public AssignmentsListFragment mAssignmentsList;
     @Override
     public void onDetailPostAction(int action, Post post) {
 
@@ -228,7 +229,12 @@ public class RipotiMainActivity extends ActionBarActivity
         }
 
         FragmentManager fm = getFragmentManager();
+
+        mAssignmentsList = (AssignmentsListFragment) fm.findFragmentById(R.id.assignmentList);
+
         mPostList = (RipotiPostsListFragment) fm.findFragmentById(R.id.postList);
+
+
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

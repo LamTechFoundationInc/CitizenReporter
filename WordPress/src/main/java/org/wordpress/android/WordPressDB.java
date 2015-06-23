@@ -83,7 +83,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_MEDIA_TYPES          = "media_types";
     private static final String COLUMN_NAME_RESPONSES            = "responses";
 
-    private static final int DATABASE_VERSION = 31;
+    private static final int DATABASE_VERSION = 30;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -154,9 +154,11 @@ public class WordPressDB {
 
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
+    private static final String ADD_LOCAL_ASSIGNMENT_CHANGES = "alter table assignments add isLocalChange boolean default 0";
 
     // Add boolean to POSTS to track posts currently being uploaded
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
+    private static final String ADD_IS_UPLOADING_ASSIGNMENT = "alter table assignments add isUploading boolean default 0";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -311,6 +313,10 @@ public class WordPressDB {
                 if (!isNewInstall) {
                     migratePreferencesToAccountTable(context);
                 }
+                currentVersion++;
+            case 30:
+                db.execSQL(ADD_IS_UPLOADING_ASSIGNMENT);
+                db.execSQL(ADD_LOCAL_ASSIGNMENT_CHANGES);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
