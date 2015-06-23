@@ -74,6 +74,14 @@ public class WordPressDB {
     public static final String COLUMN_NAME_VIDEO_PRESS_SHORTCODE = "videoPressShortcode";
     public static final String COLUMN_NAME_UPLOAD_STATE          = "uploadState";
 
+    /*
+        Assignment specific columns
+     */
+    private static final String COLUMN_NAME_LOCATION             = "location";
+    private static final String COLUMN_NAME_BOUNTY               = "bounty";
+    private static final String COLUMN_NAME_DEADLINE             = "deadline";
+    private static final String COLUMN_NAME_MEDIA_TYPES          = "media_types";
+
     private static final int DATABASE_VERSION = 30;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
