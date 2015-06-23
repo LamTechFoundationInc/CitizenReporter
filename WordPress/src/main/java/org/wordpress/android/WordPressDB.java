@@ -603,6 +603,7 @@ public class WordPressDB {
     public void dangerouslyDeleteAllContent() {
         db.delete(BLOGS_TABLE, null, null);
         db.delete(POSTS_TABLE, null, null);
+        db.delete(ASSIGNMENTS_TABLE, null, null);
         db.delete(MEDIA_TABLE, null, null);
         db.delete(CATEGORIES_TABLE, null, null);
         db.delete(CommentTable.COMMENTS_TABLE, null, null);
