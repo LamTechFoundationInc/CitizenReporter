@@ -97,6 +97,8 @@ public class AssignmentsListAdapter extends BaseAdapter {
         wrapper.getLocation().setText(locationText);
 
         String bountyText = post.getBounty();
+        if (bountyText.equals("KSH 0"))
+            bountyText = "n/a";
         wrapper.getBounty().setText(bountyText);
 
         String deadlineText = post.getDeadline();
