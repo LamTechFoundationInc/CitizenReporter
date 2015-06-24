@@ -10,8 +10,9 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.PostStatus;
-import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.ui.main.AssignmentsListFragment;
 import org.wordpress.android.ui.main.RipotiPostsListFragment;
 
@@ -37,7 +38,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
     private boolean mIsPage;
     private LayoutInflater mLayoutInflater;
 
-    private List<PostsListPost> mPosts = new ArrayList<PostsListPost>();
+    private List<AssignmentsListPost> mPosts = new ArrayList<AssignmentsListPost>();
 
 
     public AssignmentsListAdapter(Context context, boolean isPage, OnLoadMoreListener onLoadMoreListener, OnPostsLoadedListener onPostsLoadedListener) {
@@ -48,11 +49,11 @@ public class AssignmentsListAdapter extends BaseAdapter {
         mLayoutInflater = LayoutInflater.from(mContext);
     }
 
-    public List<PostsListPost> getPosts() {
+    public List<AssignmentsListPost> getPosts() {
         return mPosts;
     }
 
-    public void setPosts(List<PostsListPost> postsList) {
+    public void setPosts(List<AssignmentsListPost> postsList) {
         if (postsList != null)
             this.mPosts = postsList;
     }
@@ -74,7 +75,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        PostsListPost post = mPosts.get(position);
+        AssignmentsListPost post = mPosts.get(position);
         PostViewWrapper wrapper;
         if (view == null) {
             view = mLayoutInflater.inflate(R.layout.assignment_cardview, parent, false);
@@ -90,6 +91,11 @@ public class AssignmentsListAdapter extends BaseAdapter {
         if (titleText.equals(""))
             titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
         wrapper.getTitle().setText(titleText);
+
+
+        String excerptText = post.getExcerpt();
+        wrapper.getExcerpt().setText(excerptText);
+
 
         if (post.isLocalDraft()) {
             wrapper.getDate().setVisibility(View.GONE);
@@ -126,6 +132,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
     class PostViewWrapper {
         View base;
         TextView title = null;
+        TextView excerpt = null;
         TextView date = null;
         TextView status = null;
 
@@ -140,6 +147,13 @@ public class AssignmentsListAdapter extends BaseAdapter {
             return (title);
         }
 
+        TextView getExcerpt() {
+            if (excerpt == null) {
+                excerpt = (TextView) base.findViewById(R.id.text_excerpt);
+            }
+            return (excerpt);
+        }
+
         TextView getDate() {
             if (date == null) {
                 date = (TextView) base.findViewById(R.id.assignment_list_deadline);
@@ -149,7 +163,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
     }
 
     private class LoadPostsTask extends AsyncTask <Void, Void, Boolean> {
-        List<PostsListPost> loadedPosts;
+        List<AssignmentsListPost> loadedPosts;
 
         @Override
         protected Boolean doInBackground(Void... nada) {
@@ -174,13 +188,13 @@ public class AssignmentsListAdapter extends BaseAdapter {
         }
     }
 
-    public boolean postsListMatch(List<PostsListPost> newPostsList) {
+    public boolean postsListMatch(List<AssignmentsListPost> newPostsList) {
         if (newPostsList == null || newPostsList.size() == 0 || mPosts == null || mPosts.size() != newPostsList.size())
             return false;
 
         for (int i = 0; i < newPostsList.size(); i++) {
-            PostsListPost newPost = newPostsList.get(i);
-            PostsListPost currentPost = mPosts.get(i);
+            AssignmentsListPost newPost = newPostsList.get(i);
+            AssignmentsListPost currentPost = mPosts.get(i);
 
             if (newPost.getPostId() != currentPost.getPostId())
                 return false;
@@ -206,7 +220,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
             return 0;
 
         int remotePostCount = 0;
-        for (PostsListPost post : mPosts) {
+        for (AssignmentsListPost post : mPosts) {
             if (!post.isLocalDraft())
                 remotePostCount++;
         }

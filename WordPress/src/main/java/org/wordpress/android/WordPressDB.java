@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.AccountTable;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
+import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
@@ -1059,11 +1060,11 @@ public class WordPressDB {
         return posts;
     }
 
-    public List<PostsListPost> getAssignmentsListPosts(int blogId, boolean loadPages) {
-        List<PostsListPost> posts = new ArrayList<PostsListPost>();
+    public List<AssignmentsListPost> getAssignmentsListPosts(int blogId, boolean loadPages) {
+        List<AssignmentsListPost> posts = new ArrayList<AssignmentsListPost>();
         Cursor c;
         c = db.query(ASSIGNMENTS_TABLE,
-                new String[] { "id", "blogID", "title",
+                new String[] { "id", "blogID", "title", "description", "location", "bounty", 
                         "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
@@ -1072,12 +1073,14 @@ public class WordPressDB {
 
         for (int i = 0; i < numRows; ++i) {
             String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
+            String postExcerpt = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("description")));
 
             // Create the PostsListPost and add it to the Array
-            PostsListPost post = new PostsListPost(
+            AssignmentsListPost post = new AssignmentsListPost(
                     c.getInt(c.getColumnIndex("id")),
                     c.getInt(c.getColumnIndex("blogID")),
                     postTitle,
+                    postExcerpt,
                     c.getLong(c.getColumnIndex("date_created_gmt")),
                     c.getString(c.getColumnIndex("post_status")),
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
