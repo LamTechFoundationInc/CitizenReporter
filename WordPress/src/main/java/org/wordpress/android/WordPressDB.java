@@ -970,6 +970,22 @@ public class WordPressDB {
                                     values.put("longitude", customField.get("value").toString());
                                 if (customField.get("key").equals("geo_latitude"))
                                     values.put("latitude", customField.get("value").toString());
+
+                                //assignments custom fields
+                                if(isAssignment){
+                                    if (customField.get("key").equals("assignment_address"))
+                                        values.put("location", customField.get("value").toString());
+
+                                    if (customField.get("key").equals("assignment_date"))
+                                        values.put("deadline", customField.get("value").toString());
+
+                                    if (customField.get("key").equals("assignment_bounty"))
+                                        values.put("bounty", customField.get("value").toString());
+
+                                    if (customField.get("key").equals("assignment_type"))
+                                        values.put("media_types", customField.get("value").toString());
+                                }
+
                             }
                         }
                     }
@@ -1002,11 +1018,6 @@ public class WordPressDB {
 
                     int result;
                     if(isAssignment){
-
-                        values.put("location", MapUtils.getMapStr(postMap, "location"));
-                        values.put("bounty", MapUtils.getMapStr(postMap, "bounty"));
-                        values.put("media_types", MapUtils.getMapStr(postMap, "media_types"));
-                        values.put("deadline", MapUtils.getMapStr(postMap, "deadline"));
 
                         result = db.update(ASSIGNMENTS_TABLE, values, whereClause,
                                 new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
