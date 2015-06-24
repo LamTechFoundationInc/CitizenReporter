@@ -144,4 +144,7 @@
 
     <!--Me-->
     <color name="me_list_row_border">#D8E3EA</color>
+
+    <!--Assignment-->
+    <color name="assignment_media_type_not_required">@color/gray</color>
 </resources>

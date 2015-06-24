@@ -58,7 +58,6 @@
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_medium"
                     tools:text="text_blog_name" />
-
                 <org.wordpress.android.ui.reader.views.ReaderFollowButton
                     android:id="@+id/follow_button"
                     android:layout_width="wrap_content"
@@ -145,24 +144,26 @@
                     tools:text="text_date" />
 
                 <ImageView
-                    android:id="@+id/image_reblog_btn"
-                    style="@style/ReaderImageView.ButtonIcon"
+                    android:id="@+id/media_type_photo"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:src="@drawable/reader_button_reblog" />
-
-                <org.wordpress.android.ui.reader.views.ReaderIconCountView
-                    android:id="@+id/count_comments"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_photo_camera_white_48dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:tint="@color/assignment_media_type_not_required"/>
+                <ImageView
+                    android:id="@+id/media_type_video"
                     android:layout_marginLeft="@dimen/margin_small"
-                    wp:readerIcon="comment" />
-
-                <org.wordpress.android.ui.reader.views.ReaderIconCountView
-                    android:id="@+id/count_likes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_videocam_white_48dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:tint="@color/assignment_media_type_not_required"/>
+                <ImageView
+                    android:id="@+id/media_type_audio"
                     android:layout_marginLeft="@dimen/margin_small"
-                    wp:readerIcon="like" />
+                    android:src="@drawable/ic_mic_white_48dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:tint="@color/assignment_media_type_not_required"/>
 
             </LinearLayout>
 
