@@ -908,4 +908,7 @@
     <string name="tabbar_accessibility_label_me">Me</string>
 
     <string name="user_menu">User menu</string>
+
+    <!--Assignments -->
+    <string name="assignment_btn_respond">Respond</string>
 </resources>

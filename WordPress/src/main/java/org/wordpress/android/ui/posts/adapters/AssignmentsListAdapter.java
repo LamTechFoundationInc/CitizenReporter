@@ -108,6 +108,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         wrapper.getDeadline().setText(deadlineText);
 
         String mediaTypes = post.getMedia_types();
+
         if (mediaTypes.contains("image"))
             wrapper.getMedia_type_photo().setColorFilter(R.color.assignment_media_type_required);
         if (mediaTypes.contains("video"))
