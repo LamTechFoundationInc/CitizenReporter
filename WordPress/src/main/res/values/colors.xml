@@ -147,4 +147,5 @@
 
     <!--Assignment-->
     <color name="assignment_media_type_not_required">@color/gray</color>
+    <color name="assignment_media_type_required">@color/grey_darken_20</color>
 </resources>

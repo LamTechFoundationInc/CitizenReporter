@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
@@ -106,6 +107,14 @@ public class AssignmentsListAdapter extends BaseAdapter {
             deadlineText = "Open";
         wrapper.getDeadline().setText(deadlineText);
 
+        String mediaTypes = post.getMedia_types();
+        if (mediaTypes.contains("image"))
+            wrapper.getMedia_type_photo().setColorFilter(R.color.assignment_media_type_required);
+        if (mediaTypes.contains("video"))
+            wrapper.getMedia_type_video().setColorFilter(R.color.assignment_media_type_required);
+        if (mediaTypes.contains("audio"))
+            wrapper.getMedia_type_audio().setColorFilter(R.color.assignment_media_type_required);
+
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
                 && position >= AssignmentsListFragment.POSTS_REQUEST_COUNT - 1) {
@@ -137,11 +146,33 @@ public class AssignmentsListAdapter extends BaseAdapter {
         TextView excerpt = null;
         TextView location = null;
         TextView bounty = null;
+        ImageView media_type_photo = null;
+        ImageView media_type_video = null;
+        ImageView media_type_audio = null;
         TextView date = null;
         TextView status = null;
 
         PostViewWrapper(View base) {
             this.base = base;
+        }
+
+        ImageView getMedia_type_photo(){
+            if (media_type_photo == null) {
+                media_type_photo = (ImageView) base.findViewById(R.id.media_type_photo);
+            }
+            return (media_type_photo);
+        }
+        ImageView getMedia_type_video(){
+            if (media_type_video == null) {
+                media_type_video = (ImageView) base.findViewById(R.id.media_type_video);
+            }
+            return (media_type_video);
+        }
+        ImageView getMedia_type_audio(){
+            if (media_type_audio == null) {
+                media_type_audio = (ImageView) base.findViewById(R.id.media_type_audio);
+            }
+            return (media_type_audio);
         }
 
         TextView getTitle() {
