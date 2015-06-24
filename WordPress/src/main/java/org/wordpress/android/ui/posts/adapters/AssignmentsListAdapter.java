@@ -100,6 +100,8 @@ public class AssignmentsListAdapter extends BaseAdapter {
         wrapper.getBounty().setText(bountyText);
 
         String deadlineText = post.getDeadline();
+        if (deadlineText.equals(""))
+            deadlineText = "Open";
         wrapper.getDeadline().setText(deadlineText);
 
         // load more posts when we near the end
