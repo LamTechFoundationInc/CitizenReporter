@@ -85,24 +85,22 @@ public class AssignmentsListAdapter extends BaseAdapter {
             wrapper = (PostViewWrapper) view.getTag();
         }
 
-        String date = post.getFormattedDate();
-
         String titleText = post.getTitle();
         if (titleText.equals(""))
             titleText = "(" + mContext.getResources().getText(R.string.untitled) + ")";
         wrapper.getTitle().setText(titleText);
 
-
         String excerptText = post.getExcerpt();
         wrapper.getExcerpt().setText(excerptText);
 
+        String locationText = post.getLocation();
+        wrapper.getLocation().setText(locationText);
 
-        if (post.isLocalDraft()) {
-            wrapper.getDate().setVisibility(View.GONE);
-        } else {
-            wrapper.getDate().setText(date);
-            wrapper.getDate().setVisibility(View.VISIBLE);
-        }
+        String bountyText = post.getBounty();
+        wrapper.getBounty().setText(bountyText);
+
+        String deadlineText = post.getDeadline();
+        wrapper.getDeadline().setText(deadlineText);
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
@@ -133,6 +131,8 @@ public class AssignmentsListAdapter extends BaseAdapter {
         View base;
         TextView title = null;
         TextView excerpt = null;
+        TextView location = null;
+        TextView bounty = null;
         TextView date = null;
         TextView status = null;
 
@@ -154,11 +154,25 @@ public class AssignmentsListAdapter extends BaseAdapter {
             return (excerpt);
         }
 
-        TextView getDate() {
+        TextView getDeadline() {
             if (date == null) {
                 date = (TextView) base.findViewById(R.id.assignment_list_deadline);
             }
             return (date);
+        }
+
+        TextView getLocation() {
+            if (location == null) {
+                location = (TextView) base.findViewById(R.id.text_location);
+            }
+            return (location);
+        }
+
+        TextView getBounty() {
+            if (bounty == null) {
+                bounty = (TextView) base.findViewById(R.id.text_bounty);
+            }
+            return (bounty);
         }
     }
 
