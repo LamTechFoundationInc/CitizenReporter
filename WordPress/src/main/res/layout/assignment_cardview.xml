@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_large"
-                    android:layout_toLeftOf="@+id/image_more"
+                    android:layout_toLeftOf="@+id/text_bounty"
                     android:layout_toRightOf="@+id/image_avatar"
                     android:ellipsize="end"
                     android:maxLines="1"
@@ -67,18 +67,18 @@
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_toRightOf="@+id/image_avatar" />
 
-                <ImageView
-                    android:id="@+id/image_more"
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_bounty"
+                    style="@style/ReaderTextView.Post.Bounty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/margin_small"
-                    android:background="?android:selectableItemBackground"
                     android:paddingBottom="@dimen/margin_large"
                     android:paddingLeft="@dimen/margin_large"
                     android:paddingTop="@dimen/margin_large"
-                    android:src="@drawable/ic_action_more" />
+                    tools:text="text_tag"/>
 
             </RelativeLayout>
 
@@ -107,7 +107,7 @@
                 tools:text="text_excerpt" />
 
             <org.wordpress.android.widgets.WPTextView
-                android:id="@+id/text_tag"
+                android:id="@+id/text_location"
                 style="@style/ReaderTextView.Post.Tag"
                 android:layout_below="@+id/text_excerpt"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
@@ -121,7 +121,7 @@
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/text_tag"
+                android:layout_below="@+id/text_location"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginRight="@dimen/reader_card_content_padding"
                 android:layout_marginTop="@dimen/margin_medium"

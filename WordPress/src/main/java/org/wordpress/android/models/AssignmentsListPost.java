@@ -14,18 +14,59 @@ public class AssignmentsListPost {
     private int blogId;
     private String title;
     private String excerpt;
+    private String location;
+
+    public String getBounty() {
+        return bounty;
+    }
+
+    public void setBounty(String bounty) {
+        this.bounty = bounty;
+    }
+
+    public String getMedia_types() {
+        return media_types;
+    }
+
+    public void setMedia_types(String media_types) {
+        this.media_types = media_types;
+    }
+
+    public String getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(String deadline) {
+        this.deadline = deadline;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    private String bounty;
+    private String media_types;
+    private String deadline;
     private long dateCreatedGmt;
     private String status;
     private boolean isLocalDraft;
     private boolean hasLocalChanges;
     private boolean mIsUploading;
 
-    public AssignmentsListPost(int postId, int blogId, String title, String excerpt, long dateCreatedGmt, String status, boolean localDraft,
+    public AssignmentsListPost(int postId, int blogId, String title, String excerpt,
+                               String location,
+                               String deadline,
+                               String bounty,
+                               String media_types,long dateCreatedGmt, String status, boolean localDraft,
                                boolean localChanges, boolean uploading) {
         setPostId(postId);
         setBlogId(blogId);
         setTitle(title);
         setExcerpt(excerpt);
+        setLocation(location);
+        setDeadline(deadline);
+        setBounty(bounty);
+        setMedia_types(media_types);
         setDateCreatedGmt(dateCreatedGmt);
         setStatus(status);
         setLocalDraft(localDraft);
@@ -59,6 +100,7 @@ public class AssignmentsListPost {
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public long getDateCreatedGmt() {
         return dateCreatedGmt;
@@ -106,5 +148,13 @@ public class AssignmentsListPost {
 
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

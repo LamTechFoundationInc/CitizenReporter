@@ -1064,7 +1064,7 @@ public class WordPressDB {
         List<AssignmentsListPost> posts = new ArrayList<AssignmentsListPost>();
         Cursor c;
         c = db.query(ASSIGNMENTS_TABLE,
-                new String[] { "id", "blogID", "title", "description", "location", "bounty", 
+                new String[] { "id", "blogID", "title", "description", "location", "bounty", "deadline", "media_types",
                         "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
@@ -1074,6 +1074,10 @@ public class WordPressDB {
         for (int i = 0; i < numRows; ++i) {
             String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
             String postExcerpt = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("description")));
+            String postLocation = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("location")));
+            String postDeadline = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("deadline")));
+            String postBounty = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("bounty")));
+            String postMediaTypes = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("media_types")));
 
             // Create the PostsListPost and add it to the Array
             AssignmentsListPost post = new AssignmentsListPost(
@@ -1081,6 +1085,10 @@ public class WordPressDB {
                     c.getInt(c.getColumnIndex("blogID")),
                     postTitle,
                     postExcerpt,
+                    postLocation,
+                    postDeadline,
+                    postBounty,
+                    postMediaTypes,
                     c.getLong(c.getColumnIndex("date_created_gmt")),
                     c.getString(c.getColumnIndex("post_status")),
                     SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
