@@ -65,9 +65,8 @@
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:drawableLeft">@drawable/ic_attach_money_black_24dp</item>
+        <item name="android:drawableLeft">@drawable/ic_bounty</item>
         <item name="android:backgroundTint">#ff72b3ff</item>
-        <item name="android:drawablePadding">@dimen/margin_small</item>
     </style>
     <style name="ReaderTextView.Date" parent="ReaderTextView">
         <item name="android:textSize">@dimen/text_sz_small</item>
