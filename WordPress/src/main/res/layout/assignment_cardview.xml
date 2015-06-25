@@ -45,7 +45,7 @@
                     tools:src="@drawable/gravatar_placeholder" />
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/text_blog_name"
+                    android:id="@+id/assignment_post_author"
                     style="@style/ReaderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,11 +57,11 @@
                     android:maxLines="1"
                     android:textColor="@color/grey_dark"
                     android:textSize="@dimen/text_sz_medium"
-                    tools:text="text_blog_name" />
+                    tools:text="assignment_post_author" />
 
                 <LinearLayout
                     android:id="@+id/follow_respond"
-                    android:layout_below="@+id/text_blog_name"
+                    android:layout_below="@+id/assignment_post_author"
                     android:layout_marginTop="@dimen/margin_small"
                     android:layout_toRightOf="@+id/image_avatar"
                     android:layout_width="wrap_content"

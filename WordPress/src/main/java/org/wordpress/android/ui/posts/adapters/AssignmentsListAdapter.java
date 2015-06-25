@@ -127,6 +127,10 @@ public class AssignmentsListAdapter extends BaseAdapter {
             bountyText = "n/a";
         wrapper.getBounty().setText(bountyText);
 
+        //set author of assignment
+        String postAuthor = post.getBounty();
+        wrapper.getAssignment_post_author().setText(postAuthor);
+
         String deadlineText = post.getDeadline();
         if (deadlineText.equals(""))
             deadlineText = "Open";
@@ -206,6 +210,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         ImageView media_type_audio = null;
         TextView date = null;
         TextView status = null;
+        TextView assignment_post_author = null;
 
         PostViewWrapper(View base) {
             this.base = base;
@@ -268,6 +273,12 @@ public class AssignmentsListAdapter extends BaseAdapter {
                 bounty = (TextView) base.findViewById(R.id.text_bounty);
             }
             return (bounty);
+        }
+        TextView getAssignment_post_author() {
+            if (assignment_post_author == null) {
+                assignment_post_author = (TextView) base.findViewById(R.id.assignment_post_author);
+            }
+            return (assignment_post_author);
         }
     }
 
