@@ -21,6 +21,8 @@ import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.ui.main.AssignmentsListFragment;
 import org.wordpress.android.ui.main.RipotiPostsListFragment;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.reader.views.ReaderPhotoView;
+import org.wordpress.android.widgets.WPNetworkImageView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -179,7 +181,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         if(!image_featured.equals("")){
             //wrapper.getImage_featured().setDr
             String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-            Log.d("format", WordPressMediaUtils.getMedia(blogId, image_featured));
+            wrapper.getImage_featured().setImageUrl("https://d2k1ftgv7pobq7.cloudfront.net/meta/u/res/images/b001cabdefbd6c7968ee9d1ad40124b0/home-devices.png", WPNetworkImageView.ImageType.AVATAR);
         }
 
         // load more posts when we near the end
@@ -217,7 +219,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         ImageView media_type_video = null;
         ImageView assignment_deadline_noticon = null;
         ImageView media_type_audio = null;
-        ImageView image_featured = null;
+        WPNetworkImageView image_featured = null;
         TextView date = null;
         TextView status = null;
         TextView assignment_post_author = null;
@@ -226,9 +228,9 @@ public class AssignmentsListAdapter extends BaseAdapter {
             this.base = base;
         }
 
-        ImageView getImage_featured(){
+        WPNetworkImageView getImage_featured(){
             if(image_featured == null){
-                image_featured = (ImageView)base.findViewById(R.id.image_featured);
+                image_featured = (WPNetworkImageView) base.findViewById(R.id.image_featured);
             }
             return image_featured;
         }

@@ -925,12 +925,10 @@ public class ApiHelper {
         }
         private Callback mCallback;
         private int mMediaId;
-
         public GetMediaItemTask(int mediaId, Callback callback) {
             mMediaId = mediaId;
             mCallback = callback;
         }
-
         @Override
         protected MediaFile doInBackground(List<?>... params) {
             List<?> arguments = params[0];
