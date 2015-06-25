@@ -20,7 +20,11 @@ import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.ui.main.AssignmentsListFragment;
 import org.wordpress.android.ui.main.RipotiPostsListFragment;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -128,6 +132,34 @@ public class AssignmentsListAdapter extends BaseAdapter {
             deadlineText = "Open";
         wrapper.getDeadline().setText(deadlineText);
 
+        //if deadline passed, tint accordingly
+        if(!deadlineText.equals("")){
+            ImageView deadlineView = wrapper.getAssignment_deadline_noticon();
+
+            String deadlineString = deadlineText;
+
+            DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+            Date deadlineDate = null;
+            try {
+                deadlineDate = format.parse(deadlineString);
+                Date today = new Date();
+
+                if(deadlineDate.after(today)){
+                    deadlineView.setColorFilter(R.color.alert_yellow);
+
+                }else if(deadlineDate.before(today)) {
+                    deadlineView.setColorFilter(R.color.alert_green);
+                }else{
+                        //deadline is today
+                    deadlineView.setColorFilter(R.color.alert_red);
+
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         String mediaTypes = post.getMedia_types();
 
         if (mediaTypes.contains("image"))
@@ -170,6 +202,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         TextView bounty = null;
         ImageView media_type_photo = null;
         ImageView media_type_video = null;
+        ImageView assignment_deadline_noticon = null;
         ImageView media_type_audio = null;
         TextView date = null;
         TextView status = null;
@@ -196,7 +229,12 @@ public class AssignmentsListAdapter extends BaseAdapter {
             }
             return (media_type_audio);
         }
-
+        ImageView getAssignment_deadline_noticon(){
+            if (assignment_deadline_noticon == null) {
+                assignment_deadline_noticon = (ImageView) base.findViewById(R.id.assignment_deadline_noticon);
+            }
+            return (assignment_deadline_noticon);
+        }
         TextView getTitle() {
             if (title == null) {
                 title = (TextView) base.findViewById(R.id.text_title);
