@@ -57,10 +57,10 @@ public class AssignmentsListPost {
 
     public AssignmentsListPost(int postId, int blogId, String title, String excerpt,
                                String location,
-                               String coordinates,
+                               String coordinates, String postAuthor,
                                String deadline,
                                String bounty,
-                               String media_types, String postAuthor, long dateCreatedGmt, String status, boolean localDraft,
+                               String media_types, long dateCreatedGmt, String status, boolean localDraft,
                                boolean localChanges, boolean uploading) {
         setPostId(postId);
         setBlogId(blogId);

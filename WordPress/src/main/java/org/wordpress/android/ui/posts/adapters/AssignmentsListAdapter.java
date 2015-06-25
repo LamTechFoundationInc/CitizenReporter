@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,25 +129,28 @@ public class AssignmentsListAdapter extends BaseAdapter {
         wrapper.getBounty().setText(bountyText);
 
         //set author of assignment
-        String postAuthor = post.getBounty();
+        String postAuthor = post.getPostAuthor();
         wrapper.getAssignment_post_author().setText(postAuthor);
 
         String deadlineText = post.getDeadline();
-        if (deadlineText.equals(""))
-            deadlineText = "Open";
-        wrapper.getDeadline().setText(deadlineText);
+
 
         //if deadline passed, tint accordingly
         if(!deadlineText.equals("")){
             ImageView deadlineView = wrapper.getAssignment_deadline_noticon();
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-            String deadlineString = deadlineText;
+            Log.d("formatdate1", format + "");
 
-            DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
             Date deadlineDate = null;
             try {
-                deadlineDate = format.parse(deadlineString);
+                deadlineDate = format.parse(deadlineText);
+
+                Log.d("formatdate2", deadlineDate + "");
+
                 Date today = new Date();
+
+                Log.d("formatdate3", today + "");
 
                 if(deadlineDate.after(today)){
                     deadlineView.setColorFilter(R.color.alert_yellow);
@@ -162,7 +166,11 @@ public class AssignmentsListAdapter extends BaseAdapter {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+        }else{
+
+            deadlineText = "Open";
         }
+        wrapper.getDeadline().setText(deadlineText);
 
         String mediaTypes = post.getMedia_types();
 
