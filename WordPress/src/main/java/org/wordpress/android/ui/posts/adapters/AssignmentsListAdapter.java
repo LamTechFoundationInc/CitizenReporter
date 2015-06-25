@@ -134,33 +134,25 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
         String deadlineText = post.getDeadline();
 
-
         //if deadline passed, tint accordingly
         if(!deadlineText.equals("")){
             ImageView deadlineView = wrapper.getAssignment_deadline_noticon();
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
-            Log.d("formatdate1", format + "");
-
             Date deadlineDate = null;
             try {
                 deadlineDate = format.parse(deadlineText);
 
-                Log.d("formatdate2", deadlineDate + "");
-
                 Date today = new Date();
 
-                Log.d("formatdate3", today + "");
-
                 if(deadlineDate.after(today)){
-                    deadlineView.setColorFilter(R.color.alert_yellow);
+                    deadlineView.setBackgroundColor(mContext.getResources().getColor(R.color.alert_yellow));
 
                 }else if(deadlineDate.before(today)) {
-                    deadlineView.setColorFilter(R.color.alert_green);
+                    deadlineView.setBackgroundColor(mContext.getResources().getColor(R.color.alert_green));
                 }else{
                         //deadline is today
-                    deadlineView.setColorFilter(R.color.alert_red);
-
+                    deadlineView.setBackgroundColor(mContext.getResources().getColor(R.color.alert_red));
                 }
 
             } catch (ParseException e) {
@@ -175,11 +167,19 @@ public class AssignmentsListAdapter extends BaseAdapter {
         String mediaTypes = post.getMedia_types();
 
         if (mediaTypes.contains("image"))
-            wrapper.getMedia_type_photo().setColorFilter(R.color.assignment_media_type_required);
+            wrapper.getMedia_type_photo().setBackgroundColor(mContext.getResources().getColor(R.color.assignment_media_type_required));
         if (mediaTypes.contains("video"))
-            wrapper.getMedia_type_video().setColorFilter(R.color.assignment_media_type_required);
+            wrapper.getMedia_type_video().setBackgroundColor(mContext.getResources().getColor(R.color.assignment_media_type_required));
         if (mediaTypes.contains("audio"))
-            wrapper.getMedia_type_audio().setColorFilter(R.color.assignment_media_type_required);
+            wrapper.getMedia_type_audio().setBackgroundColor(mContext.getResources().getColor(R.color.assignment_media_type_required));
+
+        //set featured image
+        String image_featured = post.getPostThumb();
+        if(!image_featured.equals("")){
+            //wrapper.getImage_featured().setDr
+            Log.d("format", image_featured);
+
+        }
 
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
@@ -216,12 +216,20 @@ public class AssignmentsListAdapter extends BaseAdapter {
         ImageView media_type_video = null;
         ImageView assignment_deadline_noticon = null;
         ImageView media_type_audio = null;
+        ImageView image_featured = null;
         TextView date = null;
         TextView status = null;
         TextView assignment_post_author = null;
 
         PostViewWrapper(View base) {
             this.base = base;
+        }
+
+        ImageView getImage_featured(){
+            if(image_featured == null){
+                image_featured = (ImageView)base.findViewById(R.id.image_featured);
+            }
+            return image_featured;
         }
 
         ImageView getMedia_type_photo(){
