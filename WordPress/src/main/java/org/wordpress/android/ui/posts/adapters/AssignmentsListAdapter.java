@@ -108,9 +108,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
                 if(!post.getCoordinates().equals("")) {
 
                     String gps = post.getCoordinates().replace("(", "");
-                    gps = post.getCoordinates().replace(")", "");
-
-
+                    gps = gps.replace(")", "");
 
                     Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + gps));
                     i.setClassName("com.google.android.apps.maps",
