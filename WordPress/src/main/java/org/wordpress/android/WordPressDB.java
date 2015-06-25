@@ -85,7 +85,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_RESPONSES            = "responses";
     private static final String COLUMN_NAME_COORDINATES            = "coordinates";
 
-    private static final int DATABASE_VERSION = 30;
+    private static final int DATABASE_VERSION = 31;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -109,7 +109,7 @@ public class WordPressDB {
             + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
             + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
-            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, isUploading boolean default 0, isLocalChange boolean default 0, location text, location_gps text, bounty text, deadline date, media_types text, responses integer default 0);";
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, isUploading boolean default 0, isLocalChange boolean default 0, location text, coordinates text, bounty text, deadline date, media_types text, responses integer default 0);";
 
     private static final String ASSIGNMENTS_TABLE = "assignments";
 
@@ -312,8 +312,8 @@ public class WordPressDB {
                 if (!isNewInstall) {
                     migratePreferencesToAccountTable(context);
                 }
-                currentVersion++;
-            case 30:
+                currentVersion = 31;
+            case 31:
                 db.execSQL(CREATE_TABLE_ASSIGNMENTS);
                 currentVersion++;
         }
@@ -972,6 +972,9 @@ public class WordPressDB {
                                 if(isAssignment){
                                     if (customField.get("key").equals("assignment_address"))
                                         values.put("location", customField.get("value").toString());
+
+                                    if (customField.get("key").equals("assignment_location"))
+                                        values.put("coordinates", customField.get("value").toString());
 
                                     if (customField.get("key").equals("assignment_date"))
                                         values.put("deadline", customField.get("value").toString());

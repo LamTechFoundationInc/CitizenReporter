@@ -1,6 +1,8 @@
 package org.wordpress.android.ui.posts.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -76,7 +79,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        AssignmentsListPost post = mPosts.get(position);
+        final AssignmentsListPost post = mPosts.get(position);
         PostViewWrapper wrapper;
         if (view == null) {
             view = mLayoutInflater.inflate(R.layout.assignment_cardview, parent, false);
@@ -96,6 +99,26 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
         String locationText = post.getLocation();
         wrapper.getLocation().setText(locationText);
+
+        wrapper.getLocation().setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(mContext, "" + post.getCoordinates(), Toast.LENGTH_LONG).show();
+
+                if(!post.getCoordinates().equals("")) {
+
+                    String gps = post.getCoordinates().replace("(", "");
+                    gps = post.getCoordinates().replace(")", "");
+
+
+
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + gps));
+                    i.setClassName("com.google.android.apps.maps",
+                            "com.google.android.maps.MapsActivity");
+                    mContext.startActivity(i);
+                }
+            }
+        });
 
         String bountyText = post.getBounty();
         if (bountyText.equals("KSH 0"))
