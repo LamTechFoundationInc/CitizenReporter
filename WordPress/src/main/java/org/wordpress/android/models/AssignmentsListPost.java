@@ -48,6 +48,7 @@ public class AssignmentsListPost {
     private String media_types;
     private String deadline;
     private String coordinates;
+    private String postAuthor;
     private long dateCreatedGmt;
     private String status;
     private boolean isLocalDraft;
@@ -59,7 +60,7 @@ public class AssignmentsListPost {
                                String coordinates,
                                String deadline,
                                String bounty,
-                               String media_types, long dateCreatedGmt, String status, boolean localDraft,
+                               String media_types, String postAuthor, long dateCreatedGmt, String status, boolean localDraft,
                                boolean localChanges, boolean uploading) {
         setPostId(postId);
         setBlogId(blogId);
@@ -67,6 +68,7 @@ public class AssignmentsListPost {
         setExcerpt(excerpt);
         setLocation(location);
         setCoordinates(coordinates);
+        setPostAuthor(postAuthor);
         setDeadline(deadline);
         setBounty(bounty);
         setMedia_types(media_types);
@@ -167,5 +169,13 @@ public class AssignmentsListPost {
 
     public void setCoordinates(String coordinates) {
         this.coordinates = coordinates;
+    }
+
+    public String getPostAuthor() {
+        return postAuthor;
+    }
+
+    public void setPostAuthor(String postAuthor) {
+        this.postAuthor = postAuthor;
     }
 }

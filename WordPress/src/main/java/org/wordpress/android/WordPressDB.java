@@ -84,6 +84,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_MEDIA_TYPES          = "media_types";
     private static final String COLUMN_NAME_RESPONSES            = "responses";
     private static final String COLUMN_NAME_COORDINATES            = "coordinates";
+    private static final String COLUMN_NAME_AUTHOR            = "author";
 
     private static final int DATABASE_VERSION = 31;
 
@@ -109,7 +110,7 @@ public class WordPressDB {
             + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
             + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
-            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, isUploading boolean default 0, isLocalChange boolean default 0, location text, coordinates text, bounty text, deadline date, media_types text, responses integer default 0);";
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, isUploading boolean default 0, isLocalChange boolean default 0, location text, coordinates text, author text, bounty text, deadline date, media_types text, responses integer default 0);";
 
     private static final String ASSIGNMENTS_TABLE = "assignments";
 
@@ -944,6 +945,10 @@ public class WordPressDB {
                     values.put("link", MapUtils.getMapStr(postMap, "link"));
                     values.put("permaLink", MapUtils.getMapStr(postMap, "permaLink"));
 
+                    if(isAssignment){
+                        values.put("author", MapUtils.getMapStr(postMap, "wp_author_display_name"));
+                    }
+
                     Object[] postCategories = (Object[]) postMap.get("categories");
                     JSONArray jsonCategoriesArray = new JSONArray();
                     if (postCategories != null) {
@@ -1075,7 +1080,7 @@ public class WordPressDB {
         List<AssignmentsListPost> posts = new ArrayList<AssignmentsListPost>();
         Cursor c;
         c = db.query(ASSIGNMENTS_TABLE,
-                new String[] { "id", "blogID", "title", "description", "location", "bounty", "deadline", "media_types", "coordinates",
+                new String[] { "id", "blogID", "title", "description", "location", "bounty", "deadline", "media_types", "coordinates", "author",
                         "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
@@ -1087,6 +1092,7 @@ public class WordPressDB {
             String postExcerpt = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("description")));
             String postLocation = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("location")));
             String postCoordinates = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("coordinates")));
+            String postAuthor = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("author")));
             String postDeadline = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("deadline")));
             String postBounty = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("bounty")));
             String postMediaTypes = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("media_types")));
@@ -1099,6 +1105,7 @@ public class WordPressDB {
                     postExcerpt,
                     postLocation,
                     postCoordinates,
+                    postAuthor,
                     postDeadline,
                     postBounty,
                     postMediaTypes,
