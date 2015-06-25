@@ -146,13 +146,13 @@ public class AssignmentsListAdapter extends BaseAdapter {
                 Date today = new Date();
 
                 if(deadlineDate.after(today)){
-                    deadlineView.setBackgroundColor(mContext.getResources().getColor(R.color.alert_yellow));
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_yellow),android.graphics.PorterDuff.Mode.MULTIPLY);
 
                 }else if(deadlineDate.before(today)) {
-                    deadlineView.setBackgroundColor(mContext.getResources().getColor(R.color.alert_green));
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green),android.graphics.PorterDuff.Mode.MULTIPLY);
                 }else{
                         //deadline is today
-                    deadlineView.setBackgroundColor(mContext.getResources().getColor(R.color.alert_red));
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_red),android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
 
             } catch (ParseException e) {
@@ -167,11 +167,11 @@ public class AssignmentsListAdapter extends BaseAdapter {
         String mediaTypes = post.getMedia_types();
 
         if (mediaTypes.contains("image"))
-            wrapper.getMedia_type_photo().setBackgroundColor(mContext.getResources().getColor(R.color.assignment_media_type_required));
+            wrapper.getMedia_type_photo().setColorFilter(mContext.getResources().getColor(R.color.assignment_media_type_required));
         if (mediaTypes.contains("video"))
-            wrapper.getMedia_type_video().setBackgroundColor(mContext.getResources().getColor(R.color.assignment_media_type_required));
+            wrapper.getMedia_type_video().setColorFilter(mContext.getResources().getColor(R.color.assignment_media_type_required));
         if (mediaTypes.contains("audio"))
-            wrapper.getMedia_type_audio().setBackgroundColor(mContext.getResources().getColor(R.color.assignment_media_type_required));
+            wrapper.getMedia_type_audio().setColorFilter(mContext.getResources().getColor(R.color.assignment_media_type_required));
 
         //set featured image
         String image_featured = post.getPostThumb();
