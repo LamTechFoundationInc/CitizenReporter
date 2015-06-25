@@ -20,6 +20,7 @@ import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.ui.main.AssignmentsListFragment;
 import org.wordpress.android.ui.main.RipotiPostsListFragment;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -146,13 +147,13 @@ public class AssignmentsListAdapter extends BaseAdapter {
                 Date today = new Date();
 
                 if(deadlineDate.after(today)){
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_yellow),android.graphics.PorterDuff.Mode.MULTIPLY);
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_yellow), android.graphics.PorterDuff.Mode.MULTIPLY);
 
                 }else if(deadlineDate.before(today)) {
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green),android.graphics.PorterDuff.Mode.MULTIPLY);
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }else{
                         //deadline is today
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_red),android.graphics.PorterDuff.Mode.MULTIPLY);
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
 
             } catch (ParseException e) {
@@ -177,8 +178,8 @@ public class AssignmentsListAdapter extends BaseAdapter {
         String image_featured = post.getPostThumb();
         if(!image_featured.equals("")){
             //wrapper.getImage_featured().setDr
-            Log.d("format", image_featured);
-
+            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
+            Log.d("format", WordPressMediaUtils.getMedia(blogId, image_featured));
         }
 
         // load more posts when we near the end

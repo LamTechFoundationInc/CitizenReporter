@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ImageView;
 
 import org.wordpress.android.R;
@@ -212,6 +213,27 @@ public class WordPressMediaUtils {
         }
 
         return true;
+    }
+
+    public static String getMedia(String blogId, String mediaID) {
+        Cursor cursor = WordPress.wpDB.getMediaFile(blogId, mediaID);
+        String result = "";
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Log.d("cursorformat", cursor.getString(0));
+            result = cursor.getString(0);
+            cursor.moveToNext();
+        }
+
+        int numRows = cursor.getCount();
+
+        Log.d("format numrows", numRows+"");
+
+        cursor.close();
+
+        return result;
+
     }
 
     public static boolean canDeleteMedia(String blogId, String mediaID) {
