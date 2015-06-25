@@ -79,9 +79,10 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:minWidth="90dp"
-                        android:text="@string/reader_btn_follow"
+                        android:text="@string/assignment_btn_respond"
                         android:textColor="@color/reader_follow_button_text"
-                        android:textSize="@dimen/text_sz_medium" />
+                        android:textSize="@dimen/text_sz_large"
+                        android:textAllCaps="true"/>
 
                 </LinearLayout>
 

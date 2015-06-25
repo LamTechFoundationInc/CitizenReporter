@@ -83,6 +83,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_DEADLINE             = "deadline";
     private static final String COLUMN_NAME_MEDIA_TYPES          = "media_types";
     private static final String COLUMN_NAME_RESPONSES            = "responses";
+    private static final String COLUMN_NAME_COORDINATES            = "coordinates";
 
     private static final int DATABASE_VERSION = 30;
 
@@ -108,7 +109,7 @@ public class WordPressDB {
             + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
             + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
-            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, location text, bounty text, deadline date, media_types text, responses integer default 0);";
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, isUploading boolean default 0, isLocalChange boolean default 0, location text, location_gps text, bounty text, deadline date, media_types text, responses integer default 0);";
 
     private static final String ASSIGNMENTS_TABLE = "assignments";
 
@@ -155,11 +156,9 @@ public class WordPressDB {
 
     //add boolean to posts to check uploaded posts that have local changes
     private static final String ADD_LOCAL_POST_CHANGES = "alter table posts add isLocalChange boolean default 0";
-    private static final String ADD_LOCAL_ASSIGNMENT_CHANGES = "alter table assignments add isLocalChange boolean default 0";
 
     // Add boolean to POSTS to track posts currently being uploaded
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
-    private static final String ADD_IS_UPLOADING_ASSIGNMENT = "alter table assignments add isUploading boolean default 0";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -203,7 +202,6 @@ public class WordPressDB {
         // Create tables if they don't exist
         db.execSQL(CREATE_TABLE_BLOGS);
         db.execSQL(CREATE_TABLE_POSTS);
-        db.execSQL(CREATE_TABLE_ASSIGNMENTS);
         db.execSQL(CREATE_TABLE_CATEGORIES);
         db.execSQL(CREATE_TABLE_QUICKPRESS_SHORTCUTS);
         db.execSQL(CREATE_TABLE_MEDIA);
@@ -316,8 +314,7 @@ public class WordPressDB {
                 }
                 currentVersion++;
             case 30:
-                db.execSQL(ADD_IS_UPLOADING_ASSIGNMENT);
-                db.execSQL(ADD_LOCAL_ASSIGNMENT_CHANGES);
+                db.execSQL(CREATE_TABLE_ASSIGNMENTS);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -1075,7 +1072,7 @@ public class WordPressDB {
         List<AssignmentsListPost> posts = new ArrayList<AssignmentsListPost>();
         Cursor c;
         c = db.query(ASSIGNMENTS_TABLE,
-                new String[] { "id", "blogID", "title", "description", "location", "bounty", "deadline", "media_types",
+                new String[] { "id", "blogID", "title", "description", "location", "bounty", "deadline", "media_types", "coordinates",
                         "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
@@ -1086,6 +1083,7 @@ public class WordPressDB {
             String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
             String postExcerpt = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("description")));
             String postLocation = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("location")));
+            String postCoordinates = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("coordinates")));
             String postDeadline = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("deadline")));
             String postBounty = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("bounty")));
             String postMediaTypes = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("media_types")));
@@ -1097,6 +1095,7 @@ public class WordPressDB {
                     postTitle,
                     postExcerpt,
                     postLocation,
+                    postCoordinates,
                     postDeadline,
                     postBounty,
                     postMediaTypes,
