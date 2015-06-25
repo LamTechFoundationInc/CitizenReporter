@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.ui.main.AssignmentsListFragment;
+import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.main.RipotiPostsListFragment;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.reader.views.ReaderPhotoView;
@@ -184,6 +186,16 @@ public class AssignmentsListAdapter extends BaseAdapter {
             wrapper.getImage_featured().setImageUrl("https://d2k1ftgv7pobq7.cloudfront.net/meta/u/res/images/b001cabdefbd6c7968ee9d1ad40124b0/home-devices.png", WPNetworkImageView.ImageType.AVATAR);
         }
 
+
+        //respond listener
+        wrapper.getRespondButton().setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                ((RipotiMainActivity)mContext).newPost();
+            }
+        });
+
         // load more posts when we near the end
         if (mOnLoadMoreListener != null && position >= getCount() - 1
                 && position >= AssignmentsListFragment.POSTS_REQUEST_COUNT - 1) {
@@ -215,6 +227,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         TextView excerpt = null;
         TextView location = null;
         TextView bounty = null;
+        LinearLayout respondButton = null;
         ImageView media_type_photo = null;
         ImageView media_type_video = null;
         ImageView assignment_deadline_noticon = null;
@@ -226,6 +239,13 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
         PostViewWrapper(View base) {
             this.base = base;
+        }
+
+        LinearLayout getRespondButton(){
+            if(respondButton == null){
+                respondButton = (LinearLayout)base.findViewById(R.id.respond_button);
+            }
+            return respondButton;
         }
 
         WPNetworkImageView getImage_featured(){
