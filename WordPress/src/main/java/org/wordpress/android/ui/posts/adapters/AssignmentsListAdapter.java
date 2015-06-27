@@ -181,12 +181,10 @@ public class AssignmentsListAdapter extends BaseAdapter {
         //set featured image
         String image_featured = post.getPostThumb();
         if(!image_featured.equals("")){
-            //wrapper.getImage_featured().setDr
-            String blogId = String.valueOf(WordPress.getCurrentBlog().getLocalTableBlogId());
-            wrapper.getImage_featured().setImageUrl("https://d2k1ftgv7pobq7.cloudfront.net/meta/u/res/images/b001cabdefbd6c7968ee9d1ad40124b0/home-devices.png", WPNetworkImageView.ImageType.AVATAR);
+            wrapper.getImage_featured().setImageUrl(image_featured, WPNetworkImageView.ImageType.PHOTO);
+        }else{
+            wrapper.getImage_featured().setImageUrl("http://s3.footagesearch.com/fsthumb/252180.jpg", WPNetworkImageView.ImageType.PHOTO);
         }
-
-
         //respond listener
         wrapper.getRespondButton().setOnClickListener(new View.OnClickListener(){
 
