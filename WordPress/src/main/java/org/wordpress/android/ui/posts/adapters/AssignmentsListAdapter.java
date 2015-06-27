@@ -110,12 +110,12 @@ public class AssignmentsListAdapter extends BaseAdapter {
         String locationText = post.getLocation();
         wrapper.getLocation().setText(locationText);
 
-        wrapper.getLocation().setOnClickListener(new View.OnClickListener(){
+        wrapper.getLocation().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(mContext, "" + post.getCoordinates(), Toast.LENGTH_LONG).show();
 
-                if(!post.getCoordinates().equals("")) {
+                if (!post.getCoordinates().equals("")) {
 
                     String gps = post.getCoordinates().replace("(", "");
                     gps = gps.replace(")", "");
@@ -151,8 +151,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
                 Date today = new Date();
 
                 if(today.after(deadlineDate)){
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_yellow), android.graphics.PorterDuff.Mode.MULTIPLY);
-
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_orange), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }else if(today.before(deadlineDate)) {
                     deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }else{
