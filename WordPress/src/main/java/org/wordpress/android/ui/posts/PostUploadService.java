@@ -316,14 +316,14 @@ public class PostUploadService extends Service {
             contentStruct.put((mPost.isPage()) ? "page_status" : "post_status", mPost.getPostStatus());
 
             // Geolocation
+            Map<Object, Object> hLatitude = new HashMap<Object, Object>();
+            Map<Object, Object> hLongitude = new HashMap<Object, Object>();
+            Map<Object, Object> hPublic = new HashMap<Object, Object>();
+
             if (mPost.supportsLocation()) {
                 JSONObject remoteGeoLatitude = mPost.getCustomField("geo_latitude");
                 JSONObject remoteGeoLongitude = mPost.getCustomField("geo_longitude");
                 JSONObject remoteGeoPublic = mPost.getCustomField("geo_public");
-
-                Map<Object, Object> hLatitude = new HashMap<Object, Object>();
-                Map<Object, Object> hLongitude = new HashMap<Object, Object>();
-                Map<Object, Object> hPublic = new HashMap<Object, Object>();
 
                 try {
                     if (remoteGeoLatitude != null) {
@@ -360,10 +360,22 @@ public class PostUploadService extends Service {
                     AppLog.e(T.EDITOR, e);
                 }
 
-                if (!hLatitude.isEmpty() && !hLongitude.isEmpty() && !hPublic.isEmpty()) {
-                    Object[] geo = {hLatitude, hLongitude, hPublic};
-                    contentStruct.put("custom_fields", geo);
-                }
+            }
+
+            //set assignment id
+
+            Map<Object, Object> assignmentidOb = new HashMap<Object, Object>();
+
+            assignmentidOb.put("key", "assignment_id");
+
+            assignmentidOb.put("value", mPost.getAssignment_id()+"");
+
+            if (!hLatitude.isEmpty() && !hLongitude.isEmpty() && !hPublic.isEmpty()) {
+                Object[] custom_fields = {hLatitude, hLongitude, hPublic, assignmentidOb};
+                contentStruct.put("custom_fields", custom_fields);
+            }else{
+                Object[] custom_fields = {assignmentidOb};
+                contentStruct.put("custom_fields", custom_fields);
             }
 
             // featured image
