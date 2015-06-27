@@ -150,10 +150,10 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
                 Date today = new Date();
 
-                if(deadlineDate.after(today)){
+                if(today.after(deadlineDate)){
                     deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_yellow), android.graphics.PorterDuff.Mode.MULTIPLY);
 
-                }else if(deadlineDate.before(today)) {
+                }else if(today.before(deadlineDate)) {
                     deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }else{
                         //deadline is today
