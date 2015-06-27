@@ -1094,7 +1094,7 @@ public class WordPressDB {
         List<AssignmentsListPost> posts = new ArrayList<AssignmentsListPost>();
         Cursor c;
         c = db.query(ASSIGNMENTS_TABLE,
-                new String[] { "id", "blogID", "title", "description", "location", "bounty", "deadline", "media_types", "coordinates", "author", "thumb", "avatar",
+                new String[] { "id", "blogID", "postid", "title", "description", "location", "bounty", "deadline", "media_types", "coordinates", "author", "thumb", "avatar",
                         "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
                 "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
                 new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
@@ -1112,11 +1112,13 @@ public class WordPressDB {
             String postDeadline = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("deadline")));
             String postBounty = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("bounty")));
             String postMediaTypes = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("media_types")));
+            String postID = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("postid")));
 
             // Create the PostsListPost and add it to the Array
             AssignmentsListPost post = new AssignmentsListPost(
                     c.getInt(c.getColumnIndex("id")),
                     c.getInt(c.getColumnIndex("blogID")),
+                    postID,
                     postTitle,
                     postExcerpt,
                     postLocation,
@@ -1440,6 +1442,7 @@ public class WordPressDB {
                 post.setLocalTableBlogId(Integer.valueOf(c.getString(c.getColumnIndex("blogID"))));
                 post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
                 post.setTitle(c.getString(c.getColumnIndex("title")));
+                post.setAssignment_id(Integer.valueOf(c.getString(c.getColumnIndex("assignment_id"))));
                 post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
                 post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
                 post.setCategories(c.getString(c.getColumnIndex("categories")));

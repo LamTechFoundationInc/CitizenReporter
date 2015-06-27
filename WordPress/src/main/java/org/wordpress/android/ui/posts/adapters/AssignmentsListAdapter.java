@@ -196,11 +196,12 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
 
         //respond listener
-        wrapper.getRespondButton().setOnClickListener(new View.OnClickListener(){
+
+        wrapper.getRespondButton().setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                ((RipotiMainActivity)mContext).newPost(post.getPostId());
+                ((RipotiMainActivity) mContext).newPost(Integer.parseInt(post.getAssignmentID()));
             }
         });
 

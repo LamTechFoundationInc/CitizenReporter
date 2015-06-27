@@ -56,8 +56,9 @@ public class AssignmentsListPost {
     private boolean isLocalDraft;
     private boolean hasLocalChanges;
     private boolean mIsUploading;
+    private String assignmentID;
 
-    public AssignmentsListPost(int postId, int blogId, String title, String excerpt,
+    public AssignmentsListPost(int postId, int blogId, String assignmentID, String title, String excerpt,
                                String location,
                                String coordinates, String postAuthor, String postThumb, String postAvatar,
                                String deadline,
@@ -65,6 +66,7 @@ public class AssignmentsListPost {
                                String media_types, long dateCreatedGmt, String status, boolean localDraft,
                                boolean localChanges, boolean uploading) {
         setPostId(postId);
+        setAssignmentID(assignmentID);
         setBlogId(blogId);
         setTitle(title);
         setExcerpt(excerpt);
@@ -197,5 +199,13 @@ public class AssignmentsListPost {
 
     public void setPostAvatar(String postAvatar) {
         this.postAvatar = postAvatar;
+    }
+
+    public String getAssignmentID() {
+        return assignmentID;
+    }
+
+    public void setAssignmentID(String assignmentID) {
+        this.assignmentID = assignmentID;
     }
 }

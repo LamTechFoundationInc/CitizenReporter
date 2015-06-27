@@ -133,6 +133,7 @@ public class RipotiMainActivity extends ActionBarActivity
     public boolean isDualPane() {
         return true;
     }
+
     public void newPost(int assignment_id) {
         if (WordPress.getCurrentBlog() == null) {
             if (!isFinishing())
@@ -142,6 +143,7 @@ public class RipotiMainActivity extends ActionBarActivity
         // Create a new post object
         Post newPost = new Post(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage);
         newPost.setAssignment_id(assignment_id);
+
         WordPress.wpDB.savePost(newPost);
         Intent i = new Intent(this, EditPostActivity.class);
         i.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
