@@ -259,7 +259,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
     private void newPost() {
         if (getActivity() instanceof RipotiMainActivity) {
-            ((RipotiMainActivity)getActivity()).newPost();
+            ((RipotiMainActivity)getActivity()).newPost(0);
         }
     }
 

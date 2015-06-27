@@ -55,6 +55,7 @@ public class Post implements Serializable {
     private boolean isLocalChange;
     private String mediaPaths;
     private String quickPostType;
+    private int assignment_id;
     private PostLocation mPostLocation;
 
     public Post() {
@@ -520,5 +521,13 @@ public class Post implements Serializable {
 
     public boolean isPublishable() {
         return !(getContent().isEmpty() && getPostExcerpt().isEmpty() && getTitle().isEmpty());
+    }
+
+    public int getAssignment_id() {
+        return assignment_id;
+    }
+
+    public void setAssignment_id(int assignment_id) {
+        this.assignment_id = assignment_id;
     }
 }

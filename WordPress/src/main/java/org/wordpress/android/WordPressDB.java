@@ -88,7 +88,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 31;
+    private static final int DATABASE_VERSION = 32;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -162,6 +162,9 @@ public class WordPressDB {
 
     // Add boolean to POSTS to track posts currently being uploaded
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
+
+    //Add integer to store assignment id
+    private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer default 0";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -318,6 +321,9 @@ public class WordPressDB {
                 currentVersion = 31;
             case 31:
                 db.execSQL(CREATE_TABLE_ASSIGNMENTS);
+                currentVersion++;
+            case 32:
+                db.execSQL(ADD_ASSIGNMENT_ID);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -977,6 +983,10 @@ public class WordPressDB {
                                 if (customField.get("key").equals("geo_latitude"))
                                     values.put("latitude", customField.get("value").toString());
 
+                                //assignment id
+                                if (customField.get("key").equals("assignment_id"))
+                                    values.put("assignment_id", customField.get("value").toString());
+
                                 //assignments custom fields
                                 if(isAssignment){
                                     if (customField.get("key").equals("assignment_address"))
@@ -1165,6 +1175,7 @@ public class WordPressDB {
             values.put("isPage", post.isPage());
             values.put("wp_post_format", post.getPostFormat());
             putPostLocation(post, values);
+            values.put("assignment_id", post.getAssignment_id());
             values.put("isLocalChange", post.isLocalChange());
             values.put("mt_excerpt", post.getPostExcerpt());
 

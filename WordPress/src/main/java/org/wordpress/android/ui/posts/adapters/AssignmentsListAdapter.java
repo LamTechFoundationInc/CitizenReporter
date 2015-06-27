@@ -200,7 +200,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View v) {
-                ((RipotiMainActivity)mContext).newPost();
+                ((RipotiMainActivity)mContext).newPost(post.getPostId());
             }
         });
 
