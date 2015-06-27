@@ -185,6 +185,17 @@ public class AssignmentsListAdapter extends BaseAdapter {
         }else{
             wrapper.getImage_featured().setImageUrl("http://s3.footagesearch.com/fsthumb/252180.jpg", WPNetworkImageView.ImageType.PHOTO);
         }
+
+        //set assignment poster thumbnail
+        String image_avatar = post.getPostAvatar();
+        if(!image_avatar.equals("")){
+            wrapper.getImage_Avatar().setImageUrl(image_avatar, WPNetworkImageView.ImageType.AVATAR);
+        }else{
+            //TODO: show default
+
+        }
+
+
         //respond listener
         wrapper.getRespondButton().setOnClickListener(new View.OnClickListener(){
 
@@ -231,6 +242,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         ImageView assignment_deadline_noticon = null;
         ImageView media_type_audio = null;
         WPNetworkImageView image_featured = null;
+        WPNetworkImageView image_avatar = null;
         TextView date = null;
         TextView status = null;
         TextView assignment_post_author = null;
@@ -252,7 +264,12 @@ public class AssignmentsListAdapter extends BaseAdapter {
             }
             return image_featured;
         }
-
+        WPNetworkImageView getImage_Avatar(){
+            if(image_avatar == null){
+                image_avatar = (WPNetworkImageView) base.findViewById(R.id.image_avatar);
+            }
+            return image_avatar;
+        }
         ImageView getMedia_type_photo(){
             if (media_type_photo == null) {
                 media_type_photo = (ImageView) base.findViewById(R.id.media_type_photo);

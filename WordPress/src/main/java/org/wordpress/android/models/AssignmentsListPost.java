@@ -50,6 +50,7 @@ public class AssignmentsListPost {
     private String coordinates;
     private String postAuthor;
     private String postThumb;
+    private String postAvatar;
     private long dateCreatedGmt;
     private String status;
     private boolean isLocalDraft;
@@ -58,7 +59,7 @@ public class AssignmentsListPost {
 
     public AssignmentsListPost(int postId, int blogId, String title, String excerpt,
                                String location,
-                               String coordinates, String postAuthor, String postThumb,
+                               String coordinates, String postAuthor, String postThumb, String postAvatar,
                                String deadline,
                                String bounty,
                                String media_types, long dateCreatedGmt, String status, boolean localDraft,
@@ -71,6 +72,7 @@ public class AssignmentsListPost {
         setCoordinates(coordinates);
         setPostAuthor(postAuthor);
         setPostThumb(postThumb);
+        setPostAvatar(postAvatar);
         setDeadline(deadline);
         setBounty(bounty);
         setMedia_types(media_types);
@@ -189,4 +191,11 @@ public class AssignmentsListPost {
         this.postThumb = postThumb;
     }
 
+    public String getPostAvatar() {
+        return postAvatar;
+    }
+
+    public void setPostAvatar(String postAvatar) {
+        this.postAvatar = postAvatar;
+    }
 }
