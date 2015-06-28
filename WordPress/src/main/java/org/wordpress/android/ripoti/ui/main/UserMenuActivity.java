@@ -162,6 +162,13 @@ public class UserMenuActivity extends ActionBarActivity{
             }
         });
 
+        findViewById(R.id.row_account).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+            }
+        });
+
         refreshBlogDetails();
     }
 
@@ -234,7 +241,7 @@ public class UserMenuActivity extends ActionBarActivity{
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.gravatarFromEmail(WP.g), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+        // mBlavatarImageView.setImageUrl(GravatarUtils.gravatarFromEmail(WordPress.get, mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
         String hostName = StringUtils.getHost(mBlog.getUrl());
@@ -256,5 +263,6 @@ public class UserMenuActivity extends ActionBarActivity{
         EventBus.getDefault().register(this);
     }
     public void onEventMainThread(CoreEvents.MainViewPagerScrolled event) {
+
     }
 }

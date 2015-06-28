@@ -197,7 +197,8 @@
             <!--Pages-->
             <RelativeLayout
                 android:id="@+id/row_pages"
-                style="@style/MySiteListRowLayout">
+                style="@style/MySiteListRowLayout"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/my_site_pages_icon"
@@ -235,7 +236,8 @@
             <!--Look & Feel-->
             <LinearLayout
                 android:id="@+id/my_site_look_and_feel_header"
-                style="@style/MySiteListHeaderLayout">
+                style="@style/MySiteListHeaderLayout"
+                android:visibility="gone">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/MySiteListHeaderTextView"
@@ -248,7 +250,8 @@
             <!--Themes-->
             <RelativeLayout
                 android:id="@+id/row_themes"
-                style="@style/MySiteListRowLayout">
+                style="@style/MySiteListRowLayout"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/my_site_themes_icon"
@@ -346,7 +349,9 @@
 
 
             <!--Account-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
+            <LinearLayout
+                android:visibility="gone"
+                style="@style/MySiteListHeaderLayout">
 
                 <View style="@style/MySiteListSectionDividerView" />
 
@@ -356,7 +361,8 @@
             <RelativeLayout
                 android:id="@+id/row_account"
                 style="@style/MySiteListRowLayout"
-                android:layout_marginBottom="@dimen/margin_extra_large">
+                android:layout_marginBottom="@dimen/margin_extra_large"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/account_icon"
