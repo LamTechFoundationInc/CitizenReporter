@@ -914,6 +914,6 @@
 
     <!--User Menu-->
     <string name="my_account">My Account</string>
-
+    <string name="my_stories">My Stories</string>
     <string name="logout">Logout</string>
 </resources>

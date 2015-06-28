@@ -171,7 +171,7 @@
                     android:id="@+id/my_site_blog_posts_text_view"
                     style="@style/MySiteListRowTextView"
                     android:layout_toRightOf="@id/my_site_blog_posts_icon"
-                    android:text="@string/my_site_btn_blog_posts" />
+                    android:text="@string/my_stories" />
 
             </RelativeLayout>
 
