@@ -805,7 +805,7 @@
     <string name="email_hint">Email address</string>
     <string name="agree_terms_of_service">By creating an account you agree to the fascinating %1$sTerms of Service%2$s</string>
     <string name="username_email">Username or email</string>
-    <string name="site_address">Your self-hosted address (URL)</string>
+    <string name="site_address">Your CitizenReporter Wordpress URL</string>
     <string name="connecting_wpcom">Connecting to WordPress.com</string>
     <string name="username_only_lowercase_letters_and_numbers">Username can only contain lowercase letters (a-z) and numbers</string>
     <string name="username_required">Enter a username</string>

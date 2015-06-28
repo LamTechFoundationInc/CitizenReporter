@@ -45,11 +45,8 @@
                     android:layout_marginBottom="16dp"
                     app:fixWidowWords="true"/>
 
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXTitle"
-                    android:text="@string/help"
-                    android:id="@+id/create_account_label"
-                    app:fontVariation="light"/>
+                <View style="@style/JustADividerView"
+                    android:layout_marginBottom="16dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
@@ -74,7 +71,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp"
+                    android:layout_height="60dp"
                     android:layout_margin="10dp"
                     android:id="@+id/imageView5"
                     android:layout_gravity="center_horizontal"

@@ -287,7 +287,14 @@
         <item name="android:background">@color/grey_lighten_20</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
     </style>
-
+    <style name="JustADividerView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginLeft">@dimen/margin_small</item>
+        <item name="android:background">@color/grey_lighten_20</item>
+        <item name="android:layout_marginRight">@dimen/margin_small</item>
+    </style>
     <style name="MeListRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/me_list_row_height</item>
