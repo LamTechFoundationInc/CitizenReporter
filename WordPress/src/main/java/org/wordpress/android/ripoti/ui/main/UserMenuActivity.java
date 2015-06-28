@@ -162,10 +162,16 @@ public class UserMenuActivity extends ActionBarActivity{
             }
         });
 
-        findViewById(R.id.row_account).setOnClickListener(new View.OnClickListener(){
+        findViewById(R.id.row_my_account).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-
+                ActivityLauncher.viewAccountSettings(UserMenuActivity.this);
+            }
+        });
+        findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                ActivityLauncher.showSignInForResult(UserMenuActivity.this);
             }
         });
 

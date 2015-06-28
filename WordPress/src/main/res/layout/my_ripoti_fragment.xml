@@ -349,9 +349,7 @@
 
 
             <!--Account-->
-            <LinearLayout
-                android:visibility="gone"
-                style="@style/MySiteListHeaderLayout">
+            <LinearLayout style="@style/MySiteListHeaderLayout">
 
                 <View style="@style/MySiteListSectionDividerView" />
 
@@ -359,10 +357,10 @@
 
             <!--View Admin-->
             <RelativeLayout
-                android:id="@+id/row_account"
+                android:id="@+id/row_logout"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginBottom="@dimen/margin_extra_large"
-                android:visibility="gone">
+                >
 
                 <ImageView
                     android:id="@+id/account_icon"
