@@ -24,6 +24,7 @@ import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -32,6 +33,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.GravatarUtils;
+import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
@@ -172,6 +174,14 @@ public class UserMenuActivity extends ActionBarActivity{
             @Override
             public void onClick(View v){
                 ActivityLauncher.showSignInForResult(UserMenuActivity.this);
+            }
+        });
+        findViewById(R.id.row_about_app).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(UserMenuActivity.this, HelpActivity.class);
+                intent.putExtra(HelpshiftHelper.ORIGIN_KEY, "UserMenu");
+                startActivity(intent);
             }
         });
 

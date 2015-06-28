@@ -26,23 +26,30 @@
                 android:layout_marginRight="16dp"
                 android:orientation="vertical"
                 android:gravity="center">
-
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
-                    android:text="@string/help"
-                    android:id="@+id/create_account_label"
-                    app:fontVariation="light"/>
+                    android:text="@string/app_name"
+                    android:id="@+id/nux_help_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXGreyButtonNoBg"
-                    android:text="@string/nux_help_description"
-                    android:id="@+id/nux_help_description"
+                    android:text="@string/about_desc"
+                    android:id="@+id/nu_help_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
                     app:fixWidowWords="true"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/WordPress.NUXTitle"
+                    android:text="@string/help"
+                    android:id="@+id/create_account_label"
+                    app:fontVariation="light"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
@@ -65,14 +72,16 @@
                     android:layout_width="match_parent"
                     android:gravity="center"/>
 
-                <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXGreyButtonNoBg"
-                    android:text="@string/app_name"
-                    android:id="@+id/nux_help_version"
+                <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_height="100dp"
+                    android:layout_margin="10dp"
+                    android:id="@+id/imageView5"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/c4a_white"/>
             </LinearLayout>
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
+
+
     </LinearLayout>
 </ScrollView>

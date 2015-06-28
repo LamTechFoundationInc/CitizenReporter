@@ -918,6 +918,6 @@
     <string name="logout">Logout</string>
     <string name="my_feedback">Feedback</string>
     <string name="lessons">Lessons</string>
-    <string name="about_title">About</string>
+    <string name="about_title">About &amp; Help</string>
     <string name="about_desc">Citizen Reporter is a CodeForAfrica project that provides a simple and easy-to-use experience for users, minimising barriers to securely submitting media rich stories to newsrooms.</string>
 </resources>

@@ -100,7 +100,7 @@
 
             <!--About-->
             <RelativeLayout
-                android:id="@+id/about_app"
+                android:id="@+id/row_about_app"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginTop="@dimen/my_site_margin_general">
 
