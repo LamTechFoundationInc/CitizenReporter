@@ -234,7 +234,7 @@ public class UserMenuActivity extends ActionBarActivity{
         mLookAndFeelHeader.setVisibility(themesVisibility);
         mThemesContainer.setVisibility(themesVisibility);
 
-        mBlavatarImageView.setImageUrl(GravatarUtils.blavatarFromUrl(mBlog.getUrl(), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
+        mBlavatarImageView.setImageUrl(GravatarUtils.gravatarFromEmail(WP.g), mBlavatarSz), WPNetworkImageView.ImageType.BLAVATAR);
 
         String blogName = StringUtils.unescapeHTML(mBlog.getBlogName());
         String hostName = StringUtils.getHost(mBlog.getUrl());

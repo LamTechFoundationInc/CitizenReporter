@@ -1,8 +1,13 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
+
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
         android:id="@+id/posts"
         android:orientation="vertical">
     <include
@@ -289,6 +294,25 @@
 
             </RelativeLayout>
 
+            <!--Account-->
+            <RelativeLayout
+                android:id="@+id/row_my_account"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_account_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/my_site_btn_site_settings"
+                    android:src="@drawable/me_icon_settings"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_account_text"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_account_icon"
+                    android:text="@string/my_account" />
+
+            </RelativeLayout>
+
             <!--Admin-->
             <LinearLayout style="@style/MySiteListHeaderLayout">
 
@@ -320,7 +344,36 @@
 
             </RelativeLayout>
 
+
+            <!--Account-->
+            <LinearLayout style="@style/MySiteListHeaderLayout">
+
+                <View style="@style/MySiteListSectionDividerView" />
+
+            </LinearLayout>
+
+            <!--View Admin-->
+            <RelativeLayout
+                android:id="@+id/row_account"
+                style="@style/MySiteListRowLayout"
+                android:layout_marginBottom="@dimen/margin_extra_large">
+
+                <ImageView
+                    android:id="@+id/account_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/my_site_btn_view_admin"
+                    android:src="@drawable/me_icon_login_logout" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/account_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/account_icon"
+                    android:text="@string/logout" />
+
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
+</ScrollView>
