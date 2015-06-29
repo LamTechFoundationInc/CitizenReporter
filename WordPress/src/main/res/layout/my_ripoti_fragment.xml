@@ -121,7 +121,7 @@
 
             <!--Lessons-->
             <RelativeLayout
-                android:id="@+id/lessons"
+                android:id="@+id/row_lessons"
                 style="@style/MySiteListRowLayout"
                 android:layout_marginTop="@dimen/my_site_margin_general">
 

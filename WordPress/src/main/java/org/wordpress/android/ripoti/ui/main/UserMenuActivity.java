@@ -29,6 +29,7 @@ import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.LessonsActivity;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AniUtils;
@@ -184,6 +185,14 @@ public class UserMenuActivity extends ActionBarActivity{
             public void onClick(View v){
                 Intent intent = new Intent(UserMenuActivity.this, HelpActivity.class);
                 intent.putExtra(HelpshiftHelper.ORIGIN_KEY, "UserMenu");
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.row_lessons).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(UserMenuActivity.this, LessonsActivity.class);
                 startActivity(intent);
             }
         });

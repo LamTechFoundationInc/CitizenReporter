@@ -15,6 +15,7 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FeatureSet;
 import org.wordpress.android.ui.main.AssignmentsListFragment;
 import org.wordpress.android.ui.media.MediaGridFragment.Filter;
+import org.wordpress.android.ui.posts.LessonsListFragment;
 import org.wordpress.android.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -455,7 +456,7 @@ public class ApiHelper {
                         postsList.add(postMap);
                     }
 
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true, !loadMore);
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true, !loadMore, false);
                 }
                 return true;
             } catch (XMLRPCFault e) {
@@ -551,7 +552,7 @@ public class ApiHelper {
                         postsList.add(postMap);
                     }
 
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, false, !loadMore);
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, false, !loadMore, false);
                 }
                 return true;
             } catch (XMLRPCFault e) {
@@ -591,7 +592,182 @@ public class ApiHelper {
             }
         }
     }
+    /*
+        Fetch assignments
+         */
+    public static class FetchLessonsTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess(int postCount);
+        }
 
+        private Callback mCallback;
+        private String mErrorMessage;
+        private int mLessonsCount;
+
+        public FetchLessonsTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            boolean isPage = (Boolean) arguments.get(1);
+            int recordCount = (Integer) arguments.get(2);
+            boolean loadMore = (Boolean) arguments.get(3);
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] result;
+            Object[] xmlrpcParams = { blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), recordCount };
+            try {
+                result = (Object[]) client.call((isPage) ? "wp.getPages"
+                        : "metaWeblog.getLessons", xmlrpcParams);
+                if (result != null && result.length > 0) {
+                    mLessonsCount = result.length;
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+
+                    if (!loadMore) {
+                        WordPress.wpDB.deleteUploadedLessons(
+                                blog.getLocalTableBlogId());
+                    }
+
+                    // If we're loading more posts, only save the posts at the end of the array.
+                    // NOTE: Switching to wp.getPosts wouldn't require janky solutions like this
+                    // since it allows for an offset parameter.
+                    int startPosition = 0;
+                    if (loadMore && result.length > LessonsListFragment.POSTS_REQUEST_COUNT) {
+                        startPosition = result.length - LessonsListFragment.POSTS_REQUEST_COUNT;
+                    }
+
+                    for (int ctr = startPosition; ctr < result.length; ctr++) {
+                        Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+                        postsList.add(postMap);
+                    }
+                    boolean isLessons = true;
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true, !loadMore, isLessons);
+                }
+                return true;
+            } catch (XMLRPCFault e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                if (e.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
+                mErrorMessage = e.getMessage();
+            } catch (XMLRPCException e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                mErrorMessage = e.getMessage();
+            } catch (IOException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
+                mErrorMessage = e.getMessage();
+            } catch (XmlPullParserException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mCallback.onFailure(ErrorType.TASK_CANCELLED, mErrorMessage, mThrowable);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess(mLessonsCount);
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
+    /**
+     * Fetch a single lessong or page from the XML-RPC API and save/update it in the DB
+     */
+    public static class FetchSingleLessonTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess();
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+
+        public FetchSingleLessonTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            String postId = (String) arguments.get(1);
+            boolean isPage = (Boolean) arguments.get(2);
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] apiParams;
+            if (isPage) {
+                apiParams = new Object[]{
+                        blog.getRemoteBlogId(),
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            } else {
+                apiParams = new Object[]{
+                        postId,
+                        blog.getUsername(),
+                        blog.getPassword()
+                };
+            }
+
+            try {
+                Object result = client.call((isPage) ? "wp.getPage" : "metaWeblog.getPost", apiParams);
+                if (result != null && result instanceof Map) {
+                    Map postMap = (HashMap) result;
+                    List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
+                    postsList.add(postMap);
+
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, false, true, false);
+                }
+
+                return true;
+            } catch (XMLRPCException e) {
+                mErrorMessage = e.getMessage();
+            } catch (IOException e) {
+                mErrorMessage = e.getMessage();
+            } catch (XmlPullParserException e) {
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess();
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
     /**
      * Fetch a single post or page from the XML-RPC API and save/update it in the DB
      */
@@ -643,7 +819,7 @@ public class ApiHelper {
                     List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
                     postsList.add(postMap);
 
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, false, true);
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, false, true, false);
                 }
 
                 return true;
@@ -718,7 +894,7 @@ public class ApiHelper {
                     List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
                     postsList.add(postMap);
 
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true, true);
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true, true, false);
                 }
 
                 return true;

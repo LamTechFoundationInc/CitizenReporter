@@ -88,7 +88,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 32;
+    private static final int DATABASE_VERSION = 33;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -104,6 +104,16 @@ public class WordPressDB {
             + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
             + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
+
+    private static final String CREATE_TABLE_LESSONS = "create table if not exists lessons (id integer primary key autoincrement, blogID text, "
+            + "postid text, title text default '', dateCreated date, date_created_gmt date, categories text default '', custom_fields text default '', "
+            + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
+            + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
+            + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
+
+
+    private static final String LESSONS_TABLE = "lessons";
 
     private static final String POSTS_TABLE = "posts";
 
@@ -325,6 +335,9 @@ public class WordPressDB {
             case 32:
                 db.execSQL(ADD_ASSIGNMENT_ID);
                 currentVersion++;
+            case 33:
+                db.execSQL(CREATE_TABLE_LESSONS);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -356,7 +369,7 @@ public class WordPressDB {
     }
 
     private void migrateWPComAccount() {
-        Cursor c = db.query(BLOGS_TABLE, new String[] { "username" }, "dotcomFlag=1", null, null,
+        Cursor c = db.query(BLOGS_TABLE, new String[]{"username"}, "dotcomFlag=1", null, null,
                 null, null);
 
         if (c.getCount() > 0) {
@@ -912,7 +925,7 @@ public class WordPressDB {
      * @param localBlogId: the posts table blog id
      * @param isPage: boolean to save as pages
      */
-    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean isAssignment, boolean shouldOverwrite) {
+    public void savePosts(List<?> postsList, int localBlogId, boolean isPage, boolean isAssignment, boolean shouldOverwrite, boolean isLesson) {
         if (postsList != null && postsList.size() != 0) {
             db.beginTransaction();
             try {
@@ -1042,6 +1055,11 @@ public class WordPressDB {
                                 new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
                         if (result == 0)
                             db.insert(ASSIGNMENTS_TABLE, null, values);
+                    }else if(isLesson){
+                        result = db.update(LESSONS_TABLE, values, whereClause,
+                                new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
+                        if (result == 0)
+                            db.insert(LESSONS_TABLE, null, values);
                     }else{
                         result = db.update(POSTS_TABLE, values, whereClause,
                                 new String[]{String.valueOf(localBlogId), postID, String.valueOf(SqlUtils.boolToSql(isPage))});
@@ -1089,6 +1107,40 @@ public class WordPressDB {
 
         return posts;
     }
+
+    public List<PostsListPost> getLessons(int blogId, boolean loadPages) {
+        List<PostsListPost> posts = new ArrayList<PostsListPost>();
+        Cursor c;
+        c = db.query(LESSONS_TABLE,
+                new String[] { "id", "blogID", "title",
+                        "date_created_gmt", "post_status", "isUploading", "localDraft", "isLocalChange" },
+                "blogID=? AND isPage=? AND NOT (localDraft=1 AND uploaded=1)",
+                new String[] {String.valueOf(blogId), (loadPages) ? "1" : "0"}, null, null, "localDraft DESC, date_created_gmt DESC");
+        int numRows = c.getCount();
+        c.moveToFirst();
+
+        for (int i = 0; i < numRows; ++i) {
+            String postTitle = StringUtils.unescapeHTML(c.getString(c.getColumnIndex("title")));
+
+            // Create the PostsListPost and add it to the Array
+            PostsListPost post = new PostsListPost(
+                    c.getInt(c.getColumnIndex("id")),
+                    c.getInt(c.getColumnIndex("blogID")),
+                    postTitle,
+                    c.getLong(c.getColumnIndex("date_created_gmt")),
+                    c.getString(c.getColumnIndex("post_status")),
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))),
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))),
+                    SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading")))
+            );
+            posts.add(i, post);
+            c.moveToNext();
+        }
+        c.close();
+
+        return posts;
+    }
+
 
     public List<AssignmentsListPost> getAssignmentsListPosts(int blogId, boolean loadPages) {
         List<AssignmentsListPost> posts = new ArrayList<AssignmentsListPost>();
@@ -1182,6 +1234,43 @@ public class WordPressDB {
             values.put("mt_excerpt", post.getPostExcerpt());
 
             result = db.insert(POSTS_TABLE, null, values);
+
+            if (result >= 0 && post.isLocalDraft() && !post.isUploaded()) {
+                post.setLocalTablePostId(result);
+            }
+        }
+
+        return (result);
+    }
+    public long saveLesson(Post post) {
+        long result = -1;
+        if (post != null) {
+            ContentValues values = new ContentValues();
+            values.put("blogID", post.getLocalTableBlogId());
+            values.put("title", post.getTitle());
+            values.put("date_created_gmt", post.getDate_created_gmt());
+            values.put("description", post.getDescription());
+            values.put("mt_text_more", post.getMoreText());
+
+            JSONArray categoriesJsonArray = post.getJSONCategories();
+            if (categoriesJsonArray != null) {
+                values.put("categories", categoriesJsonArray.toString());
+            }
+
+            values.put("localDraft", post.isLocalDraft());
+            values.put("mt_keywords", post.getKeywords());
+            values.put("wp_password", post.getPassword());
+            values.put("post_status", post.getPostStatus());
+            values.put("isUploading", post.isUploading());
+            values.put("uploaded", post.isUploaded());
+            values.put("isPage", post.isPage());
+            values.put("wp_post_format", post.getPostFormat());
+            putPostLocation(post, values);
+            values.put("assignment_id", post.getAssignment_id());
+            values.put("isLocalChange", post.isLocalChange());
+            values.put("mt_excerpt", post.getPostExcerpt());
+
+            result = db.insert(LESSONS_TABLE, null, values);
 
             if (result >= 0 && post.isLocalDraft() && !post.isUploaded()) {
                 post.setLocalTablePostId(result);
@@ -1375,6 +1464,12 @@ public class WordPressDB {
     public void deleteUploadedAssignments(int blogID) {
             db.delete(ASSIGNMENTS_TABLE, "blogID=" + blogID
                     + " AND localDraft != 1 AND isPage=0", null);
+
+    }
+
+    public void deleteUploadedLessons(int blogID) {
+        db.delete(LESSONS_TABLE, "blogID=" + blogID
+                + " AND localDraft != 1 AND isPage=0", null);
 
     }
 
