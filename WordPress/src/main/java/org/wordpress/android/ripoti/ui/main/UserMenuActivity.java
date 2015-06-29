@@ -25,6 +25,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity;
+import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -173,7 +174,9 @@ public class UserMenuActivity extends ActionBarActivity{
         findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ActivityLauncher.showSignInForResult(UserMenuActivity.this);
+                Intent intent = new Intent(UserMenuActivity.this, SignInActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
         findViewById(R.id.row_about_app).setOnClickListener(new View.OnClickListener(){
