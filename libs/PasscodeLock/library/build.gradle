@@ -16,6 +16,10 @@ repositories {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
+
+    compile ('com.getbase:floatingactionbutton:1.9.0') {
+        exclude module: 'support-annotations'
+    }
 }
 
 version '0.0.6'
