@@ -105,12 +105,12 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
                             return;
                         }
                         mSwipedToRefresh = true;
-                        refreshPosts((PostsActivity) getActivity());
+                        refreshPosts((LessonsActivity) getActivity());
                     }
                 });
     }
 
-    private void refreshPosts(PostsActivity postsActivity) {
+    private void refreshPosts(LessonsActivity LessonsActivity) {
         Blog currentBlog = WordPress.getCurrentBlog();
         if (currentBlog == null) {
             ToastUtils.showToast(getActivity(), mIsPage ? R.string.error_refresh_pages : R.string.error_refresh_posts,
@@ -119,7 +119,7 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
         }
         boolean hasLocalChanges = WordPress.wpDB.findLocalChanges(currentBlog.getLocalTableBlogId(), mIsPage);
         if (hasLocalChanges) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(postsActivity);
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LessonsActivity);
             dialogBuilder.setTitle(getResources().getText(R.string.local_changes));
             dialogBuilder.setMessage(getResources().getText(R.string.overwrite_local_changes));
             dialogBuilder.setPositiveButton(getResources().getText(R.string.yes),
@@ -191,7 +191,7 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
                                 getListView().setItemChecked(0, true);
                             }
                         }
-                    } else if (isAdded() && ((PostsActivity) getActivity()).isDualPane()) {
+                    } else if (isAdded() && ((LessonsActivity) getActivity()).isDualPane()) {
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
@@ -251,15 +251,15 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             // If we remove or throttle the following call, we should make PostUpload events sticky
-            ((PostsActivity) getActivity()).requestPosts();
+            ((LessonsActivity) getActivity()).requestPosts();
         } else {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
         }
     }
 
     private void newPost() {
-        if (getActivity() instanceof PostsActivity) {
-            ((PostsActivity)getActivity()).newPost();
+        if (getActivity() instanceof LessonsActivity) {
+            ((LessonsActivity)getActivity()).newPost();
         }
     }
 

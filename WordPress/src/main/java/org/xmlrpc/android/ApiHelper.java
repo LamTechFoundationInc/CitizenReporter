@@ -651,7 +651,7 @@ public class ApiHelper {
                         postsList.add(postMap);
                     }
                     boolean isLessons = true;
-                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, true, !loadMore, isLessons);
+                    WordPress.wpDB.savePosts(postsList, blog.getLocalTableBlogId(), isPage, false, !loadMore, isLessons);
                 }
                 return true;
             } catch (XMLRPCFault e) {
