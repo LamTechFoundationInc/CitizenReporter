@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -203,6 +205,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         initPasswordVisibilityButton(rootView, mPasswordEditText);
         initInfoButtons(rootView);
         moveBottomButtons();
+
+        //autofill sign in details if app is in debug mode
+        Log.d("builddebug", "1");
+        if (BuildConfig.DEBUG) {
+            mUrlEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_URL);
+            mUsernameEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_USERNAME);
+            mPasswordEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_PASSWORD);
+            Log.d("builddebug", "2");
+        }
 
         return rootView;
     }
