@@ -20,7 +20,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostsListPost;
+import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.ui.EmptyViewAnimationHandler;
 import org.wordpress.android.ui.EmptyViewMessageType;
 import org.wordpress.android.ui.posts.PostUploadEvents.PostUploadFailed;
@@ -191,7 +191,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                         // Select the first row on a tablet, if requested
                         mShouldSelectFirstPost = false;
                         if (mAssignmentsListAdapter.getCount() > 0) {
-                            PostsListPost postsListPost = (PostsListPost) mAssignmentsListAdapter.getItem(0);
+                            AssignmentsListPost postsListPost = (AssignmentsListPost) mAssignmentsListAdapter.getItem(0);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                                 getListView().setItemChecked(0, true);
@@ -201,7 +201,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                         // Reload the last selected position, if available
                         int selectedPosition = getListView().getCheckedItemPosition();
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mAssignmentsListAdapter.getCount()) {
-                            PostsListPost postsListPost = (PostsListPost) mAssignmentsListAdapter.getItem(selectedPosition);
+                            AssignmentsListPost postsListPost = (AssignmentsListPost) mAssignmentsListAdapter.getItem(selectedPosition);
                             if (postsListPost != null) {
                                 showPost(postsListPost.getPostId());
                             }
@@ -231,7 +231,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
                     return;
                 if (v == null) //view is gone
                     return;
-                PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(position);
+                AssignmentsListPost postsListPost = (AssignmentsListPost) getPostListAdapter().getItem(position);
                 if (postsListPost == null)
                     return;
                 if (!mIsFetchingPosts || isLoadingMorePosts()) {

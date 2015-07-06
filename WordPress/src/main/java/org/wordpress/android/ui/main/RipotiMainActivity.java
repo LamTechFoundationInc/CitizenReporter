@@ -3,6 +3,7 @@ package org.wordpress.android.ui.main;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -37,6 +38,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.ViewAssignmentFragment;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
@@ -121,7 +123,32 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onAssignmentSelected(Post post) {
+        if (isFinishing()) {
+            return;
+        }
+        FragmentManager fm = getFragmentManager();
+        ViewAssignmentFragment viewAssignmentFragment = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
 
+        if (post != null) {
+            /*
+            TODO: Editable assignments by admin?
+            if (post.isUploading()){
+                ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
+                return;
+            }*/
+            WordPress.currentPost = post;
+            if (viewAssignmentFragment == null || !viewAssignmentFragment.isInLayout()) {
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.hide(mPostList);
+                viewAssignmentFragment = new ViewAssignmentFragment();
+                ft.add(R.id.postDetailFragmentContainer, viewAssignmentFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+            } else {
+                viewAssignmentFragment.loadPost(post);
+            }
+        }
     }
 
     @Override
@@ -264,6 +291,16 @@ public class RipotiMainActivity extends ActionBarActivity
         getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
     }
+    public boolean isRefreshingAssignments() {
+        return mAssignmentsList.isRefreshing();
+    }
+    public void attemptToSelectAssignment() {
+        FragmentManager fm = getFragmentManager();
+        ViewAssignmentFragment f = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
+        if (f != null && f.isInLayout()) {
+            mPostList.setShouldSelectFirstPost(true);
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
@@ -295,7 +332,9 @@ public class RipotiMainActivity extends ActionBarActivity
             launchWithNoteId();
         }
     }
+    public void refreshAssignmentResponses() {
 
+    }
     /*
      * called when app is launched from a push notification, switches to the notification tab
      * and opens the desired note detail
