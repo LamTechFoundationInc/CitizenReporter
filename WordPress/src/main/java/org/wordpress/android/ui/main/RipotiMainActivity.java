@@ -108,7 +108,7 @@ public class RipotiMainActivity extends ActionBarActivity
     public RipotiPostsListFragment mPostList;
 
     public AssignmentsListFragment mAssignmentsList;
-
+    private ViewAssignmentFragment viewAssignmentFragment;
     @Override
     public void onDetailAssignmentAction(int action, Post post) {
         onAssignmentAction(action, post);
@@ -133,14 +133,19 @@ public class RipotiMainActivity extends ActionBarActivity
 
     }
 
+    public void closeAssignment(){
+        if(viewAssignmentFragment != null)
+            getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
+        mTabs.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onAssignmentSelected(Post post) {
-        Log.d("debug1", "are we here?");
         if (isFinishing()) {
             return;
         }
         FragmentManager fm = getFragmentManager();
-        ViewAssignmentFragment viewAssignmentFragment = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
+        viewAssignmentFragment = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
 
         if (post != null) {
             /*
@@ -158,9 +163,12 @@ public class RipotiMainActivity extends ActionBarActivity
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.addToBackStack(null);
                 ft.commitAllowingStateLoss();
+
             } else {
                 viewAssignmentFragment.loadPost(post);
             }
+            
+            mTabs.setVisibility(View.GONE);
         }
     }
 
