@@ -9,3 +9,6 @@ wp.simperium.app_name = wordpress
 wp.helpshift.api.key = wordpress
 wp.helpshift.api.domain = wordpress.org
 wp.helpshift.api.id = wordpress
+wp.default.url = wordpress
+wp.default.username = wordpress
+wp.default.password = wordpress

@@ -71,7 +71,7 @@ public class RipotiMainActivity extends ActionBarActivity
         RipotiPostsListFragment.OnPostSelectedListener,
         RipotiPostsListFragment.OnSinglePostLoadedListener,
         RipotiPostsListFragment.OnPostActionListener,
-        AssignmentsListFragment.OnPostSelectedListener,
+        AssignmentsListFragment.OnAssignmentSelectedListener,
         AssignmentsListFragment.OnSinglePostLoadedListener,
         AssignmentsListFragment.OnPostActionListener,
         OnDetailPostActionListener,
@@ -83,8 +83,9 @@ public class RipotiMainActivity extends ActionBarActivity
     public static final String ARG_OPENED_FROM_PUSH = "opened_from_push";
 
     /*
-    posts list variables
+    Assignments list variables
      */
+
     public static final String EXTRA_VIEW_PAGES = "viewPages";
     public static final String EXTRA_ERROR_MSG = "errorMessage";
     public static final String EXTRA_ERROR_INFO_TITLE = "errorInfoTitle";
@@ -115,6 +116,11 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onPostAction(int action, Post post) {
+
+    }
+
+    @Override
+    public void onAssignmentSelected(Post post) {
 
     }
 

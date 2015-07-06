@@ -47,7 +47,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
     public static final int POSTS_REQUEST_COUNT = 20;
 
     private SwipeToRefreshHelper mSwipeToRefreshHelper;
-    private OnPostSelectedListener mOnPostSelectedListener;
+    private OnAssignmentSelectedListener mOnAssignmentSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private AssignmentsListAdapter mAssignmentsListAdapter;
     private ApiHelper.FetchAssignmentsTask mCurrentFetchAssignmentsTask;
@@ -265,7 +265,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
         super.onAttach(activity);
         try {
             // check that the containing activity implements our callback
-            mOnPostSelectedListener = (OnPostSelectedListener) activity;
+            mOnAssignmentSelectedListener = (OnAssignmentSelectedListener) activity;
             mOnSinglePostLoadedListener = (OnSinglePostLoadedListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
@@ -306,7 +306,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId);
         if (post != null) {
             WordPress.currentPost = post;
-            mOnPostSelectedListener.onPostSelected(post);
+            mOnAssignmentSelectedListener.onAssignmentSelected(post);
         } else {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -583,8 +583,8 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
         }
     }
 
-    public interface OnPostSelectedListener {
-        public void onPostSelected(Post post);
+    public interface OnAssignmentSelectedListener {
+        public void onAssignmentSelected(Post post);
     }
 
     public interface OnPostActionListener {
