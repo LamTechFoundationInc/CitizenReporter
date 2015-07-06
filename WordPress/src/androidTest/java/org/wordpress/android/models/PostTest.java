@@ -24,7 +24,7 @@ public class PostTest extends InstrumentationTestCase {
 
     public void testInvalidPostIdLoad() {
         SQLiteDatabase db = TestUtils.loadDBFromDump(mTargetContext, mTestContext, "taliwutt-blogs-sample.sql");
-        Post post = WordPress.wpDB.getPostForLocalTablePostId(-1);
+        Post post = WordPress.wpDB.getPostForLocalTablePostId(-1, false);
 
         assertNull(post);
     }
@@ -35,7 +35,7 @@ public class PostTest extends InstrumentationTestCase {
         post.setTitle("test-post");
         WordPress.wpDB.savePost(post);
 
-        Post loadedPost = WordPress.wpDB.getPostForLocalTablePostId(post.getLocalTablePostId());
+        Post loadedPost = WordPress.wpDB.getPostForLocalTablePostId(post.getLocalTablePostId(), false);
 
         assertNotNull(loadedPost);
         assertEquals(loadedPost.getTitle(), post.getTitle());

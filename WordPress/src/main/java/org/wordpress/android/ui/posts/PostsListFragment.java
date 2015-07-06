@@ -311,7 +311,7 @@ public class PostsListFragment extends ListFragment implements EmptyViewAnimatio
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId);
+        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
         if (post != null) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);

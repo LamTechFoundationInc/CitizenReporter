@@ -249,7 +249,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
             // If we remove or throttle the following call, we should make PostUpload events sticky
-            ((RipotiMainActivity) getActivity()).requestPosts();
+            ((RipotiMainActivity) getActivity()).requestAssignments();
         } else {
             updateEmptyView(EmptyViewMessageType.NETWORK_ERROR);
         }
@@ -303,7 +303,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId);
+        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, true);
         if (post != null) {
             WordPress.currentPost = post;
             mOnAssignmentSelectedListener.onAssignmentSelected(post);
@@ -587,8 +587,8 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
         public void onAssignmentSelected(Post post);
     }
 
-    public interface OnPostActionListener {
-        public void onPostAction(int action, Post post);
+    public interface OnAssignmentActionListener {
+        public void onAssignmentAction(int action, Post post);
     }
 
     public interface OnSinglePostLoadedListener {

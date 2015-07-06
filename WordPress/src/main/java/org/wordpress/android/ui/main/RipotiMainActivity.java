@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -75,8 +76,9 @@ public class RipotiMainActivity extends ActionBarActivity
         RipotiPostsListFragment.OnPostActionListener,
         AssignmentsListFragment.OnAssignmentSelectedListener,
         AssignmentsListFragment.OnSinglePostLoadedListener,
-        AssignmentsListFragment.OnPostActionListener,
+        AssignmentsListFragment.OnAssignmentActionListener,
         OnDetailPostActionListener,
+        ViewAssignmentFragment.OnDetailAssignmentActionListener,
         WPAlertDialogFragment.OnDialogConfirmListener {
     private WPMainViewPager mViewPager;
     private SlidingTabLayout mTabs;
@@ -106,8 +108,18 @@ public class RipotiMainActivity extends ActionBarActivity
     public RipotiPostsListFragment mPostList;
 
     public AssignmentsListFragment mAssignmentsList;
+
+    @Override
+    public void onDetailAssignmentAction(int action, Post post) {
+        onAssignmentAction(action, post);
+    }
     @Override
     public void onDetailPostAction(int action, Post post) {
+        onPostAction(action, post);
+    }
+
+    @Override
+    public void onPostAction(int action, final Post post) {
 
     }
 
@@ -117,12 +129,13 @@ public class RipotiMainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onPostAction(int action, Post post) {
+    public void onAssignmentAction(int action, final Post post) {
 
     }
 
     @Override
     public void onAssignmentSelected(Post post) {
+        Log.d("debug1", "are we here?");
         if (isFinishing()) {
             return;
         }
@@ -163,6 +176,22 @@ public class RipotiMainActivity extends ActionBarActivity
     private void popPostDetail() {
 
     }
+
+    private void popAssignmentDetail(){
+        if (isFinishing()) {
+            return;
+        }
+
+        FragmentManager fm = getFragmentManager();
+        ViewAssignmentFragment f = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
+        if (f == null) {
+            try {
+                fm.popBackStack();
+            } catch (RuntimeException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+    }
     public boolean isDualPane() {
         return true;
     }
@@ -195,7 +224,17 @@ public class RipotiMainActivity extends ActionBarActivity
             mPostList.setRefreshing(true);
         }
     }
-
+    public void requestAssignments() {
+        if (WordPress.getCurrentBlog() == null) {
+            return;
+        }
+        // If user has local changes, don't refresh
+        //if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
+            popAssignmentDetail();
+            mAssignmentsList.requestPosts(false);
+            mAssignmentsList.setRefreshing(true);
+        //}
+    }
 
     /*
      * tab fragments implement this if their contents can be scrolled, called when user

@@ -1528,8 +1528,16 @@ public class WordPressDB {
         c.close();
         return post;
     }
-    public Post getPostForLocalTablePostId(long localTablePostId) {
-        Cursor c = db.query(POSTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
+    public Post getPostForLocalTablePostId(long localTablePostId, boolean isAssignment) {
+
+        Cursor c;
+        if(isAssignment){
+            c = db.query(ASSIGNMENTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
+
+        }else{
+            c = db.query(POSTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
+
+        }
 
         Post post = new Post();
         if (c.moveToFirst()) {
@@ -1537,7 +1545,8 @@ public class WordPressDB {
                 post.setLocalTableBlogId(Integer.valueOf(c.getString(c.getColumnIndex("blogID"))));
                 post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
                 post.setTitle(c.getString(c.getColumnIndex("title")));
-                post.setAssignment_id(Integer.valueOf(c.getString(c.getColumnIndex("assignment_id"))));
+                if(!isAssignment)
+                    post.setAssignment_id(Integer.valueOf(c.getString(c.getColumnIndex("assignment_id"))));
                 post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
                 post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
                 post.setCategories(c.getString(c.getColumnIndex("categories")));

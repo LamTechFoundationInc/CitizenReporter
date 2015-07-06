@@ -47,7 +47,7 @@ import de.greenrobot.event.EventBus;
 public class ViewAssignmentFragment extends Fragment {
     /** Called when the activity is first created. */
 
-    private OnDetailPostActionListener mOnDetailPostActionListener;
+    private OnDetailAssignmentActionListener mOnDetailPostActionListener;
     RipotiMainActivity mParentActivity;
 
     private ViewGroup mLayoutCommentBox;
@@ -136,7 +136,7 @@ public class ViewAssignmentFragment extends Fragment {
         editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (WordPress.currentPost != null && !mParentActivity.isRefreshingAssignments()) {
-                    mOnDetailPostActionListener.onDetailPostAction(RipotiMainActivity.POST_EDIT, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_EDIT, WordPress.currentPost);
                     long postId = WordPress.currentPost.getLocalTablePostId();
                     boolean isPage = WordPress.currentPost.isPage();
                     ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
@@ -148,7 +148,7 @@ public class ViewAssignmentFragment extends Fragment {
         mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!mParentActivity.isRefreshingAssignments()) {
-                    mOnDetailPostActionListener.onDetailPostAction(RipotiMainActivity.POST_SHARE, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_SHARE, WordPress.currentPost);
                 }
             }
         });
@@ -157,14 +157,14 @@ public class ViewAssignmentFragment extends Fragment {
         deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
                 if (!mParentActivity.isRefreshingAssignments()) {
-                    mOnDetailPostActionListener.onDetailPostAction(RipotiMainActivity.POST_DELETE, WordPress.currentPost);
+                    mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_DELETE, WordPress.currentPost);
                 }
             }
         });
 
         mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
-                mOnDetailPostActionListener.onDetailPostAction(RipotiMainActivity.POST_VIEW, WordPress.currentPost);
+                mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_VIEW, WordPress.currentPost);
                 if (!mParentActivity.isRefreshingAssignments()) {
                     loadPostPreview();
                 }
@@ -216,7 +216,7 @@ public class ViewAssignmentFragment extends Fragment {
         super.onAttach(activity);
         try {
             // check that the containing activity implements our callback
-            mOnDetailPostActionListener = (OnDetailPostActionListener) activity;
+            mOnDetailPostActionListener = (OnDetailAssignmentActionListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
             throw new ClassCastException(activity.toString()
@@ -299,8 +299,8 @@ public class ViewAssignmentFragment extends Fragment {
         }.start();
     }
 
-    public interface OnDetailPostActionListener {
-        public void onDetailPostAction(int action, Post post);
+    public interface OnDetailAssignmentActionListener {
+        public void onDetailAssignmentAction(int action, Post post);
     }
 
     public void clearContent() {

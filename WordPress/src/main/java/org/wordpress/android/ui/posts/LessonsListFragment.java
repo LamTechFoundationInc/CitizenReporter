@@ -307,7 +307,7 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
         if (WordPress.getCurrentBlog() == null)
             return;
 
-        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId);
+        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
         if (post != null) {
             WordPress.currentPost = post;
             mOnPostSelectedListener.onPostSelected(post);
