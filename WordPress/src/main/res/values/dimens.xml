@@ -73,6 +73,8 @@
 
     <!-- padding inside the card (space between card border and card content) -->
     <dimen name="reader_card_content_padding">16dp</dimen>
+    <dimen name="assignment_card_content_padding">10dp</dimen>
+    <dimen name="assignment_card_content_padding_big">16dp</dimen>
 
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
