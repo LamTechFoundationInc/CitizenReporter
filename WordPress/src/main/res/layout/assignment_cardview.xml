@@ -94,7 +94,7 @@
                 android:layout_below="@+id/image_featured"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginRight="@dimen/reader_card_content_padding"
-                android:layout_marginTop="@dimen/margin_large"
+
                 tools:text="text_title" />
 
             <org.wordpress.android.widgets.WPTextView
