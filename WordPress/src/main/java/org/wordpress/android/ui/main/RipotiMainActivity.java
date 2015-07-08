@@ -359,11 +359,7 @@ public class RipotiMainActivity extends ActionBarActivity
         switch(item.getItemId()){
 
             case android.R.id.home:
-                    if(viewAssignmentFragment.isVisible()){
-                        closeAssignment();
-                    }else{
-                        finish();
-                    }
+                    closeAssignment();
                 return true;
             case R.id.user_menu:
                 //show user menu
@@ -753,5 +749,16 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onMediaAdded(String mediaId) {
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        if(viewAssignmentFragment.isVisible()){
+            closeAssignment();
+        }else{
+            finish();
+        }
+
     }
 }
