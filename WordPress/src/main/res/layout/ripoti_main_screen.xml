@@ -46,7 +46,14 @@
 
     </org.wordpress.android.widgets.WPMainViewPager>
 
+        <View
+            android:layout_above="@+id/bottom_action_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_gravity="bottom"
+            android:background="@color/white"/>
     <LinearLayout
+        android:id="@+id/bottom_action_buttons"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -65,8 +72,9 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@color/grey_darken_10"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/grey_lighten_10"
             />
         <ImageView
             android:id="@+id/button_video"
@@ -78,8 +86,9 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@color/grey_darken_10"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/grey_lighten_10"
             />
         <ImageView
             android:id="@+id/button_mic"
