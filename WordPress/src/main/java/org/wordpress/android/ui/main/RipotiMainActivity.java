@@ -137,6 +137,7 @@ public class RipotiMainActivity extends ActionBarActivity
         if(viewAssignmentFragment != null)
             getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
         mTabs.setVisibility(View.VISIBLE);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     @Override
@@ -169,6 +170,7 @@ public class RipotiMainActivity extends ActionBarActivity
             }
             
             mTabs.setVisibility(View.GONE);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -353,6 +355,13 @@ public class RipotiMainActivity extends ActionBarActivity
 
         switch(item.getItemId()){
 
+            case android.R.id.home:
+                    if(viewAssignmentFragment.isVisible()){
+                        closeAssignment();
+                    }else{
+                        finish();
+                    }
+                return true;
             case R.id.user_menu:
                 //show user menu
                 Intent userMenuIntent = new Intent(RipotiMainActivity.this, UserMenuActivity.class);
