@@ -50,9 +50,6 @@ public class ViewAssignmentFragment extends Fragment {
     private OnDetailAssignmentActionListener mOnDetailPostActionListener;
     RipotiMainActivity mParentActivity;
 
-    private ViewGroup mLayoutCommentBox;
-    private SuggestionAutoCompleteText mEditComment;
-    private ImageButton mAddCommentButton, mShareUrlButton, mViewPostButton;
     private TextView mTitleTextView, mContentTextView;
 
     private SuggestionAdapter mSuggestionAdapter;
@@ -118,83 +115,11 @@ public class ViewAssignmentFragment extends Fragment {
 
         mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
         mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
-        mShareUrlButton = (ImageButton) v.findViewById(R.id.sharePostLink);
-        mViewPostButton = (ImageButton) v.findViewById(R.id.viewPost);
-
-        // comment views
-        mLayoutCommentBox = (ViewGroup) v.findViewById(R.id.layout_comment_box);
-        mEditComment = (SuggestionAutoCompleteText) mLayoutCommentBox.findViewById(R.id.edit_comment);
-        mEditComment.setHint(R.string.reader_hint_comment_on_post);
-        if (WordPress.currentPost != null && WordPress.getCurrentRemoteBlogId() != -1) {
-            mEditComment.getAutoSaveTextHelper().setUniqueId(String.format("%s%d%s",
-                    AccountHelper.getCurrentUsernameForBlog(WordPress.getCurrentBlog()),
-                    WordPress.getCurrentRemoteBlogId(), WordPress.currentPost.getRemotePostId()));
-        }
-
-        // button listeners here
-        ImageButton editPostButton = (ImageButton) v.findViewById(R.id.editPost);
-        editPostButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (WordPress.currentPost != null && !mParentActivity.isRefreshingAssignments()) {
-                    mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_EDIT, WordPress.currentPost);
-                    long postId = WordPress.currentPost.getLocalTablePostId();
-                    boolean isPage = WordPress.currentPost.isPage();
-                    ActivityLauncher.editBlogPostOrPageForResult(getActivity(), postId, isPage);
-                }
-            }
-        });
-
-
-        mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (!mParentActivity.isRefreshingAssignments()) {
-                    mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_SHARE, WordPress.currentPost);
-                }
-            }
-        });
-
-        ImageButton deletePostButton = (ImageButton) v.findViewById(R.id.deletePost);
-        deletePostButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (!mParentActivity.isRefreshingAssignments()) {
-                    mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_DELETE, WordPress.currentPost);
-                }
-            }
-        });
-
-        mViewPostButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                mOnDetailPostActionListener.onDetailAssignmentAction(RipotiMainActivity.POST_VIEW, WordPress.currentPost);
-                if (!mParentActivity.isRefreshingAssignments()) {
-                    loadPostPreview();
-                }
-            }
-        });
-
-        mAddCommentButton = (ImageButton) v.findViewById(R.id.addComment);
-        mAddCommentButton.setOnClickListener(new ImageButton.OnClickListener() {
-            public void onClick(View v) {
-                if (!mParentActivity.isRefreshingAssignments()) {
-                    toggleCommentBox();
-                }
-            }
-        });
-
-        setupSuggestionServiceAndAdapter();
 
         return v;
     }
 
-    private void setupSuggestionServiceAndAdapter() {
-        if (!isAdded()) return;
 
-        int remoteBlogId = WordPress.getCurrentRemoteBlogId();
-        mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(getActivity(), remoteBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(remoteBlogId, getActivity(), mSuggestionServiceConnectionManager);
-        if (mSuggestionAdapter != null) {
-            mEditComment.setAdapter(mSuggestionAdapter);
-        }
-    }
 
     /**
      * Load the post preview as an authenticated URL so stats aren't bumped.
@@ -277,16 +202,11 @@ public class ViewAssignmentFragment extends Fragment {
                         if (post.isLocalDraft()) {
                             mContentTextView.setVisibility(View.VISIBLE);
                             webView.setVisibility(View.GONE);
-                            mShareUrlButton.setVisibility(View.GONE);
-                            mViewPostButton.setVisibility(View.GONE);
-                            mAddCommentButton.setVisibility(View.GONE);
+
                             mContentTextView.setText(draftContent);
                         } else {
                             mContentTextView.setVisibility(View.GONE);
                             webView.setVisibility(View.VISIBLE);
-                            mShareUrlButton.setVisibility(View.VISIBLE);
-                            mViewPostButton.setVisibility(View.VISIBLE);
-                            mAddCommentButton.setVisibility(post.isAllowComments() ? View.VISIBLE : View.GONE);
                             webView.loadDataWithBaseURL("file:///android_asset/",
                                                         htmlContent,
                                                         "text/html",
@@ -322,110 +242,5 @@ public class ViewAssignmentFragment extends Fragment {
             outState.putBoolean("bug_19917_fix", true);
         }
         super.onSaveInstanceState(outState);
-    }
-
-    boolean mIsCommentBoxShowing = false;
-    boolean mIsSubmittingComment = false;
-
-    private void showCommentBox() {
-        // skip if it's already showing or a comment is being submitted
-        if (mIsCommentBoxShowing || mIsSubmittingComment)
-            return;
-        if (!isAdded())
-            return;
-
-        // show the comment box in, force keyboard to appear and highlight the comment button
-        mLayoutCommentBox.setVisibility(View.VISIBLE);
-        mEditComment.requestFocus();
-
-        // submit comment when done/send tapped on the keyboard
-        mEditComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEND)
-                    submitComment();
-                return false;
-            }
-        });
-
-        // submit comment when send icon tapped
-        final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
-        imgPostComment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitComment();
-            }
-        });
-        EditTextUtils.showSoftInput(mEditComment);
-        mIsCommentBoxShowing = true;
-    }
-
-    private void hideCommentBox() {
-        if (!mIsCommentBoxShowing)
-            return;
-        if (!isAdded())
-            return;
-
-        EditTextUtils.hideSoftInput(mEditComment);
-        mLayoutCommentBox.setVisibility(View.GONE);
-
-        mIsCommentBoxShowing = false;
-    }
-
-    private void toggleCommentBox() {
-        if (mIsCommentBoxShowing) {
-            hideCommentBox();
-        } else {
-            showCommentBox();
-        }
-    }
-
-    private void submitComment() {
-        if (!isAdded() || mIsSubmittingComment || WordPress.currentPost == null || !NetworkUtils.checkConnection(
-                getActivity())) {
-            return;
-        }
-        final String commentText = EditTextUtils.getText(mEditComment);
-        if (TextUtils.isEmpty(commentText)) {
-            return;
-        }
-
-        final ImageView imgPostComment = (ImageView) mLayoutCommentBox.findViewById(R.id.image_post_comment);
-        final ProgressBar progress = (ProgressBar) mLayoutCommentBox.findViewById(R.id.progress_submit_comment);
-
-        // disable editor & comment button, hide soft keyboard, hide submit icon, and show progress spinner while submitting
-        mEditComment.setEnabled(false);
-        mAddCommentButton.setEnabled(false);
-        EditTextUtils.hideSoftInput(mEditComment);
-        imgPostComment.setVisibility(View.GONE);
-        progress.setVisibility(View.VISIBLE);
-
-        CommentActions.CommentActionListener actionListener = new CommentActions.CommentActionListener() {
-            @Override
-            public void onActionResult(boolean succeeded) {
-                mIsSubmittingComment = false;
-                if (!isAdded())
-                    return;
-
-                mParentActivity.attemptToSelectAssignment();
-
-                mEditComment.setEnabled(true);
-                mAddCommentButton.setEnabled(true);
-                imgPostComment.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-
-                if (succeeded) {
-                    ToastUtils.showToast(getActivity(), R.string.comment_added);
-                    hideCommentBox();
-                    mEditComment.setText(null);
-                    mParentActivity.refreshAssignmentResponses();
-                } else {
-                    ToastUtils.showToast(getActivity(), R.string.reader_toast_err_comment_failed, ToastUtils.Duration.LONG);
-                }
-            }
-        };
-
-        int accountId = WordPress.getCurrentLocalTableBlogId();
-        CommentActions.addComment(accountId, WordPress.currentPost.getRemotePostId(), commentText, actionListener);
     }
 }

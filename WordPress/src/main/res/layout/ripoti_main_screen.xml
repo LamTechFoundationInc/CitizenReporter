@@ -61,14 +61,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@color/grey_lighten_20">
+        android:background="@drawable/view_post_toolbar">
         <ImageView
             android:id="@+id/button_camera"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:src="@drawable/ic_action_camera"
-            android:tint="@color/grey_darken_10"/>
+            android:tint="@color/post_detail_icon_tint"/>
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -82,7 +82,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:src="@drawable/ic_action_video"
-            android:tint="@color/grey_darken_10"/>
+            android:tint="@color/post_detail_icon_tint"/>
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
@@ -96,7 +96,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:src="@drawable/ic_action_mic"
-            android:tint="@color/grey_darken_10" />
+            android:tint="@color/post_detail_icon_tint" />
 
     </LinearLayout>
 
