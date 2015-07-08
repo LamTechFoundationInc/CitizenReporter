@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
@@ -26,12 +27,43 @@
             android:textSize="@dimen/text_sz_extra_large"
             android:textColor="@color/grey_dark"/>
     </LinearLayout>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/assignment_meta"
+        android:layout_below="@+id/postBar"
+        android:padding="10dp">
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_location"
+            style="@style/ReaderTextView.Post.Address"
+            tools:text="text_tag"
+            android:layout_marginBottom="10dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/assignment_post_author"
+            style="@style/ReaderTextView.Post.Author"
+            tools:text="text_author"
+            android:layout_marginBottom="10dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/text_bounty"
+            style="@style/ReaderTextView.Post.Bounty"
+            tools:text="text_tag"
+            android:layout_marginBottom="10dp"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/assignment_list_deadline"
+            style="@style/ReaderTextView.Post.Deadline_2"
+            tools:text="text_tag"/>
+    </LinearLayout>
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginBottom="48dp"
-        android:layout_marginTop="48dp" >
+        android:layout_below="@+id/assignment_meta">
+
 
         <FrameLayout
             android:layout_width="fill_parent"

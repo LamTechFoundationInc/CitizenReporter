@@ -55,6 +55,10 @@ public class ViewAssignmentFragment extends Fragment {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
+    private TextView location;
+    private TextView bounty;
+    private TextView date;
+    private TextView assignment_post_author;
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -115,7 +119,10 @@ public class ViewAssignmentFragment extends Fragment {
 
         mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
         mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
-
+        assignment_post_author = (TextView) v.findViewById(R.id.assignment_post_author);
+        bounty = (TextView) v.findViewById(R.id.text_bounty);
+        location = (TextView) v.findViewById(R.id.text_location);
+        date = (TextView) v.findViewById(R.id.assignment_list_deadline);
         return v;
     }
 
