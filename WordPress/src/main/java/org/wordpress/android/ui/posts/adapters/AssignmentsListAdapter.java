@@ -177,6 +177,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         if (mediaTypes.contains("audio"))
             wrapper.getMedia_type_audio().setColorFilter(mContext.getResources().getColor(R.color.assignment_media_type_required));
 
+        /*
         //set featured image
         String image_featured = post.getPostThumb();
         if(!image_featured.equals("")){
@@ -192,7 +193,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         }else{
             //TODO: show default
 
-        }
+        }*/
 
 
         //respond listener

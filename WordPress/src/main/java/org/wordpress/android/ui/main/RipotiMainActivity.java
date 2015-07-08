@@ -109,6 +109,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
     public AssignmentsListFragment mAssignmentsList;
     private ViewAssignmentFragment viewAssignmentFragment;
+    private Toolbar toolbar;
     @Override
     public void onDetailAssignmentAction(int action, Post post) {
         onAssignmentAction(action, post);
@@ -138,6 +139,8 @@ public class RipotiMainActivity extends ActionBarActivity
             getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
         mTabs.setVisibility(View.VISIBLE);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        setSupportActionBar(toolbar);
+
     }
 
     @Override
@@ -241,8 +244,8 @@ public class RipotiMainActivity extends ActionBarActivity
         // If user has local changes, don't refresh
         //if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
             popAssignmentDetail();
-            mAssignmentsList.requestPosts(false);
-            mAssignmentsList.setRefreshing(true);
+        mAssignmentsList.requestPosts(false);
+        mAssignmentsList.setRefreshing(true);
         //}
     }
 
@@ -261,7 +264,7 @@ public class RipotiMainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ripoti_main_screen);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //toolbar.inflateMenu(R.menu.home_menu);
         toolbar.setNavigationIcon(R.drawable.dashicon_lock);

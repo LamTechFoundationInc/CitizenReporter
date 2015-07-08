@@ -42,7 +42,8 @@
                     android:layout_marginRight="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="?android:selectableItemBackground"
-                    tools:src="@drawable/gravatar_placeholder" />
+                    tools:src="@drawable/gravatar_placeholder"
+                    android:visibility="gone"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/assignment_post_author"
@@ -103,7 +104,8 @@
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/image_featured"
                 style="@style/ReaderImageView.Featured"
-                android:layout_below="@+id/layout_post_header" />
+                android:layout_below="@+id/layout_post_header"
+                android:visibility="gone"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/text_title"
