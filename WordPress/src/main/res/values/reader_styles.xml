@@ -68,6 +68,18 @@
         <item name="android:drawableLeft">@drawable/ic_address</item>
         <item name="android:drawablePadding">@dimen/margin_small</item>
     </style>
+    <style name="ReaderTextView.Post.Author" parent="ReaderTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:textColor">@color/reader_hyperlink</item>
+        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawableLeft">@drawable/ic_author</item>
+        <item name="android:drawablePadding">@dimen/margin_small</item>
+    </style>
     <style name="ReaderTextView.Post.Bounty" parent="ReaderTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
