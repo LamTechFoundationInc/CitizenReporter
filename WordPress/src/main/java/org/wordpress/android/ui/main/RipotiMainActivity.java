@@ -159,6 +159,7 @@ public class RipotiMainActivity extends ActionBarActivity
                 return;
             }*/
             WordPress.currentPost = post;
+
             if (viewAssignmentFragment == null || !viewAssignmentFragment.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mPostList);

@@ -2,6 +2,8 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Spanned;
@@ -22,6 +24,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AccountHelper;
+import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.Suggestion;
 import org.wordpress.android.ui.ActivityLauncher;
@@ -40,6 +43,9 @@ import org.wordpress.android.util.WPHtml;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
@@ -55,10 +61,10 @@ public class ViewAssignmentFragment extends Fragment {
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
 
-    private TextView location;
-    private TextView bounty;
-    private TextView date;
-    private TextView assignment_post_author;
+    private TextView mLocation;
+    private TextView mBounty;
+    private TextView mDeadline;
+    private TextView mAuthor;
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -119,14 +125,77 @@ public class ViewAssignmentFragment extends Fragment {
 
         mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
         mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
-        assignment_post_author = (TextView) v.findViewById(R.id.assignment_post_author);
-        bounty = (TextView) v.findViewById(R.id.text_bounty);
-        location = (TextView) v.findViewById(R.id.text_location);
-        date = (TextView) v.findViewById(R.id.assignment_list_deadline);
+        mAuthor = (TextView) v.findViewById(R.id.assignment_post_author);
+        mBounty = (TextView) v.findViewById(R.id.text_bounty);
+        mLocation = (TextView) v.findViewById(R.id.text_location);
+        mDeadline = (TextView) v.findViewById(R.id.assignment_list_deadline);
+
+        loadPostMeta(WordPress.currentPost);
+
         return v;
     }
 
+    protected void loadPostMeta(final Post post){
+        String locationText = post.getAssignmentLocation();
+        mLocation.setText(locationText);
 
+        mLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!post.getCoordinates().equals("")) {
+
+                    String gps = post.getCoordinates().replace("(", "");
+                    gps = gps.replace(")", "");
+
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + gps));
+                    i.setClassName("com.google.android.apps.maps",
+                            "com.google.android.maps.MapsActivity");
+                    mParentActivity.startActivity(i);
+                }
+            }
+        });
+
+        String bountyText = post.getBounty();
+        if (bountyText.equals("KSH 0"))
+            bountyText = "n/a";
+        mBounty.setText(bountyText);
+
+        //set author of assignment
+        String postAuthor = post.getAuthorDisplayName();
+        mAuthor.setText(postAuthor);
+
+        String deadlineText = post.getDeadline();
+
+        /*
+        //if deadline passed, tint accordingly
+        if(!deadlineText.equals("")){
+            ImageView deadlineView = wrapper.getAssignment_deadline_noticon();
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+
+            Date deadlineDate = null;
+            try {
+                deadlineDate = format.parse(deadlineText);
+
+                Date today = new Date();
+
+                if(today.after(deadlineDate)){
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_orange), android.graphics.PorterDuff.Mode.MULTIPLY);
+                }else if(today.before(deadlineDate)) {
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                }else{
+                    //deadline is today
+                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }else{
+
+            deadlineText = "Open";
+        }*/
+        mDeadline.setText(deadlineText);
+    }
 
     /**
      * Load the post preview as an authenticated URL so stats aren't bumped.

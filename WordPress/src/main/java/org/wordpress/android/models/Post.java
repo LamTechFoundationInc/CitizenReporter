@@ -58,6 +58,12 @@ public class Post implements Serializable {
     private int assignment_id;
     private PostLocation mPostLocation;
 
+    private String assignmentLocation;
+    private String assignmnetBounty;
+    private String assignmentMediaTypes;
+    private String assignmentDeadline;
+    private String coordinates;
+
     public Post() {
     }
 
@@ -529,5 +535,45 @@ public class Post implements Serializable {
 
     public void setAssignment_id(int assignment_id) {
         this.assignment_id = assignment_id;
+    }
+
+    public String getAssignmentLocation() {
+        return assignmentLocation;
+    }
+
+    public void setAssignmentLocation(String assignmentLocation) {
+        this.assignmentLocation = assignmentLocation;
+    }
+
+    public String getAssignmnetBounty() {
+        return assignmnetBounty;
+    }
+
+    public void setAssignmnetBounty(String assignmnetBounty) {
+        this.assignmnetBounty = assignmnetBounty;
+    }
+
+    public String getAssignmentMediaTypes() {
+        return assignmentMediaTypes;
+    }
+
+    public void setAssignmentMediaTypes(String assignmentMediaTypes) {
+        this.assignmentMediaTypes = assignmentMediaTypes;
+    }
+
+    public String getAssignmentDeadline() {
+        return assignmentDeadline;
+    }
+
+    public void setAssignmentDeadline(String assignmentDeadline) {
+        this.assignmentDeadline = assignmentDeadline;
+    }
+
+    public String getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(String coordinates) {
+        this.coordinates = coordinates;
     }
 }

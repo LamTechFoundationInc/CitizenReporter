@@ -32,6 +32,7 @@ import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
 import org.wordpress.android.analytics.AnalyticsTrackerNosara;
 import org.wordpress.android.datasets.ReaderDatabase;
 import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.OAuthAuthenticator;
@@ -84,6 +85,7 @@ public class WordPress extends Application {
     public static String versionName;
     public static Blog currentBlog;
     public static Post currentPost;
+    public static AssignmentsListPost currentAssignment;
     public static WordPressDB wpDB;
     public static RestClientUtils mRestClientUtils;
     public static RestClientUtils mRestClientUtilsVersion1_1;

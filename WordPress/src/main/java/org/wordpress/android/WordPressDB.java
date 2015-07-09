@@ -1473,61 +1473,7 @@ public class WordPressDB {
 
     }
 
-    public Post getPostForLocalTablePostId_Assignment(long localTablePostId) {
-        Cursor c = db.query(ASSIGNMENTS_TABLE, null, "id=?", new String[]{String.valueOf(localTablePostId)}, null, null, null);
 
-        Post post = new Post();
-        if (c.moveToFirst()) {
-            post.setLocalTablePostId(c.getLong(c.getColumnIndex("id")));
-            post.setLocalTableBlogId(Integer.valueOf(c.getString(c.getColumnIndex("blogID"))));
-            post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
-            post.setTitle(c.getString(c.getColumnIndex("title")));
-            post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
-            post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
-            post.setCategories(c.getString(c.getColumnIndex("categories")));
-            post.setCustomFields(c.getString(c.getColumnIndex("custom_fields")));
-            post.setDescription(c.getString(c.getColumnIndex("description")));
-            post.setLink(c.getString(c.getColumnIndex("link")));
-            post.setAllowComments(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_comments"))));
-            post.setAllowPings(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("mt_allow_pings"))));
-            post.setPostExcerpt(c.getString(c.getColumnIndex("mt_excerpt")));
-            post.setKeywords(c.getString(c.getColumnIndex("mt_keywords")));
-            post.setMoreText(c.getString(c.getColumnIndex("mt_text_more")));
-            post.setPermaLink(c.getString(c.getColumnIndex("permaLink")));
-            post.setPostStatus(c.getString(c.getColumnIndex("post_status")));
-            post.setUserId(c.getString(c.getColumnIndex("userid")));
-            post.setAuthorDisplayName(c.getString(c.getColumnIndex("wp_author_display_name")));
-            post.setAuthorId(c.getString(c.getColumnIndex("wp_author_id")));
-            post.setPassword(c.getString(c.getColumnIndex("wp_password")));
-            post.setPostFormat(c.getString(c.getColumnIndex("wp_post_format")));
-            post.setSlug(c.getString(c.getColumnIndex("wp_slug")));
-            post.setMediaPaths(c.getString(c.getColumnIndex("mediaPaths")));
-
-            post.setLocation(c.getString(c.getColumnIndex("location")));
-            post.setBounty(c.getString(c.getColumnIndex("bounty")));
-            post.setMedia_types(c.getString(c.getColumnIndex("media_types")));
-            post.setDeadline(c.getString(c.getColumnIndex("deadline")));
-
-            int latColumnIndex = c.getColumnIndex("latitude");
-            int lngColumnIndex = c.getColumnIndex("longitude");
-            if (!c.isNull(latColumnIndex) && !c.isNull(lngColumnIndex)) {
-                post.setLocation(c.getDouble(latColumnIndex), c.getDouble(lngColumnIndex));
-            }
-
-            post.setLocalDraft(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("localDraft"))));
-            post.setUploading(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isUploading"))));
-            post.setUploaded(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("uploaded"))));
-            post.setIsPage(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isPage"))));
-            post.setPageParentId(c.getString(c.getColumnIndex("wp_page_parent_id")));
-            post.setPageParentTitle(c.getString(c.getColumnIndex("wp_page_parent_title")));
-            post.setLocalChange(SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("isLocalChange"))));
-        } else {
-            post = null;
-        }
-
-        c.close();
-        return post;
-    }
     public Post getPostForLocalTablePostId(long localTablePostId, boolean isAssignment) {
 
         Cursor c;
@@ -1547,6 +1493,15 @@ public class WordPressDB {
                 post.setTitle(c.getString(c.getColumnIndex("title")));
                 if(!isAssignment)
                     post.setAssignment_id(Integer.valueOf(c.getString(c.getColumnIndex("assignment_id"))));
+
+                if(isAssignment){
+                    post.setAssignmentLocation(c.getString(c.getColumnIndex("location")));
+                    post.setCoordinates(c.getString(c.getColumnIndex("coordinates")));
+                    post.setDeadline(c.getString(c.getColumnIndex("deadline")));
+                    post.setBounty(c.getString(c.getColumnIndex("bounty")));
+                    post.setMedia_types(c.getString(c.getColumnIndex("media_types")));
+                }
+
                 post.setDateCreated(c.getLong(c.getColumnIndex("dateCreated")));
                 post.setDate_created_gmt(c.getLong(c.getColumnIndex("date_created_gmt")));
                 post.setCategories(c.getString(c.getColumnIndex("categories")));
