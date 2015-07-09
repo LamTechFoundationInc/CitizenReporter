@@ -40,6 +40,7 @@ import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.ViewAssignmentFragment;
+import org.wordpress.android.ui.posts.ViewPostFragmentRipoti;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
@@ -60,7 +61,7 @@ import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
 
-import org.wordpress.android.ui.posts.ViewPostFragment.OnDetailPostActionListener;
+import org.wordpress.android.ui.posts.ViewPostFragmentRipoti.OnDetailPostActionListener;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -180,7 +181,32 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onPostSelected(Post post) {
+        Log.d("debug1", "are we here?");
 
+        if (isFinishing()) {
+            return;
+        }
+        FragmentManager fm = getFragmentManager();
+        ViewPostFragmentRipoti viewPostFragment = (ViewPostFragmentRipoti) fm.findFragmentById(R.id.postDetail);
+
+        if (post != null) {
+            if (post.isUploading()){
+                ToastUtils.showToast(this, R.string.toast_err_post_uploading, ToastUtils.Duration.SHORT);
+                return;
+            }
+            WordPress.currentPost = post;
+            if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.hide(mPostList);
+                viewPostFragment = new ViewPostFragmentRipoti();
+                ft.add(R.id.postDetailFragmentContainer, viewPostFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.addToBackStack(null);
+                ft.commitAllowingStateLoss();
+            } else {
+                viewPostFragment.loadPost(post);
+            }
+        }
     }
 
     @Override
@@ -347,9 +373,19 @@ public class RipotiMainActivity extends ActionBarActivity
     public boolean isRefreshingAssignments() {
         return mAssignmentsList.isRefreshing();
     }
+    public boolean isRefreshing() {
+        return mPostList.isRefreshing();
+    }
     public void attemptToSelectAssignment() {
         FragmentManager fm = getFragmentManager();
         ViewAssignmentFragment f = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
+        if (f != null && f.isInLayout()) {
+            mPostList.setShouldSelectFirstPost(true);
+        }
+    }
+    public void attemptToSelectPost() {
+        FragmentManager fm = getFragmentManager();
+        ViewPostFragmentRipoti f = (ViewPostFragmentRipoti) fm.findFragmentById(R.id.postDetail);
         if (f != null && f.isInLayout()) {
             mPostList.setShouldSelectFirstPost(true);
         }
@@ -389,6 +425,9 @@ public class RipotiMainActivity extends ActionBarActivity
         }
     }
     public void refreshAssignmentResponses() {
+
+    }
+    public void refreshComments(){
 
     }
     /*
