@@ -111,6 +111,7 @@ public class RipotiMainActivity extends ActionBarActivity
     public AssignmentsListFragment mAssignmentsList;
     private ViewAssignmentFragment viewAssignmentFragment;
     private Toolbar toolbar;
+    private ViewPostFragmentRipoti viewPostFragment;
     @Override
     public void onDetailAssignmentAction(int action, Post post) {
         onAssignmentAction(action, post);
@@ -135,13 +136,26 @@ public class RipotiMainActivity extends ActionBarActivity
 
     }
 
-    public void closeAssignment(){
+
+    public void closePost(){
+        if(viewPostFragment != null)
+            getFragmentManager().beginTransaction().remove(viewPostFragment).commit();
+
         if(viewAssignmentFragment != null)
             getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
-        mTabs.setVisibility(View.VISIBLE);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        setSupportActionBar(toolbar);
 
+        toggleToolbar(false);
+    }
+
+    public void toggleToolbar(boolean isShowing){
+        if(isShowing){
+            mTabs.setVisibility(View.GONE);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        } else {
+            mTabs.setVisibility(View.VISIBLE);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            toolbar.setNavigationIcon(R.drawable.app_icon);
+        }
     }
 
     @Override
@@ -174,8 +188,7 @@ public class RipotiMainActivity extends ActionBarActivity
                 viewAssignmentFragment.loadPost(post);
             }
             
-            mTabs.setVisibility(View.GONE);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toggleToolbar(true);
         }
     }
 
@@ -187,7 +200,7 @@ public class RipotiMainActivity extends ActionBarActivity
             return;
         }
         FragmentManager fm = getFragmentManager();
-        ViewPostFragmentRipoti viewPostFragment = (ViewPostFragmentRipoti) fm.findFragmentById(R.id.postDetail);
+        viewPostFragment = (ViewPostFragmentRipoti) fm.findFragmentById(R.id.postDetail);
 
         if (post != null) {
             if (post.isUploading()){
@@ -206,6 +219,8 @@ public class RipotiMainActivity extends ActionBarActivity
             } else {
                 viewPostFragment.loadPost(post);
             }
+
+            toggleToolbar(true);
         }
     }
 
@@ -294,7 +309,7 @@ public class RipotiMainActivity extends ActionBarActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         //toolbar.inflateMenu(R.menu.home_menu);
-        toolbar.setNavigationIcon(R.drawable.dashicon_lock);
+        toolbar.setNavigationIcon(R.drawable.app_icon);
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
@@ -396,7 +411,7 @@ public class RipotiMainActivity extends ActionBarActivity
         switch(item.getItemId()){
 
             case android.R.id.home:
-                    closeAssignment();
+                    closePost();
                 return true;
             case R.id.user_menu:
                 //show user menu
@@ -794,8 +809,8 @@ public class RipotiMainActivity extends ActionBarActivity
     @Override
     public void onBackPressed(){
 
-        if(viewAssignmentFragment.isVisible()){
-            closeAssignment();
+        if(viewAssignmentFragment.isVisible()||(viewPostFragment.isVisible())){
+            closePost();
         }else{
             finish();
         }
