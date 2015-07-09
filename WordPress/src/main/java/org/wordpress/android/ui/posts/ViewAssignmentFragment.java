@@ -166,10 +166,9 @@ public class ViewAssignmentFragment extends Fragment {
 
         String deadlineText = post.getDeadline();
 
-        /*
+
         //if deadline passed, tint accordingly
         if(!deadlineText.equals("")){
-            ImageView deadlineView = wrapper.getAssignment_deadline_noticon();
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
             Date deadlineDate = null;
@@ -179,12 +178,12 @@ public class ViewAssignmentFragment extends Fragment {
                 Date today = new Date();
 
                 if(today.after(deadlineDate)){
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_orange), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    mDeadline.setTextColor(mParentActivity.getResources().getColor(R.color.alert_orange));
                 }else if(today.before(deadlineDate)) {
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    mDeadline.setTextColor(mParentActivity.getResources().getColor(R.color.alert_green));
                 }else{
                     //deadline is today
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    mDeadline.setTextColor(mParentActivity.getResources().getColor(R.color.alert_red));
                 }
 
             } catch (ParseException e) {
@@ -193,7 +192,7 @@ public class ViewAssignmentFragment extends Fragment {
         }else{
 
             deadlineText = "Open";
-        }*/
+        }
         mDeadline.setText(deadlineText);
     }
 
