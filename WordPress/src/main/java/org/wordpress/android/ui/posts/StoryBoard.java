@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -20,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -98,6 +100,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         });
 
         setUpSlider();
+
+        setUpQuestionnaire();
+    }
+
+    public void setUpQuestionnaire(){
+        String[] array = {"What Happened?", "Why did it happen?", "How did it happen?", "Where did it happen?", "Who was involved?"};
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.view_row, R.id.header_text, array);
+
+        ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
+        expandableLayoutListView.setAdapter(arrayAdapter);
     }
 
     public void togglePanes(boolean showTemplate){
