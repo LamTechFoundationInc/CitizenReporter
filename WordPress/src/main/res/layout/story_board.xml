@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/footerBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:id="@+id/mediaPanel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+
+            <RelativeLayout
+                android:id="@+id/noMediaPane"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:id="@+id/no_mediaImage"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/no_media"
+                    android:layout_marginBottom="10dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_media_added"
+                    android:id="@+id/textView3"
+                    android:layout_below="@+id/no_mediaImage"
+                    android:layout_centerHorizontal="true" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/metaPanel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+            <LinearLayout
+                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:id="@+id/paneSwitch"
+                android:orientation="horizontal"
+                android:layout_alignParentTop="true">
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_summary"
+                    style="@style/ReaderTextView.Post.Summary"
+                    tools:text="@string/summary"
+                    android:layout_margin="5dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:background="@color/grey_lighten_10"/>
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/text_template"
+                    style="@style/ReaderTextView.Post.Template"
+                    tools:text="@string/template"
+                    android:layout_margin="5dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:background="@color/grey_lighten_20"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/paneContainer"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/paneSwitch"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+                <LinearLayout
+                    android:id="@+id/summaryPane"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="@string/summary_prompt"
+                        android:id="@+id/textView2"
+                        android:textStyle="italic"
+                        android:background="@color/grey_lighten_10"
+                        android:padding="5dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/guidePane"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/footerBar"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/post_detail_button_size"
+        android:layout_alignWithParentIfMissing="true"
+        android:background="@drawable/view_post_toolbar"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true" >
+
+        <LinearLayout
+            android:id="@+id/bottom_action_buttons"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/view_post_toolbar">
+            <ImageView
+                android:id="@+id/button_camera"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_camera"
+                android:tint="@color/post_detail_icon_tint"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/grey_lighten_10"
+                />
+            <ImageView
+                android:id="@+id/button_video"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_video"
+                android:tint="@color/post_detail_icon_tint"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/grey_lighten_10"
+                />
+            <ImageView
+                android:id="@+id/button_mic"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_mic"
+                android:tint="@color/post_detail_icon_tint" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
