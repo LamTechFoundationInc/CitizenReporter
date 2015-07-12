@@ -8,16 +8,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -26,15 +23,12 @@ import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
-import org.wordpress.android.ui.main.WPMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
-import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.LessonsActivity;
+import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
-import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.CoreEvents;
-import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -193,6 +187,13 @@ public class UserMenuActivity extends ActionBarActivity{
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(UserMenuActivity.this, LessonsActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.row_new_post).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(UserMenuActivity.this, StoryBoard.class);
                 startActivity(intent);
             }
         });

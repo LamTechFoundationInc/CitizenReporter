@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -12,6 +11,9 @@
         android:layout_above="@+id/footerBar"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/toolbar" />
         <RelativeLayout
             android:id="@+id/mediaPanel"
             android:layout_width="match_parent"
@@ -59,17 +61,19 @@
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_summary"
                     style="@style/ReaderTextView.Post.Summary"
-                    tools:text="@string/summary"
+                    tools:text="text_summary"
                     android:layout_margin="5dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:padding="5dp"
-                    android:background="@color/grey_lighten_10"/>
+                    android:background="@color/grey_lighten_10"
+                    android:text="@string/summary"/>
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_template"
                     style="@style/ReaderTextView.Post.Template"
-                    tools:text="@string/template"
+                    tools:text="text_template"
+                    android:text="@string/template"
                     android:layout_margin="5dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
@@ -90,14 +94,15 @@
                     android:id="@+id/summaryPane"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:clickable="true">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:text="@string/summary_prompt"
-                        android:id="@+id/textView2"
+                        android:id="@+id/displaySummary"
                         android:textStyle="italic"
                         android:background="@color/grey_lighten_10"
                         android:padding="5dp"/>

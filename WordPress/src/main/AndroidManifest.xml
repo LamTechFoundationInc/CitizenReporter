@@ -144,6 +144,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.posts.StoryBoard"
+            android:theme="@style/Calypso.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.posts.LessonsActivity"
             android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>
