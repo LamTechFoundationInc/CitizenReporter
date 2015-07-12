@@ -101,7 +101,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/ic_summary"/>
+                    android:drawableLeft="@drawable/ic_summary"
+                    android:padding="3dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_template"
@@ -111,7 +112,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/ic_template"/>
+                    android:drawableLeft="@drawable/ic_template"
+                    android:padding="3dp"/>
             </LinearLayout>
 
             <LinearLayout

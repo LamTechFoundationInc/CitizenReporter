@@ -101,10 +101,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void togglePanes(boolean showTemplate){
-        LinearLayout.LayoutParams activeParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams activeParam = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         activeParam.setMargins(3, 3, 3, 3);
 
-        LinearLayout.LayoutParams inActiveParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams inActiveParam = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         inActiveParam.setMargins(5, 5, 5, 5);
 
         if (showTemplate){
@@ -118,7 +118,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             text_template.setLayoutParams(activeParam);
 
             text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+            text_template.setBackgroundColor(getResources().getColor(R.color.grey_lighten_10));
+            text_summary.setBackgroundColor(getResources().getColor(R.color.grey_lighten_20));
 
         }else{
             summaryPane.setVisibility(View.VISIBLE);
@@ -131,7 +134,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             text_template.setLayoutParams(inActiveParam);
 
             text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+            text_summary.setBackgroundColor(getResources().getColor(R.color.grey_lighten_10));
+            text_template.setBackgroundColor(getResources().getColor(R.color.grey_lighten_20));
         }
     }
 
