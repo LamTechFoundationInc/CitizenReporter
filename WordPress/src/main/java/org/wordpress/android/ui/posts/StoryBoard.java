@@ -37,6 +37,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private SliderLayout mDemoSlider;
 
     private LinearLayout summaryPane;
+    private LinearLayout guidePane;
 
     private TextView displaySummary;
     private EditText editTextSummary;
@@ -44,6 +45,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private String summary="";
     private RelativeLayout yesMedia;
     private RelativeLayout noMedia;
+
+    private TextView text_summary;
+    private TextView text_template;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +63,30 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mDemoSlider = (SliderLayout)findViewById(R.id.slider);
 
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
+        guidePane = (LinearLayout)findViewById(R.id.guidePane);
         displaySummary = (TextView)findViewById(R.id.displaySummary);
         editTextSummary = (EditText)findViewById(R.id.editTextSummary);
 
         yesMedia = (RelativeLayout)findViewById(R.id.yesMediaPane);
         noMedia = (RelativeLayout)findViewById(R.id.noMediaPane);
+
+        text_summary = (TextView)findViewById(R.id.text_summary);
+        text_template= (TextView)findViewById(R.id.text_template);
+
+        text_summary.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                boolean showTemplate = false;
+                togglePanes(showTemplate);
+            }
+        });
+        text_template.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                boolean showTemplate = true;
+                togglePanes(showTemplate);
+            }
+        });
 
         //on click summary pane, show pop up dialog for post section
         summaryPane.setOnClickListener(new View.OnClickListener(){
@@ -73,6 +97,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         });
 
         setUpSlider();
+    }
+
+    public void togglePanes(boolean showTemplate){
+
+        if(showTemplate){
+            summaryPane.setVisibility(View.GONE);
+            guidePane.setVisibility(View.VISIBLE);
+        }else{
+            summaryPane.setVisibility(View.VISIBLE);
+            guidePane.setVisibility(View.GONE);
+        }
+
     }
 
     public void setUpSlider(){
