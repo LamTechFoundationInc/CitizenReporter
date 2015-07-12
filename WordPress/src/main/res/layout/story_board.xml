@@ -95,26 +95,23 @@
                 android:layout_alignParentTop="true">
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_summary"
-                    style="@style/ReaderTextView.Post.Summary"
+                    style="@style/ReaderTextView.TogglePane_Active"
                     tools:text="text_summary"
-                    android:layout_margin="5dp"
+                    android:text="@string/summary"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:background="@color/grey_lighten_10"
-                    android:text="@string/summary"/>
+                    android:drawableLeft="@drawable/ic_summary"/>
+
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_template"
-                    style="@style/ReaderTextView.Post.Template"
+                    style="@style/ReaderTextView.TogglePane_InActive"
                     tools:text="text_template"
                     android:text="@string/template"
-                    android:layout_margin="5dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:background="@color/grey_lighten_20"/>
+                    android:drawableLeft="@drawable/ic_template"/>
             </LinearLayout>
 
             <LinearLayout

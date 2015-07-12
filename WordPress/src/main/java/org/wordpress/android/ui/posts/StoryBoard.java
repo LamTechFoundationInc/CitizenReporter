@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -100,15 +101,38 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void togglePanes(boolean showTemplate){
+        LinearLayout.LayoutParams activeParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        activeParam.setMargins(3, 3, 3, 3);
 
-        if(showTemplate){
+        LinearLayout.LayoutParams inActiveParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        inActiveParam.setMargins(5, 5, 5, 5);
+
+        if (showTemplate){
             summaryPane.setVisibility(View.GONE);
             guidePane.setVisibility(View.VISIBLE);
+
+            text_summary.setTextColor(getResources().getColor(R.color.reader_hyperlink));
+            text_template.setTextColor(getResources().getColor(R.color.black));
+
+            text_summary.setLayoutParams(inActiveParam);
+            text_template.setLayoutParams(activeParam);
+
+            text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+
         }else{
             summaryPane.setVisibility(View.VISIBLE);
             guidePane.setVisibility(View.GONE);
-        }
 
+            text_summary.setTextColor(getResources().getColor(R.color.black));
+            text_template.setTextColor(getResources().getColor(R.color.reader_hyperlink));
+
+            text_summary.setLayoutParams(activeParam);
+            text_template.setLayoutParams(inActiveParam);
+
+            text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        }
     }
 
     public void setUpSlider(){
