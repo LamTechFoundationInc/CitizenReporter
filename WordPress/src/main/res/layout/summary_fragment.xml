@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/editTextSummary"
         android:layout_below="@+id/closeDialog"
         android:layout_alignLeft="@+id/closeDialog"
         android:layout_alignStart="@+id/closeDialog"
@@ -53,9 +53,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/getLocation"
         android:src="@drawable/ic_address"
-        android:layout_below="@+id/editText"
-        android:layout_alignLeft="@+id/editText"
-        android:layout_alignStart="@+id/editText"
+        android:layout_below="@+id/editTextSummary"
+        android:layout_alignLeft="@+id/editTextSummary"
+        android:layout_alignStart="@+id/editTextSummary"
         android:layout_marginTop="17dp" />
 
     <TextView

@@ -1,11 +1,16 @@
 package org.wordpress.android.ui.posts;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import org.wordpress.android.R;
 
@@ -15,6 +20,9 @@ import org.wordpress.android.R;
 public class StoryBoard extends ActionBarActivity {
 
     private LinearLayout summaryPane;
+
+    private TextView displaySummary;
+    private EditText editTextSummary;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +36,8 @@ public class StoryBoard extends ActionBarActivity {
 
 
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
+        displaySummary = (TextView)findViewById(R.id.displaySummary);
+        editTextSummary = (EditText)findViewById(R.id.editTextSummary);
 
         //on click summary pane, show pop up dialog for post section
         summaryPane.setOnClickListener(new View.OnClickListener(){
@@ -39,9 +49,19 @@ public class StoryBoard extends ActionBarActivity {
     }
 
     public void showCreateSummaryDialog(){
-        SummaryFragment dFragment = new SummaryFragment();
-        // Show DialogFragment
-        FragmentManager fm = getSupportFragmentManager();
-        dFragment.show(fm, "Dialog Fragment");
+        
+        final Dialog dialog = new Dialog(StoryBoard.this);
+        dialog.setContentView(R.layout.summary_fragment);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        dialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }
