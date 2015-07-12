@@ -113,6 +113,7 @@ dependencies {
     releaseCompile project(path:':libs:editor:WordPressEditor', configuration: 'release')
     debugCompile project(path:':libs:editor:WordPressEditor', configuration: 'debug')
     compile project(path:':libs:PasscodeLock:library')
+    compile 'info.hoang8f:fbutton:1.0.5'
 }
 
 configurations.all {
