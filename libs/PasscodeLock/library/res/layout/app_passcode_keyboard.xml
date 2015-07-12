@@ -147,35 +147,10 @@
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        >
 
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_button_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/fab_normal_camera"
-            fab:fab_colorPressed="@color/fab_pressed_camera"
-            fab:fab_icon="@drawable/ic_action_camera" />
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_button_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/fab_normal_video"
-            fab:fab_colorPressed="@color/fab_pressed_video"
-            fab:fab_icon="@drawable/ic_action_video"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/fab_button_audio"
-            android:layout_toEndOf="@+id/fab_button_audio" />
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_button_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/fab_normal_audio"
-            fab:fab_colorPressed="@color/fab_pressed_audio"
-            fab:fab_icon="@drawable/ic_action_mic"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/fab_button_camera"
-            android:layout_toEndOf="@+id/fab_button_camera" />
+
 
     </RelativeLayout>
 </RelativeLayout>
