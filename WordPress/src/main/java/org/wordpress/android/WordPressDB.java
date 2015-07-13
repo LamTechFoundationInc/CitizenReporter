@@ -174,7 +174,7 @@ public class WordPressDB {
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     //Add integer to store assignment id
-    private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer not null";
+    private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer default 0 not null";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
