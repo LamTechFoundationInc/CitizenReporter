@@ -136,59 +136,56 @@
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginRight="@dimen/reader_card_content_padding"
                 android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:background="@color/reader_divider_grey" />
 
             <LinearLayout
                 android:id="@+id/layout_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/divider"
                 android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:layout_alignRight="@+id/text_title"
-                android:layout_alignEnd="@+id/text_title">
+                android:layout_alignRight="@+id/divider"
+                android:layout_alignEnd="@+id/divider"
+                android:layout_alignTop="@+id/divider"
+                android:weightSum="1">
 
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/assignment_list_deadline"
                     style="@style/ReaderTextView.Post.Deadline_2"
-                    tools:text="text_tag"/>
+                    tools:text="text_tag"
+                    android:layout_weight="1.04" />
+
+                <ImageView
+                    android:id="@+id/media_type_audio"
+                    android:src="@drawable/ic_mic_white_48dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:padding="5dp"
+                    android:tint="@color/assignment_media_type_not_required"
+                    android:layout_alignBottom="@+id/layout_bottom"
+                    android:layout_alignRight="@+id/divider"
+                    android:layout_alignEnd="@+id/divider" />
+
+                <ImageView
+                    android:id="@+id/media_type_video"
+                    android:src="@drawable/ic_videocam_white_48dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:padding="5dp"
+                    android:tint="@color/assignment_media_type_not_required" />
+
+                <ImageView
+                    android:id="@+id/media_type_photo"
+                    android:src="@drawable/ic_photo_camera_white_48dp"
+                    android:layout_height="30dp"
+                    android:layout_width="30dp"
+                    android:padding="5dp"
+                    android:tint="@color/assignment_media_type_not_required" />
 
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/media_type_audio"
-                android:src="@drawable/ic_mic_white_48dp"
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:padding="5dp"
-                android:tint="@color/assignment_media_type_not_required"
-                android:layout_alignTop="@+id/divider"
-                android:layout_toRightOf="@+id/media_type_video"
-                android:layout_toEndOf="@+id/media_type_video" />
-
-            <ImageView
-                android:id="@+id/media_type_video"
-                android:src="@drawable/ic_videocam_white_48dp"
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:padding="5dp"
-                android:tint="@color/assignment_media_type_not_required"
-                android:layout_alignTop="@+id/divider"
-                android:layout_toRightOf="@+id/media_type_photo"
-                android:layout_toEndOf="@+id/media_type_photo" />
-
-            <ImageView
-                android:id="@+id/media_type_photo"
-                android:src="@drawable/ic_photo_camera_white_48dp"
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:padding="5dp"
-                android:tint="@color/assignment_media_type_not_required"
-                android:layout_alignTop="@+id/divider"
-                android:layout_toRightOf="@+id/text_location"
-                android:layout_toEndOf="@+id/text_location" />
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
