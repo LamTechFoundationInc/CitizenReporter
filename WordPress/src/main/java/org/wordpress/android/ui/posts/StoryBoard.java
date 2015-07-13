@@ -111,7 +111,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story_board);
-
         //get post
         long selectedId = getIntent().getLongExtra("selectedId", 0);
 
@@ -353,7 +352,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         });
 
-        initLocation((ViewGroup)dialog.getLayoutInflater().inflate(R.layout.summary_fragment, null));
+        initLocation(dialog);
+
+
 
         dialog.show();
     }
@@ -495,10 +496,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
      * called when activity is created to initialize the location provider, show views related
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
-    private void initLocation(ViewGroup rootView) {
+    private void initLocation(Dialog dialog) {
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         if (hasLocationProvider() && mPost.supportsLocation()) {
-            View locationRootView = ((ViewStub) rootView.findViewById(R.id.stub_post_location_settings)).inflate();
+            View locationRootView = ((ViewStub) dialog.findViewById(R.id.stub_post_location_settings)).inflate();
 
             TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
             locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
