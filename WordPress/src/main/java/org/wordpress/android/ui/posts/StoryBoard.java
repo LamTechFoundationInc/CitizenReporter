@@ -105,9 +105,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void setUpQuestionnaire(){
-        String[] array = {"What Happened?", "Why did it happen?", "How did it happen?", "Where did it happen?", "Who was involved?"};
+        String[] titles = {"What Happened?", "Why did it happen?", "How did it happen?", "Where did it happen?", "Who was involved?"};
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.view_row, R.id.header_text, array);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.view_row, R.id.header_text, titles);
 
         ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
         expandableLayoutListView.setAdapter(arrayAdapter);

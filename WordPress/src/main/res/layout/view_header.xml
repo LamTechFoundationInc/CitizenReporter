@@ -10,7 +10,16 @@
         android:layout_height="48dp"
         android:padding="10dp"
         android:textColor="@android:color/white"
-        android:text="ExpandableLayout Header!"
         android:gravity="center"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checked"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_check_white_24dp"
+        android:tint="@color/grey"/>
 
 </RelativeLayout>
