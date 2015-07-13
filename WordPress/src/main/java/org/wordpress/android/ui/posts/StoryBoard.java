@@ -388,6 +388,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     protected void onResume(){
         super.onResume();
+
+        //TODO: use onactivityresult?
         if(summaryDialog !=null) {
             if (summaryDialog.isShowing()) {
                 //resuming from enable location settings?

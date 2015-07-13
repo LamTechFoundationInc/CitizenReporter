@@ -88,7 +88,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 33;
+    private static final int DATABASE_VERSION = 34;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -198,6 +198,14 @@ public class WordPressDB {
     private static final String ADD_MEDIA_DATE_GMT = "alter table media add date_created_gmt date;";
     private static final String ADD_MEDIA_UPLOAD_STATE = "alter table media add uploadState default '';";
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
+
+    //add 5w+h columns
+    private static final String ADD_POST_WHY = "alter table posts add why text default '';";
+    private static final String ADD_POST_HOW = "alter table posts add how text default '';";
+    private static final String ADD_POST_WHAT = "alter table posts add what text default '';";
+    private static final String ADD_POST_WHEN = "alter table posts add when text default '';";
+    private static final String ADD_POST_WHO = "alter table posts add who text default '';";
+    private static final String ADD_POST_WHERE = "alter table posts add where text default '';";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
@@ -337,6 +345,14 @@ public class WordPressDB {
                 currentVersion++;
             case 33:
                 db.execSQL(CREATE_TABLE_LESSONS);
+                currentVersion++;
+            case 34:
+                db.execSQL(ADD_POST_HOW);
+                db.execSQL(ADD_POST_WHEN);
+                db.execSQL(ADD_POST_WHY);
+                db.execSQL(ADD_POST_WHO);
+                db.execSQL(ADD_POST_WHAT);
+                db.execSQL(ADD_POST_WHERE);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
