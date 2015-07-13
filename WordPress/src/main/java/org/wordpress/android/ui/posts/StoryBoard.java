@@ -29,6 +29,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 
 import info.hoang8f.widget.FButton;
 
@@ -105,9 +106,20 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void setUpQuestionnaire(){
-        String[] titles = {"What Happened?", "Why did it happen?", "How did it happen?", "Where did it happen?", "Who was involved?"};
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.view_row, R.id.header_text, titles);
+        Question questions[] = new Question[]
+                {
+                        new Question("What happened?", ""),
+                        new Question("Why did it happen?", ""),
+                        new Question("How did it happen?", ""),
+                        new Question("Where did it happen?", ""),
+                        new Question("Who was involved?", "")
+                };
+
+        GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,
+                R.layout.view_row, questions);
+
+        String[] titles = {"What Happened?", "Why did it happen?", "How did it happen?", "Where did it happen?", "Who was involved?"};
 
         ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
         expandableLayoutListView.setAdapter(arrayAdapter);

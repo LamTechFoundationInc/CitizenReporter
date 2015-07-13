@@ -5,23 +5,22 @@
     android:layout_height="match_parent"
     android:padding="5dp">
 
-    <EditText
-        android:id="@+id/text"
+    <TextView
+        android:id="@+id/content_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:textColor="@android:color/white"
-        android:background="@color/grey_lighten_30"
-        android:layout_toLeftOf="@+id/edit"
-        android:layout_toStartOf="@+id/edit" />
+        android:layout_toLeftOf="@+id/editButton"
+        android:layout_toStartOf="@+id/editButton" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/edit"
+        android:id="@+id/editButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:src="@drawable/ic_create_white_24dp"
         android:tint="@color/grey_darken_30"
-        android:layout_alignBottom="@+id/text" />
+        android:layout_alignBottom="@+id/content_text" />
 </RelativeLayout>
