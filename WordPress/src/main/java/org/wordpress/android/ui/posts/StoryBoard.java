@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -106,6 +107,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         //load post
         long selectedId = getIntent().getLongExtra("selectedId", 0);
 
+        Log.d("selectedId", selectedId + "");
+
         if (WordPress.getCurrentBlog() == null)
             return;
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
@@ -122,6 +125,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         setUpQuestionnaire();
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void loadPost(Post p){
@@ -218,7 +230,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mDemoSlider.setDuration(4000);
         mDemoSlider.addOnPageChangeListener(this);
 
-        toggleMediaPane(true);
+        toggleMediaPane(false);
     }
 
     public void toggleMediaPane(boolean hasMedia){
