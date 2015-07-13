@@ -29,7 +29,7 @@
         android:layout_alignRight="@+id/submitButton"
         android:layout_alignEnd="@+id/submitButton"
         android:layout_above="@+id/locationGroup">
-    <requestFocus/>
+        <requestFocus/>
     </EditText>
 
     <info.hoang8f.widget.FButton
@@ -37,8 +37,10 @@
         android:layout_height="wrap_content"
         android:text="@string/hs__done_btn"
         android:id="@+id/submitButton"
-        fbutton:buttonColor="@color/alert_green"
         fbutton:cornerRadius="5dp"
+        fbutton:buttonColor="@color/grey_lighten_10"
+        fbutton:shadowColor="@color/grey_lighten_20"
+        fbutton:shadowEnabled="true"
         android:padding="2dp"
         style="?android:attr/borderlessButtonStyle"
         android:layout_alignParentTop="true"
@@ -62,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout="@layout/post_location_layout_pretty"
-        />
+            />
     </LinearLayout>
 
 </RelativeLayout>

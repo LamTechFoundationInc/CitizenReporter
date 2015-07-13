@@ -44,7 +44,8 @@
             android:layout_weight="1"
             android:ellipsize="end"
             android:lines="1"
-            android:text="@string/edit_location" />
+            android:text="@string/edit_location"
+            android:layout_marginRight="3dp"/>
 
         <info.hoang8f.widget.FButton
             fbutton:buttonColor="@color/translucent_grey_lighten_10"
