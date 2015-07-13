@@ -96,8 +96,8 @@
     <color name="theme_feature_text">@color/grey_dark</color>
 
     <!-- Tab Strip -->
-    <color name="tab_background">@color/color_primary</color>
-    <color name="tab_text_normal">@color/blue_light</color>
+    <color name="tab_background">#2f5da3</color>
+    <color name="tab_text_normal">#ff1751e9</color>
     <color name="tab_text_selected">@color/white</color>
     <color name="tab_indicator">@color/white</color>
 
