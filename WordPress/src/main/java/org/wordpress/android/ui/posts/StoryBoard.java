@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +30,9 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 
 import info.hoang8f.widget.FButton;
@@ -100,9 +104,30 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         });
 
+        //load post
+        long selectedId = getIntent().getLongExtra("selectedId", 0);
+
+        if (WordPress.getCurrentBlog() == null)
+            return;
+        Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
+
+        if (post != null) {
+            WordPress.currentPost = post;
+            if (WordPress.currentPost != null) {
+                loadPost(WordPress.currentPost);
+            }
+        }
+
         setUpSlider();
 
         setUpQuestionnaire();
+
+
+    }
+
+    public void loadPost(Post p){
+        //setTitle(p.getTitle());
+        editTextSummary.setText("" + p.getTitle());
     }
 
     public void setUpQuestionnaire(){
@@ -292,5 +317,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public void onPageScrollStateChanged(int state) {}
 
-
+    @Override
+    public void onBackPressed(){
+        Intent i = new Intent(StoryBoard.this, RipotiMainActivity.class);
+        startActivity(i);
+    }
 }

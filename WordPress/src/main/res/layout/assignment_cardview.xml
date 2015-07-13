@@ -111,9 +111,12 @@
                 android:id="@+id/text_location"
                 style="@style/ReaderTextView.Post.Address"
                 android:layout_below="@+id/text_excerpt"
-                android:layout_marginLeft="@dimen/reader_card_content_padding"
                 android:layout_marginTop="@dimen/margin_small"
-                tools:text="text_tag" />
+                tools:text="text_tag"
+                android:layout_toLeftOf="@+id/assignment_post_author"
+                android:layout_alignLeft="@+id/text_excerpt"
+                android:layout_alignStart="@+id/text_excerpt"
+                />
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/assignment_post_author"

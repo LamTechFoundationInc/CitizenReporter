@@ -77,7 +77,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        dialog.setContentView(R.layout.summary_fragment);
+        dialog.setContentView(R.layout.fivew_fragment);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         final FButton submitButton = (FButton)dialog.findViewById(R.id.submitButton);
