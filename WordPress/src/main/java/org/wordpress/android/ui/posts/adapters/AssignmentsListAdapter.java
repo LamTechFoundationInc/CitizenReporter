@@ -137,7 +137,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
         String postAuthor = post.getPostAuthor();
         wrapper.getAssignment_post_author().setText(postAuthor);
 
-        String deadlineText = post.getDeadline();
+        String deadlineText = post.getDeadline().replace("-", "/");
 
         //if deadline passed, tint accordingly
         if(!deadlineText.equals("")){

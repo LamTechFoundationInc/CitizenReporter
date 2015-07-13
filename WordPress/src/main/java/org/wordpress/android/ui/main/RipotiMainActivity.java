@@ -808,9 +808,13 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed(){
+        if(viewAssignmentFragment != null){
+            if(viewAssignmentFragment.isVisible())
+                closePost();
+        }else if(viewPostFragment !=null){
+                if(viewPostFragment.isVisible())
+                    closePost();
 
-        if(viewAssignmentFragment.isVisible()||(viewPostFragment.isVisible())){
-            closePost();
         }else{
             finish();
         }
