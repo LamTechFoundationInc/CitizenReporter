@@ -73,7 +73,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
         guidePane = (LinearLayout)findViewById(R.id.guidePane);
         displaySummary = (TextView)findViewById(R.id.displaySummary);
-        editTextSummary = (EditText)findViewById(R.id.editTextSummary);
 
         yesMedia = (RelativeLayout)findViewById(R.id.yesMediaPane);
         noMedia = (RelativeLayout)findViewById(R.id.noMediaPane);
@@ -127,7 +126,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     public void loadPost(Post p){
         //setTitle(p.getTitle());
-        editTextSummary.setText("" + p.getTitle());
+        displaySummary.setText("" + p.getTitle());
     }
 
     public void setUpQuestionnaire(){
@@ -316,10 +315,4 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     @Override
     public void onPageScrollStateChanged(int state) {}
-
-    @Override
-    public void onBackPressed(){
-        Intent i = new Intent(StoryBoard.this, RipotiMainActivity.class);
-        startActivity(i);
-    }
 }

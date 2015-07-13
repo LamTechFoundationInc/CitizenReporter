@@ -308,12 +308,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
         Intent i = new Intent(getActivity(), StoryBoard.class);
         i.putExtra("selectedId", selectedId);
         startActivity(i);
-        //find better way
-        getActivity().finish();
         /*
-
-
-
         if (WordPress.getCurrentBlog() == null)
             return;
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
