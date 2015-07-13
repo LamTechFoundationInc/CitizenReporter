@@ -48,23 +48,19 @@
         android:padding="5dp"
         style="?android:attr/borderlessButtonStyle"
     />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/getLocation"
-        android:src="@drawable/ic_address"
-        android:layout_below="@+id/editTextSummary"
-        android:layout_alignLeft="@+id/editTextSummary"
-        android:layout_alignStart="@+id/editTextSummary"
-        android:layout_marginTop="17dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <ViewStub
+        android:id="@+id/stub_post_location_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout="@layout/post_location_settings"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Set location"
-        android:id="@+id/getLocationText"
-        android:layout_alignBottom="@+id/getLocation"
-        android:layout_toRightOf="@+id/closeDialog"
-        android:layout_toEndOf="@+id/closeDialog" />
+        android:layout_alignBottom="@+id/editTextSummary"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+
 </RelativeLayout>
