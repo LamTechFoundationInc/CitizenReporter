@@ -165,7 +165,7 @@
     <string name="media_details_dimensions">Dimensions:</string>
 
     <!-- tab titles -->
-    <string name="tab_comments">Comments</string>
+    <string name="tab_comments">Feedback</string>
 
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>

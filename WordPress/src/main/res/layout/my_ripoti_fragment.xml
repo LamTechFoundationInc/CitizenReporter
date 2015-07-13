@@ -27,6 +27,7 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_medium"
@@ -100,6 +101,24 @@
 
 
 
+            <!--Account-->
+            <RelativeLayout
+                android:id="@+id/row_my_account"
+                style="@style/MySiteListRowLayout">
+
+                <ImageView
+                    android:id="@+id/my_account_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/my_site_btn_site_settings"
+                    android:src="@drawable/me_icon_settings"/>
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/my_account_text"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/my_account_icon"
+                    android:text="@string/my_account" />
+
+            </RelativeLayout>
             <!--About-->
             <RelativeLayout
                 android:id="@+id/row_about_app"
@@ -223,7 +242,8 @@
             <!--Media-->
             <RelativeLayout
                 android:id="@+id/row_media"
-                style="@style/MySiteListRowLayout">
+                style="@style/MySiteListRowLayout"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/my_site_media_icon"
@@ -360,24 +380,7 @@
 
             </RelativeLayout>
 
-            <!--Account-->
-            <RelativeLayout
-                android:id="@+id/row_my_account"
-                style="@style/MySiteListRowLayout">
 
-                <ImageView
-                    android:id="@+id/my_account_icon"
-                    style="@style/MySiteListRowIcon"
-                    android:contentDescription="@string/my_site_btn_site_settings"
-                    android:src="@drawable/me_icon_settings"/>
-
-                <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/my_account_text"
-                    style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/my_account_icon"
-                    android:text="@string/my_account" />
-
-            </RelativeLayout>
 
             <!--Admin-->
             <LinearLayout

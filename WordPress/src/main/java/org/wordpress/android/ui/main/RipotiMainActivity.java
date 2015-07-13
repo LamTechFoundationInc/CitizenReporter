@@ -39,6 +39,7 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.posts.ViewAssignmentFragment;
 import org.wordpress.android.ui.posts.ViewPostFragmentRipoti;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -208,6 +209,8 @@ public class RipotiMainActivity extends ActionBarActivity
                 return;
             }
             WordPress.currentPost = post;
+            viewPostFragment = new ViewPostFragmentRipoti();
+
             if (viewPostFragment == null || !viewPostFragment.isInLayout()) {
                 FragmentTransaction ft = fm.beginTransaction();
                 ft.hide(mPostList);

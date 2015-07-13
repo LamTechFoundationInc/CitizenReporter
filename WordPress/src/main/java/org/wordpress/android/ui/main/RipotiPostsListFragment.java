@@ -305,6 +305,9 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
 
     private void showPost(long selectedId) {
 
+        Intent i = new Intent(getActivity(), StoryBoard.class);
+        startActivity(i);/*
+
         if (WordPress.getCurrentBlog() == null)
             return;
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
@@ -318,7 +321,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
             }
-        }
+        }*/
     }
 
     boolean isLoadingMorePosts() {

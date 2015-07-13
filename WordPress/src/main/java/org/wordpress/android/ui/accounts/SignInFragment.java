@@ -161,7 +161,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         });
 
         //Always force self hosted
-        mUrlButtonLayout.setVisibility(View.VISIBLE);
+        mUrlButtonLayout.setVisibility(View.GONE);
         mSelfHosted = true;
 
         mForgotPassword = (WPTextView) rootView.findViewById(R.id.forgot_password);
