@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sectionLocationView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -28,7 +29,14 @@
         android:layout_below="@+id/locationText"
         android:orientation="horizontal">
 
-        <Button
+        <info.hoang8f.widget.FButton
+            fbutton:buttonColor="@color/translucent_grey_lighten_10"
+            fbutton:shadowColor="@color/grey_lighten_20"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="5dp"
+            fbutton:cornerRadius="5dp"
+            android:padding="5dp"
+            style="?android:attr/borderlessButtonStyle"
             android:id="@+id/updateLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,7 +46,14 @@
             android:lines="1"
             android:text="@string/edit_location" />
 
-        <Button
+        <info.hoang8f.widget.FButton
+            fbutton:buttonColor="@color/translucent_grey_lighten_10"
+            fbutton:shadowColor="@color/grey_lighten_20"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="5dp"
+            fbutton:cornerRadius="5dp"
+            android:padding="5dp"
+            style="?android:attr/borderlessButtonStyle"
             android:id="@+id/removeLocation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

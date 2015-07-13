@@ -310,7 +310,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         final Dialog dialog = new Dialog(StoryBoard.this);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         dialog.setContentView(R.layout.summary_fragment);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
@@ -487,7 +487,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private View mLocationViewSection;
     private TextView mLocationText;
     private EditText mLocationEditText;
-    private Button mButtonSearchLocation;
+    private FButton mButtonSearchLocation;
 
     private TextWatcher mLocationEditTextWatcher = new TextWatcher() {
         @Override
@@ -516,9 +516,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if (hasLocationProvider() && mPost.supportsLocation()) {
             View locationRootView = ((ViewStub) dialog.findViewById(R.id.stub_post_location_settings)).inflate();
 
-            TextView locationLabel = ((TextView) locationRootView.findViewById(R.id.locationLabel));
-            locationLabel.setText(getResources().getString(R.string.location).toUpperCase());
-
             mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
             mLocationText.setOnClickListener(this);
 
@@ -526,18 +523,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
             mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
 
-            Button addLocation = (Button) locationRootView.findViewById(R.id.addLocation);
+            FButton addLocation = (FButton) locationRootView.findViewById(R.id.addLocation);
             addLocation.setOnClickListener(this);
 
-            mButtonSearchLocation = (Button) locationRootView.findViewById(R.id.searchLocation);
+            mButtonSearchLocation = (FButton) locationRootView.findViewById(R.id.searchLocation);
             mButtonSearchLocation.setOnClickListener(this);
 
             mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
             mLocationEditText.setOnEditorActionListener(this);
             mLocationEditText.addTextChangedListener(mLocationEditTextWatcher);
 
-            Button updateLocation = (Button) locationRootView.findViewById(R.id.updateLocation);
-            Button removeLocation = (Button) locationRootView.findViewById(R.id.removeLocation);
+            Button updateLocation = (FButton) locationRootView.findViewById(R.id.updateLocation);
+            Button removeLocation = (FButton) locationRootView.findViewById(R.id.removeLocation);
             updateLocation.setOnClickListener(this);
             removeLocation.setOnClickListener(this);
 

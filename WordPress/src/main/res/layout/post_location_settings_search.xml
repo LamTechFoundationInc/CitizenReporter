@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sectionLocationSearch"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,7 +19,14 @@
         android:inputType="text"
         android:imeOptions="actionSearch" />
 
-    <Button
+    <info.hoang8f.widget.FButton
+        fbutton:buttonColor="@color/translucent_grey_lighten_10"
+        fbutton:shadowColor="@color/grey_lighten_20"
+        fbutton:shadowEnabled="true"
+        fbutton:shadowHeight="5dp"
+        fbutton:cornerRadius="5dp"
+        android:padding="5dp"
+        style="?android:attr/borderlessButtonStyle"
         android:id="@+id/searchLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
