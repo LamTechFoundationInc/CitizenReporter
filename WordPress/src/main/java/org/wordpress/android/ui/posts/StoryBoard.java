@@ -219,7 +219,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         Question questions[] = new Question[]
                 {
-                        new Question(myResArrayList.get(0), mPost.getQwhat()),
+                        //new Question(myResArrayList.get(0), mPost.getQwhat()),
                         new Question(myResArrayList.get(1), mPost.getQwhy()),
                         new Question(myResArrayList.get(2), tags),
                         //new Question(myResArrayList.get(3), mPost.getQwhere()),
