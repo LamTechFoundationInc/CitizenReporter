@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
@@ -51,6 +52,7 @@ import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
+import org.wordpress.android.widgets.WPAlertDialogFragment;
 
 import info.hoang8f.widget.FButton;
 
@@ -114,10 +116,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         //get post
         long selectedId = getIntent().getLongExtra("selectedId", 0);
 
-        if (WordPress.getCurrentBlog() == null)
-            finish();
+        if (WordPress.getCurrentBlog() == null) {
+            finishWithDialog();
+        }
         mPost = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
 
+        if(mPost == null) {
+            finishWithDialog();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -173,6 +179,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         setUpQuestionnaire();
 
 
+    }
+
+    public void finishWithDialog(){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
+        ft.add(alert, "alert");
+        ft.commitAllowingStateLoss();
+
+        finish();
     }
 
     @Override
