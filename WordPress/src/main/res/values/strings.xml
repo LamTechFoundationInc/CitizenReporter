@@ -932,7 +932,7 @@
     <string-array name="fivew_and_h">
         <item>What is the incident?</item>
         <item>Why do you think it happened?</item>
-        <item>Who or what institutions are involved?</item>
+        <item>Enter comma separated names of people/organisations involved</item>
         <item>Where did this happen?</item>
         <item>When did this happen?</item>
         <item>How did the events unfold?</item>
