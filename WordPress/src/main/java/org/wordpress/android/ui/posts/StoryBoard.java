@@ -69,6 +69,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        setTitle(getResources().getString(R.string.story_board));
+
         mDemoSlider = (SliderLayout)findViewById(R.id.slider);
 
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
