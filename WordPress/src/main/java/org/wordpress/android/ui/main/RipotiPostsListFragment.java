@@ -305,17 +305,15 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
     }
 
     private void showPost(long selectedId) {
-
-        Intent i = new Intent(getActivity(), StoryBoard.class);
-        i.putExtra("selectedId", selectedId);
-        startActivity(i);
-        /*
         if (WordPress.getCurrentBlog() == null)
             return;
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
         if (post != null) {
             WordPress.currentPost = post;
-            mOnPostSelectedListener.onPostSelected(post);
+            //mOnPostSelectedListener.onPostSelected(post);
+            Intent i = new Intent(getActivity(), StoryBoard.class);
+            i.putExtra("selectedId", selectedId);
+            startActivity(i);
         } else {
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -323,7 +321,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
             }
-        }*/
+        }
     }
 
     boolean isLoadingMorePosts() {

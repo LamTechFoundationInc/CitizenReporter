@@ -109,18 +109,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         //load post
         long selectedId = getIntent().getLongExtra("selectedId", 0);
 
-        Log.d("selectedId", selectedId + "");
-
         if (WordPress.getCurrentBlog() == null)
             return;
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
-
-        if (post != null) {
+        //TODO: need for checking twice?
+        // if (post != null) {
             WordPress.currentPost = post;
-            if (WordPress.currentPost != null) {
-                loadPost(WordPress.currentPost);
-            }
-        }
+            loadPost(WordPress.currentPost);
+        //}
 
         setUpSlider();
 

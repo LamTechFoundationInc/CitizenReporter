@@ -174,7 +174,7 @@ public class WordPressDB {
     private static final String ADD_IS_UPLOADING = "alter table posts add isUploading boolean default 0";
 
     //Add integer to store assignment id
-    private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer default 0";
+    private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer not null";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -1492,7 +1492,7 @@ public class WordPressDB {
                 post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
                 post.setTitle(c.getString(c.getColumnIndex("title")));
                 if(!isAssignment)
-                    post.setAssignment_id(Integer.valueOf(c.getString(c.getColumnIndex("assignment_id"))));
+                    post.setAssignment_id(Integer.parseInt(c.getString(c.getColumnIndex("assignment_id"))));
 
                 if(isAssignment){
                     post.setAssignmentLocation(c.getString(c.getColumnIndex("location")));
