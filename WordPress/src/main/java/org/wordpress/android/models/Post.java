@@ -64,6 +64,13 @@ public class Post implements Serializable {
     private String assignmentDeadline;
     private String coordinates;
 
+    private String qwho;
+    private String qwhere;
+    private String qwhy;
+    private String qwhat;
+    private String qwhen;
+    private String qhow;
+
     public Post() {
     }
 
@@ -575,5 +582,53 @@ public class Post implements Serializable {
 
     public void setCoordinates(String coordinates) {
         this.coordinates = coordinates;
+    }
+
+    public String getQwho() {
+        return qwho;
+    }
+
+    public void setQwho(String qwho) {
+        this.qwho = qwho;
+    }
+
+    public String getQwhere() {
+        return qwhere;
+    }
+
+    public void setQwhere(String qwhere) {
+        this.qwhere = qwhere;
+    }
+
+    public String getQwhy() {
+        return qwhy;
+    }
+
+    public void setQwhy(String qwhy) {
+        this.qwhy = qwhy;
+    }
+
+    public String getQwhat() {
+        return qwhat;
+    }
+
+    public void setQwhat(String qwhat) {
+        this.qwhat = qwhat;
+    }
+
+    public String getQwhen() {
+        return qwhen;
+    }
+
+    public void setQwhen(String qwhen) {
+        this.qwhen = qwhen;
+    }
+
+    public String getQhow() {
+        return qhow;
+    }
+
+    public void setQhow(String qhow) {
+        this.qhow = qhow;
     }
 }

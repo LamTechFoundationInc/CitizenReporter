@@ -57,6 +57,8 @@ import org.wordpress.android.widgets.WPAlertDialogFragment;
 import info.hoang8f.widget.FButton;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -210,13 +212,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     public void setUpQuestionnaire(){
 
+        String[] myResArray = getResources().getStringArray(R.array.fivew_and_h);
+        List<String> myResArrayList = Arrays.asList(myResArray);
+
         Question questions[] = new Question[]
                 {
-                        new Question("What happened?", ""),
-                        new Question("Why did it happen?", ""),
-                        new Question("How did it happen?", ""),
-                        new Question("Where did it happen?", ""),
-                        new Question("Who was involved?", "")
+                        new Question(myResArrayList.get(0), ""),
+                        new Question(myResArrayList.get(1), ""),
+                        new Question(myResArrayList.get(2), ""),
+                        new Question(myResArrayList.get(3), ""),
+                        new Question(myResArrayList.get(4), "")
                 };
 
         GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,

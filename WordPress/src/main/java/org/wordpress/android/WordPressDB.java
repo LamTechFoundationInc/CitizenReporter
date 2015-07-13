@@ -200,12 +200,12 @@ public class WordPressDB {
     private static final String ADD_MEDIA_VIDEOPRESS_SHORTCODE = "alter table media add videoPressShortcode text default '';";
 
     //add 5w+h columns
-    private static final String ADD_POST_WHY = "alter table posts add why text default '';";
-    private static final String ADD_POST_HOW = "alter table posts add how text default '';";
-    private static final String ADD_POST_WHAT = "alter table posts add what text default '';";
-    private static final String ADD_POST_WHEN = "alter table posts add when text default '';";
-    private static final String ADD_POST_WHO = "alter table posts add who text default '';";
-    private static final String ADD_POST_WHERE = "alter table posts add where text default '';";
+    private static final String ADD_POST_WHY = "alter table posts add qwhy text default '';";
+     private static final String ADD_POST_HOW = "alter table posts add qhow text default '';";
+    private static final String ADD_POST_WHAT = "alter table posts add qwhat text default '';";
+    private static final String ADD_POST_WHEN = "alter table posts add qwhen text default '';";
+     private static final String ADD_POST_WHO = "alter table posts add qwho text default '';";
+    private static final String ADD_POST_WHERE = "alter table posts add qwhere text default '';";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
@@ -1016,6 +1016,20 @@ public class WordPressDB {
                                 if (customField.get("key").equals("assignment_id"))
                                     values.put("assignment_id", customField.get("value").toString());
 
+                                //questionnare questions
+                                if (customField.get("key").equals("qwho"))
+                                    values.put("qwho", customField.get("value").toString());
+                                if (customField.get("key").equals("qwhere"))
+                                    values.put("qwhere", customField.get("value").toString());
+                                if (customField.get("key").equals("qwhat"))
+                                    values.put("qwhat", customField.get("value").toString());
+                                if (customField.get("key").equals("qwhy"))
+                                    values.put("qwhy", customField.get("value").toString());
+                                if (customField.get("key").equals("qwhen"))
+                                    values.put("qwhen", customField.get("value").toString());
+                                if (customField.get("key").equals("qhow"))
+                                    values.put("qhow", customField.get("value").toString());
+
                                 //assignments custom fields
                                 if(isAssignment){
                                     if (customField.get("key").equals("assignment_address"))
@@ -1507,8 +1521,16 @@ public class WordPressDB {
                 post.setLocalTableBlogId(Integer.valueOf(c.getString(c.getColumnIndex("blogID"))));
                 post.setRemotePostId(c.getString(c.getColumnIndex("postid")));
                 post.setTitle(c.getString(c.getColumnIndex("title")));
-                if(!isAssignment)
+
+                if(!isAssignment) {
                     post.setAssignment_id(Integer.parseInt(c.getString(c.getColumnIndex("assignment_id"))));
+                    post.setQwho(c.getString(c.getColumnIndex("qwho")));
+                    post.setQwhy(c.getString(c.getColumnIndex("qwhy")));
+                    post.setQwhen(c.getString(c.getColumnIndex("qwhen")));
+                    post.setQwhere(c.getString(c.getColumnIndex("qwhere")));
+                    post.setQwhat(c.getString(c.getColumnIndex("qwhat")));
+                    post.setQhow(c.getString(c.getColumnIndex("qhow")));
+                }
 
                 if(isAssignment){
                     post.setAssignmentLocation(c.getString(c.getColumnIndex("location")));
