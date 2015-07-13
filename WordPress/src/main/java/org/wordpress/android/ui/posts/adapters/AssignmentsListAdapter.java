@@ -141,7 +141,6 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
         //if deadline passed, tint accordingly
         if(!deadlineText.equals("")){
-            ImageView deadlineView = wrapper.getAssignment_deadline_noticon();
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 
             Date deadlineDate = null;
@@ -151,14 +150,13 @@ public class AssignmentsListAdapter extends BaseAdapter {
                 Date today = new Date();
 
                 if(today.after(deadlineDate)){
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_orange), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    wrapper.getDeadline().setTextColor(mContext.getResources().getColor(R.color.alert_orange));
                 }else if(today.before(deadlineDate)) {
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    wrapper.getDeadline().setTextColor(mContext.getResources().getColor(R.color.alert_green));
                 }else{
-                        //deadline is today
-                    deadlineView.setColorFilter(mContext.getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    //deadline is today
+                    wrapper.getDeadline().setTextColor(mContext.getResources().getColor(R.color.alert_red));
                 }
-
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -289,12 +287,7 @@ public class AssignmentsListAdapter extends BaseAdapter {
             }
             return (media_type_audio);
         }
-        ImageView getAssignment_deadline_noticon(){
-            if (assignment_deadline_noticon == null) {
-                assignment_deadline_noticon = (ImageView) base.findViewById(R.id.assignment_deadline_noticon);
-            }
-            return (assignment_deadline_noticon);
-        }
+
         TextView getTitle() {
             if (title == null) {
                 title = (TextView) base.findViewById(R.id.text_title);
