@@ -924,7 +924,7 @@
     <!--Storyboard-->
     <string name="story_board">Story Board</string>
     <string name="summary">Summary</string>
-    <string name="template">Guide</string>
+    <string name="template">Template[optional]</string>
     <string name="summary_prompt">Write your story summary here and/or use the guide.</string>
     <string name="no_media_added">No media added yet!</string>
     <string name="enable_location">Enable Location</string>

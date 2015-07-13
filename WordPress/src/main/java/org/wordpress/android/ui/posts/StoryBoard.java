@@ -10,10 +10,13 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
@@ -43,16 +46,25 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
+import org.json.JSONArray;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.editor.EditorFragmentAbstract;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
+import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
+import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
+import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
+import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
+import org.wordpress.android.widgets.WPViewPager;
 
 import info.hoang8f.widget.FButton;
 
@@ -62,6 +74,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Timer;
 
 public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSliderClickListener,
         ViewPagerEx.OnPageChangeListener,
@@ -88,6 +102,19 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private FButton enableLocation;
 
     private Dialog summaryDialog;
+
+    public static final String EXTRA_POSTID = "selectedId";
+    public static final String EXTRA_IS_PAGE = "isPage";
+    public static final String EXTRA_IS_NEW_POST = "isNewPost";
+    public static final String EXTRA_IS_QUICKPRESS = "isQuickPress";
+    public static final String EXTRA_QUICKPRESS_BLOG_ID = "quickPressBlogId";
+    public static final String EXTRA_SAVED_AS_LOCAL_DRAFT = "savedAsLocalDraft";
+    public static final String EXTRA_SHOULD_REFRESH = "shouldRefresh";
+    public static final String STATE_KEY_CURRENT_POST = "stateKeyCurrentPost";
+    public static final String STATE_KEY_ORIGINAL_POST = "stateKeyOriginalPost";
+    private Post mOriginalPost;
+    private boolean mIsNewPost;
+    private boolean mIsPage;
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -113,21 +140,65 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
 
     private Post mPost;
+    public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
+    public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story_board);
         //get post
         long selectedId = getIntent().getLongExtra("selectedId", 0);
+        Bundle extras = getIntent().getExtras();
+        String action = getIntent().getAction();
+        if (savedInstanceState == null) {
+            if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)
+                    || NEW_MEDIA_GALLERY.equals(action)
+                    || NEW_MEDIA_POST.equals(action)
+                    || getIntent().hasExtra(EXTRA_IS_QUICKPRESS)
+                    || (extras != null && extras.getInt("quick-media", -1) > -1)) {
+                if (getIntent().hasExtra(EXTRA_QUICKPRESS_BLOG_ID)) {
+                    // QuickPress might want to use a different blog than the current blog
+                    int blogId = getIntent().getIntExtra(EXTRA_QUICKPRESS_BLOG_ID, -1);
+                    Blog quickPressBlog = WordPress.wpDB.instantiateBlogByLocalId(blogId);
+                    if (quickPressBlog == null) {
+                        showErrorAndFinish(R.string.blog_not_found);
+                        return;
+                    }
+                    if (quickPressBlog.isHidden()) {
+                        showErrorAndFinish(R.string.error_blog_hidden);
+                        return;
+                    }
+                    WordPress.currentBlog = quickPressBlog;
+                }
 
-        if (WordPress.getCurrentBlog() == null) {
-            finishWithDialog();
+                // Create a new post for share intents and QuickPress
+                mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
+                WordPress.wpDB.savePost(mPost);
+                mIsNewPost = true;
+            } else if (extras != null) {
+                // Load post from the postId passed in extras
+                long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
+                mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
+                mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
+                mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId, false);
+                mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId, false);
+            } else {
+                // A postId extra must be passed to this activity
+                showErrorAndFinish(R.string.post_not_found);
+                return;
+            }
+        } else {
+            if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
+                try {
+                    mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
+                    mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+                } catch (ClassCastException e) {
+                    mPost = null;
+                }
+            }
         }
-        mPost = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
 
-        if(mPost == null) {
-            finishWithDialog();
-        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -186,13 +257,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
 
     }
-
-    public void finishWithDialog(){
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
-        ft.add(alert, "alert");
-        ft.commitAllowingStateLoss();
-
+    private void showErrorAndFinish(int errorMessageId) {
+        Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
         finish();
     }
 
@@ -203,6 +269,73 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void finish(){
+        saveAndFinish();
+    }
+    private boolean hasEmptyContentFields() {
+        return TextUtils.isEmpty(displaySummary.getText().toString());
+    }
+    private void saveAndFinish() {
+        savePost(true);
+        if (hasEmptyContentFields()) {
+            // new and empty post? delete it
+            if (mIsNewPost) {
+                WordPress.wpDB.deletePost(mPost);
+            }
+        } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            // if no changes have been made to the post, set it back to the original don't save it
+            WordPress.wpDB.updatePost(mOriginalPost);
+            WordPress.currentPost = mOriginalPost;
+        } else {
+            // changes have been made, save the post and ask for the post list to refresh.
+            // We consider this being "manual save", it will replace some Android "spans" by an html
+            // or a shortcode replacement (for instance for images and galleries)
+            savePost(false);
+            WordPress.currentPost = mPost;
+            Intent i = new Intent();
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
+            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
+            i.putExtra(EXTRA_IS_PAGE, mIsPage);
+            setResult(RESULT_OK, i);
+
+            //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
+        }
+        finish();
+    }
+    private void savePost(boolean isAutosave) {
+        savePost(isAutosave, true);
+    }
+
+    private void savePost(boolean isAutosave, boolean updatePost) {
+        if (updatePost) {
+            updatePostContent();
+            updatePostSettings();
+        }
+        WordPress.wpDB.updatePost(mPost);
+    }
+
+    private void updatePostContent(){
+        Post post = mPost;
+        post.setTitle(mPost.getTitle());
+        if (!post.isLocalDraft()) {
+            post.setLocalChange(true);
+        }
+    }
+
+    private void updatePostSettings(){
+        String status = PostStatus.toString(PostStatus.DRAFT);
+        mPost.setPostStatus(status);
+
+        if (mPost.supportsLocation()) {
+            mPost.setLocation(mPostLocation);
+        }
+
+        //mPost.setKeywords(tags);
+        mPost.setJSONCategories(new JSONArray());
+        mPost.setPostStatus(status);
     }
 
     public void loadPost(Post p){
@@ -370,6 +503,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             public void onClick(View v) {
                 if (summary.trim().length() > 0) {
                     displaySummary.setText(summary);
+                    if(!summary.equals(getResources().getString(R.string.summary_prompt))){
+                        mPost.setTitle(summary);
+                    }
                 } else {
                     displaySummary.setText(getResources().getString(R.string.summary_prompt));
                 }
