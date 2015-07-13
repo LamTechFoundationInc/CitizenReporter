@@ -80,10 +80,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private TextView text_summary;
     private TextView text_template;
 
-
     private PostLocation mPostLocation;
     private LocationHelper mLocationHelper;
 
+    private FButton enableLocation;
+
+    private Dialog summaryDialog;
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -158,6 +160,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 togglePanes(showTemplate);
             }
         });
+
+
 
         //on click summary pane, show pop up dialog for post section
         summaryPane.setOnClickListener(new View.OnClickListener(){
@@ -308,16 +312,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     public void showCreateSummaryDialog(){
 
-        final Dialog dialog = new Dialog(StoryBoard.this);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-        dialog.setContentView(R.layout.summary_fragment);
-        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        summaryDialog = new Dialog(StoryBoard.this);
+        summaryDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        summaryDialog.setContentView(R.layout.summary_fragment);
+        summaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        final FButton submitButton = (FButton)dialog.findViewById(R.id.submitButton);
+        final FButton submitButton = (FButton)summaryDialog.findViewById(R.id.submitButton);
         submitButton.setEnabled(false);
 
-        final EditText editTextSummary = (EditText)dialog.findViewById(R.id.editTextSummary);
+        final EditText editTextSummary = (EditText)summaryDialog.findViewById(R.id.editTextSummary);
 
         //find current value of summary
         summary = "" + displaySummary.getText().toString();
@@ -348,10 +352,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         });
 
-        dialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
+        summaryDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
+                summaryDialog.dismiss();
             }
         });
 
@@ -363,16 +367,35 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 } else {
                     displaySummary.setText(getResources().getString(R.string.summary_prompt));
                 }
-                dialog.dismiss();
+                summaryDialog.dismiss();
             }
         });
 
-        initLocation(dialog);
+        enableLocation = (FButton)summaryDialog.findViewById(R.id.enableLocation);
+        enableLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(callGPSSettingIntent);
+            }
+        });
 
+        initLocation();
 
-
-        dialog.show();
+        summaryDialog.show();
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(summaryDialog !=null) {
+            if (summaryDialog.isShowing()) {
+                //resuming from enable location settings?
+                initLocation();
+            }
+        }
+    }
+
     @Override
     protected void onStop() {
         // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
@@ -511,10 +534,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
      * called when activity is created to initialize the location provider, show views related
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
-    private void initLocation(Dialog dialog) {
+    private void initLocation() {
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         if (hasLocationProvider() && mPost.supportsLocation()) {
-            View locationRootView = ((ViewStub) dialog.findViewById(R.id.stub_post_location_settings)).inflate();
+            enableLocation.setVisibility(View.GONE);
+
+            View locationRootView = ((ViewStub) summaryDialog.findViewById(R.id.stub_post_location_settings)).inflate();
 
             mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
             mLocationText.setOnClickListener(this);
@@ -547,6 +572,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             } else {
                 showLocationAdd();
             }
+        }else{
+            enableLocation.setVisibility(View.VISIBLE);
         }
     }
 

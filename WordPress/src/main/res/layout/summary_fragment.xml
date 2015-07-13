@@ -65,6 +65,24 @@
             android:layout_height="match_parent"
             android:layout="@layout/post_location_layout_pretty"
             />
+        <info.hoang8f.widget.FButton
+            fbutton:buttonColor="@color/translucent_grey_lighten_10"
+            fbutton:shadowColor="@color/grey_lighten_20"
+            fbutton:shadowEnabled="true"
+            fbutton:shadowHeight="5dp"
+            fbutton:cornerRadius="5dp"
+            android:padding="5dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_alignParentBottom="true"
+            android:id="@+id/enableLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_location"
+            android:textSize="@dimen/text_sz_large"
+            android:drawableLeft="@drawable/ic_post_settings"
+            android:drawablePadding="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp" />
     </LinearLayout>
 
 </RelativeLayout>
