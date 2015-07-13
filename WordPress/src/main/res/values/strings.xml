@@ -928,4 +928,12 @@
     <string name="summary_prompt">Write your story summary here and/or use the guide.</string>
     <string name="no_media_added">No media added yet!</string>
     <string name="enable_location">Enable Location</string>
+
+    <string-array name="fivew_and_h">
+        <item>What is the incident?</item>
+        <item>Why do you think it happened?</item>
+        <item>Who or what institutions are involved?</item>
+        <item>Where did this happen?</item>
+        <item>How did the events unfold?</item>
+    </string-array>
 </resources>

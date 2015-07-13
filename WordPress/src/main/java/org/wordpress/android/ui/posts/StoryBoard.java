@@ -222,8 +222,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,
                 R.layout.view_row, questions);
 
-        String[] titles = {"What Happened?", "Why did it happen?", "How did it happen?", "Where did it happen?", "Who was involved?"};
-
         ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
         expandableLayoutListView.setAdapter(arrayAdapter);
     }
