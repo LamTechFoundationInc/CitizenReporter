@@ -215,13 +215,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         String[] myResArray = getResources().getStringArray(R.array.fivew_and_h);
         List<String> myResArrayList = Arrays.asList(myResArray);
 
+        String tags = mPost.getKeywords();
+
         Question questions[] = new Question[]
                 {
-                        new Question(myResArrayList.get(0), ""),
-                        new Question(myResArrayList.get(1), ""),
-                        new Question(myResArrayList.get(2), ""),
-                        new Question(myResArrayList.get(3), ""),
-                        new Question(myResArrayList.get(4), "")
+                        new Question(myResArrayList.get(0), mPost.getQwhat()),
+                        new Question(myResArrayList.get(1), mPost.getQwhy()),
+                        new Question(myResArrayList.get(2), tags),
+                        new Question(myResArrayList.get(3), mPost.getQwhere()),
+                        new Question(myResArrayList.get(4), mPost.getQwhen()),
+                        new Question(myResArrayList.get(5), mPost.getQhow())
                 };
 
         GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,
