@@ -55,12 +55,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout="@layout/post_location_settings"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Set location"
-        android:layout_alignBottom="@+id/editTextSummary"
 
+        android:layout_alignBottom="@+id/editTextSummary"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/editTextSummary"
+        android:layout_toLeftOf="@+id/submitButton"
+        android:layout_toStartOf="@+id/submitButton"
+        android:padding="5dp">
+        <ViewStub
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/viewStub" />
+    </LinearLayout>
 
 </RelativeLayout>
