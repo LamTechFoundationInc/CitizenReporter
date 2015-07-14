@@ -52,9 +52,10 @@
 
                 <ImageView
                     android:id="@+id/nux_fragment_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="5dp"
                     android:src="@drawable/app_icon"/>
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
@@ -66,23 +67,23 @@
                     android:layout_margin="8dp"
                     android:visibility="gone"/>
                 <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXTitle"
+                    style="@style/WordPress.NUXDesc"
                     android:text="@string/site_description_1"
                     android:id="@+id/nux_slogan"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@+id/nux_help_version"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="5dp"/>
                 <org.wordpress.android.widgets.WPTextView
-                    style="@style/WordPress.NUXTitle"
-                    android:text="@string/site_description_1"
+                    style="@style/WordPress.NUXDesc"
+                    android:text="@string/site_description_2"
                     android:id="@+id/nux_slogan_2"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_below="@+id/nux_slogan"
-                    android:layout_margin="8dp"/>
+                    android:layout_margin="2dp"/>
                 <ImageView
                     android:id="@+id/info_button_secondary"
                     android:layout_width="wrap_content"

@@ -180,6 +180,16 @@
         <item name="android:lineSpacingExtra">-4sp</item>
     </style>
 
+    <style name="WordPress.NUXDesc">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">24dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/nux_desc_font_size</item>
+        <item name="android:lineSpacingExtra">-4sp</item>
+    </style>
+
     <style name="WordPress.EmptyList">
         <item name="android:textColor">@color/grey_darken_30</item>
         <item name="android:gravity">center</item>
