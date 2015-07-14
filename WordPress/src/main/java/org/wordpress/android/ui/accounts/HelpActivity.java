@@ -43,7 +43,7 @@ public class HelpActivity extends ActionBarActivity {
 
         // Init common elements
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        //version.setText(getString(R.string.version) + " " + WordPress.versionName);
 
         WPTextView applogButton = (WPTextView) findViewById(R.id.applog_button);
         applogButton.setOnClickListener(new OnClickListener() {
