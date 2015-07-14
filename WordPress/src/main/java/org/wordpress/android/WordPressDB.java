@@ -1523,7 +1523,8 @@ public class WordPressDB {
                 post.setTitle(c.getString(c.getColumnIndex("title")));
 
                 if(!isAssignment) {
-                    post.setAssignment_id(Integer.parseInt(c.getString(c.getColumnIndex("assignment_id"))));
+                    if(!c.getString(c.getColumnIndex("assignment_id")).equals(""))
+                        post.setAssignment_id(Integer.parseInt(c.getString(c.getColumnIndex("assignment_id"))));
                     post.setQwho(c.getString(c.getColumnIndex("qwho")));
                     post.setQwhy(c.getString(c.getColumnIndex("qwhy")));
                     post.setQwhen(c.getString(c.getColumnIndex("qwhen")));

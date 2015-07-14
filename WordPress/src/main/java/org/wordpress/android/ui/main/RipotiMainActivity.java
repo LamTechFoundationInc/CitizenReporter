@@ -377,9 +377,6 @@ public class RipotiMainActivity extends ActionBarActivity
 
         WordPress.currentPost = null;
 
-        if (savedInstanceState != null) {
-            popPostDetail();
-        }
 
         //attemptToSelectPost();
     }
@@ -449,7 +446,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
     }
     /*
-     * called when app is launched from a push notification, switches to the notification tab
+     * Called when app is launched from a push notification, switches to the notification tab
      * and opens the desired note detail
      */
     private void launchWithNoteId() {
@@ -811,7 +808,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed(){
-        
+
         if(viewAssignmentFragment != null){
             if(viewAssignmentFragment.isVisible()) {
                 closePost();
