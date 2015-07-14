@@ -51,6 +51,7 @@
     <string name="no">No</string>
     <string name="error">Error</string>
     <string name="could_not_remove_account">Couldn\'t remove site</string>
+    <string name="could_not_sign-out">Couldn\'t sign out. Try again.</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
     <string name="connection_error">Connection error</string>
@@ -221,7 +222,7 @@
     <string name="delete_post">Delete post</string>
     <string name="delete_page">Delete page</string>
     <string name="share_url">Share URL</string>
-    <string name="posts_fetching">Fetching posts…</string>
+    <string name="posts_fetching">Fetching …</string>
     <string name="pages_fetching">Fetching pages…</string>
     <string name="toast_err_post_uploading">Unable to open post while it\'s uploading</string>
 

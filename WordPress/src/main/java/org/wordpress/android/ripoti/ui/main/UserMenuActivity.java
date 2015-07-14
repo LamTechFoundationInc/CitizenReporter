@@ -1,6 +1,7 @@
 package org.wordpress.android.ripoti.ui.main;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -18,20 +19,28 @@ import android.widget.RelativeLayout;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
+import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.LessonsActivity;
 import org.wordpress.android.ui.posts.StoryBoard;
+import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
+import org.wordpress.android.util.AnalyticsUtils;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -169,9 +178,33 @@ public class UserMenuActivity extends ActionBarActivity{
         findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(UserMenuActivity.this, SignInActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                Blog blog = WordPress.currentBlog;
+                if (WordPress.wpDB.deleteBlog(getApplicationContext(), blog.getLocalTableBlogId())) {
+                    StatsTable.deleteStatsForBlog(getApplicationContext(), blog.getLocalTableBlogId()); // Remove stats data
+                    AnalyticsUtils.refreshMetadata();
+                    ToastUtils.showToast(UserMenuActivity.this, R.string.signing_out);
+                    WordPress.wpDB.deleteLastBlogId();
+                    WordPress.currentBlog = null;
+
+                    // If the last blog is removed and the user is not signed in wpcom, broadcast a UserSignedOut event
+                    if (!AccountHelper.isSignedIn()) {
+                        EventBus.getDefault().post(new CoreEvents.UserSignedOutCompletely());
+                    }
+
+                    Intent i = new Intent(UserMenuActivity.this, WPLaunchActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+
+                    finish();
+
+                } else {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(UserMenuActivity.this);
+                    dialogBuilder.setTitle(getResources().getText(R.string.error));
+                    dialogBuilder.setMessage(getResources().getText(R.string.could_not_sign_out));
+                    dialogBuilder.setPositiveButton("OK", null);
+                    dialogBuilder.setCancelable(true);
+                    dialogBuilder.create().show();
+                }
             }
         });
         findViewById(R.id.row_about_app).setOnClickListener(new View.OnClickListener(){

@@ -368,7 +368,6 @@ public class RipotiMainActivity extends ActionBarActivity
         mPostList = (RipotiPostsListFragment) fm.findFragmentById(R.id.postList);
 
 
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mIsPage = extras.getBoolean(EXTRA_VIEW_PAGES);
