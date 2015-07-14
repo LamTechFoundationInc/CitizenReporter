@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.simperium.client.Bucket;
@@ -113,6 +115,12 @@ public class RipotiMainActivity extends ActionBarActivity
     private ViewAssignmentFragment viewAssignmentFragment;
     private Toolbar toolbar;
     private ViewPostFragmentRipoti viewPostFragment;
+
+    private ImageView button_camera;
+    private ImageView button_video;
+    private ImageView button_mic;
+
+
     @Override
     public void onDetailAssignmentAction(int action, Post post) {
         onAssignmentAction(action, post);
@@ -362,6 +370,13 @@ public class RipotiMainActivity extends ActionBarActivity
                 ActivityLauncher.showSignInForResult(this);
             }
         }
+
+        //quick capture icons
+        button_camera = (ImageView)findViewById(R.id.button_camera);
+        button_video = (ImageView)findViewById(R.id.button_video);
+        button_mic = (ImageView)findViewById(R.id.button_mic);
+        //
+
 
         FragmentManager fm = getFragmentManager();
 
