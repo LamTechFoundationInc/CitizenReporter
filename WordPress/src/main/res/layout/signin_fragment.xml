@@ -55,8 +55,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/nux_icon_wp"
-                    android:visibility="gone"/>
+                    android:src="@drawable/app_icon"/>
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
                     android:text="@string/app_name"
@@ -64,6 +63,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_centerInParent="true"
+                    android:layout_margin="8dp"
+                    android:visibility="gone"/>
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/WordPress.NUXTitle"
+                    android:text="@string/site_description_1"
+                    android:id="@+id/nux_slogan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/nux_help_version"
+                    android:layout_margin="8dp"/>
+                <org.wordpress.android.widgets.WPTextView
+                    style="@style/WordPress.NUXTitle"
+                    android:text="@string/site_description_1"
+                    android:id="@+id/nux_slogan_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/nux_slogan"
                     android:layout_margin="8dp"/>
                 <ImageView
                     android:id="@+id/info_button_secondary"
