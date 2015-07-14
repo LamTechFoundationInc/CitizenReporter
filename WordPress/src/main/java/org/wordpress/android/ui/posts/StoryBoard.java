@@ -209,7 +209,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             // User selected 'Quick Photo' in the menu drawer
             if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA) {
                 launchCamera();
-            } else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
+            } else if(quickMediaType == Constants.QUICK_POST_VIDEO_CAMERA) {
+                launchVideoCamera();
+            }else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
                 WordPressMediaUtils.launchPictureLibrary(this);
             }
             if (mPost != null) {
@@ -286,6 +288,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         });
     }
+    private void launchVideoCamera() {
+        WordPressMediaUtils.launchVideoCamera(this);
+        AppLockManager.getInstance().setExtendedTimeout();
+    }
+
 
     private void showErrorAndFinish(int errorMessageId) {
         Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();

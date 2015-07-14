@@ -392,6 +392,21 @@ public class RipotiMainActivity extends ActionBarActivity
             }
         });
 
+        button_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean mShouldFinish = false;
+                Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                        ? Constants.QUICK_POST_VIDEO_CAMERA
+                        : Constants.QUICK_POST_PHOTO_LIBRARY);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", mShouldFinish);
+                startActivity(intent);
+            }
+        });
+
+
         FragmentManager fm = getFragmentManager();
 
         mAssignmentsList = (AssignmentsListFragment) fm.findFragmentById(R.id.assignmentList);
