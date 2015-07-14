@@ -34,6 +34,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -121,6 +122,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private Post mOriginalPost;
     private boolean mIsNewPost;
     private boolean mIsPage;
+    private ImageView button_camera;
+    private ImageView button_video;
+    private ImageView button_mic;
     private String mMediaCapturePath = "";
     @Override
     public void onClick(View v) {
@@ -272,6 +276,34 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             @Override
             public void onClick(View v){
                 showCreateSummaryDialog();
+            }
+        });
+
+        //quick capture icons
+        button_camera = (ImageView)findViewById(R.id.button_camera);
+        button_video = (ImageView)findViewById(R.id.button_video);
+        button_mic = (ImageView)findViewById(R.id.button_mic);
+        //
+        button_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchCamera();
+            }
+        });
+
+        button_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchVideoCamera();
+            }
+        });
+
+        button_mic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                launchMic();
+
             }
         });
 
