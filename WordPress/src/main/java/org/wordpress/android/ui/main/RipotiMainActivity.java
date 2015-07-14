@@ -139,8 +139,8 @@ public class RipotiMainActivity extends ActionBarActivity
 
 
     public void closePost(){
-        if(viewPostFragment != null)
-            getFragmentManager().beginTransaction().remove(viewPostFragment).commit();
+        /*if(viewPostFragment != null)
+            getFragmentManager().beginTransaction().remove(viewPostFragment).commit();*/
 
         if(viewAssignmentFragment != null)
             getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
@@ -195,6 +195,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onPostSelected(Post post) {
+        /*
         Log.d("debug1", "are we here?");
 
         if (isFinishing()) {
@@ -225,6 +226,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
             toggleToolbar(true);
         }
+        */
     }
 
     @Override
@@ -396,7 +398,7 @@ public class RipotiMainActivity extends ActionBarActivity
         FragmentManager fm = getFragmentManager();
         ViewAssignmentFragment f = (ViewAssignmentFragment) fm.findFragmentById(R.id.assignmentDetail);
         if (f != null && f.isInLayout()) {
-            mPostList.setShouldSelectFirstPost(true);
+            mAssignmentsList.setShouldSelectFirstPost(true);
         }
     }
     public void attemptToSelectPost() {
@@ -809,13 +811,13 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onBackPressed(){
+        
         if(viewAssignmentFragment != null){
-            if(viewAssignmentFragment.isVisible())
+            if(viewAssignmentFragment.isVisible()) {
                 closePost();
-        }else if(viewPostFragment !=null){
-                if(viewPostFragment.isVisible())
-                    closePost();
-
+            }else{
+                finish();
+            }
         }else{
             finish();
         }
