@@ -53,6 +53,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.wordpress.android.R;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;

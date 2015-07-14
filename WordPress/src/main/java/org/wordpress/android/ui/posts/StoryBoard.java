@@ -47,6 +47,8 @@ import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
+import net.micode.soundrecorder.SoundRecorder;
+
 import org.json.JSONArray;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -284,9 +286,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     private void launchMic(){
 
-        int ACTIVITY_RECORD_SOUND = 1;
-        Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-        startActivityForResult(intent, ACTIVITY_RECORD_SOUND);
+        Intent i = new Intent(getApplicationContext(), SoundRecorder.class);
+        startActivity(i);
     }
     private void launchCamera() {
         WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {

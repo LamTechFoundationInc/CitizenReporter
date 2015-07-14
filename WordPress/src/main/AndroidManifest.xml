@@ -309,6 +309,43 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
 
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <activity
+            android:configChanges="keyboardHidden"
+            android:launchMode="singleTop"
+            android:name="net.micode.soundrecorder.SoundRecorder"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter >
+                <action android:name="android.intent.action.GET_CONTENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+
+                <data android:mimeType="audio/amr" />
+                <data android:mimeType="audio/3gpp" />
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.provider.MediaStore.RECORD_SOUND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:label="@string/preferences_title"
+            android:launchMode="singleTop"
+            android:name="net.micode.soundrecorder.SoundRecorderPreferenceActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+        </activity>
+
+        <service
+            android:exported="false"
+            android:name="net.micode.soundrecorder.RecorderService" >
+        </service>
 		<!-- Services -->
         <service
             android:name=".ui.posts.PostUploadService"
