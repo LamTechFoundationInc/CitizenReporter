@@ -52,7 +52,6 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
     private OnPostSelectedListener mOnPostSelectedListener;
     private OnSinglePostLoadedListener mOnSinglePostLoadedListener;
     private LessonsListAdapter mPostsListAdapter;
-    private FloatingActionButton mFabButton;
     private ApiHelper.FetchLessonsTask mCurrentFetchPostsTask;
     private ApiHelper.FetchSingleLessonTask mCurrentFetchSinglePostTask;
     private View mProgressFooterView;
@@ -238,15 +237,6 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
         });
 
         initSwipeToRefreshHelper();
-
-        mFabButton = (FloatingActionButton) getView().findViewById(R.id.fab_button);
-        mFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newPost();
-            }
-        });
-
         mEmptyViewAnimationHandler = new EmptyViewAnimationHandler(mEmptyViewTitle, mEmptyViewImage, this);
 
         if (NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -284,14 +274,6 @@ public class LessonsListFragment extends ListFragment implements EmptyViewAnimat
             }
 
             getPostListAdapter().loadPosts();
-        }
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (mFabButton != null) {
-            mFabButton.setVisibility(hidden ? View.GONE : View.VISIBLE);
         }
     }
 

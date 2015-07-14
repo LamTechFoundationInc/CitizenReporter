@@ -72,7 +72,8 @@
             android:layout_marginRight="@dimen/fab_margin"
             fab:fab_colorNormal="@color/fab_normal"
             fab:fab_colorPressed="@color/fab_pressed"
-            fab:fab_icon="@drawable/ic_create_white_24dp" />
+            fab:fab_icon="@drawable/ic_create_white_24dp"
+            android:visibility="gone"/>
 
     </FrameLayout>
 
