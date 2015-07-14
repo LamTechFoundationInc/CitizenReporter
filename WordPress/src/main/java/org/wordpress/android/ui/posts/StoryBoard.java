@@ -271,10 +271,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public void finish(){
         saveAndFinish();
-    }
+    }*/
     private boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(displaySummary.getText().toString());
     }

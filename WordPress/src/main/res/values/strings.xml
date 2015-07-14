@@ -51,7 +51,7 @@
     <string name="no">No</string>
     <string name="error">Error</string>
     <string name="could_not_remove_account">Couldn\'t remove site</string>
-    <string name="could_not_sign-out">Couldn\'t sign out. Try again.</string>
+    <string name="could_not_sign_out">Couldn\'t sign out. Try again.</string>
     <string name="edit_post">Edit post</string>
     <string name="add_comment">Add comment</string>
     <string name="connection_error">Connection error</string>

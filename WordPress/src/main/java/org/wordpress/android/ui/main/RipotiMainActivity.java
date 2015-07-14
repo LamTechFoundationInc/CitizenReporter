@@ -288,7 +288,7 @@ public class RipotiMainActivity extends ActionBarActivity
         }
         // If user has local changes, don't refresh
         //if (!WordPress.wpDB.findLocalChanges(WordPress.getCurrentBlog().getLocalTableBlogId(), mIsPage)) {
-            popAssignmentDetail();
+           // popAssignmentDetail();
         mAssignmentsList.requestPosts(false);
         mAssignmentsList.setRefreshing(true);
         //}
@@ -366,7 +366,6 @@ public class RipotiMainActivity extends ActionBarActivity
         mAssignmentsList = (AssignmentsListFragment) fm.findFragmentById(R.id.assignmentList);
 
         mPostList = (RipotiPostsListFragment) fm.findFragmentById(R.id.postList);
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
