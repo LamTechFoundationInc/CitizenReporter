@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -406,6 +407,19 @@ public class RipotiMainActivity extends ActionBarActivity
             }
         });
 
+        button_mic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                boolean mShouldFinish = false;
+                Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
+                intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", mShouldFinish);
+                startActivity(intent);
+
+            }
+        });
 
         FragmentManager fm = getFragmentManager();
 

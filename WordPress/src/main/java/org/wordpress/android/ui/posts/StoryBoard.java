@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -211,6 +212,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 launchCamera();
             } else if(quickMediaType == Constants.QUICK_POST_VIDEO_CAMERA) {
                 launchVideoCamera();
+            }else if(quickMediaType == Constants.QUICK_POST_AUDIO_MIC) {
+                launchMic();
             }else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
                 WordPressMediaUtils.launchPictureLibrary(this);
             }
@@ -279,6 +282,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     }
 
+    private void launchMic(){
+
+        int ACTIVITY_RECORD_SOUND = 1;
+        Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+        startActivityForResult(intent, ACTIVITY_RECORD_SOUND);
+    }
     private void launchCamera() {
         WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
             @Override
