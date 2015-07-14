@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/sign_in_scroll_view"
     android:animateLayoutChanges="true"
     android:fillViewport="true"
@@ -45,25 +45,26 @@
             android:orientation="vertical"
             app:maxWidth="@dimen/nux_width">
 
-            <RelativeLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="16dp"
+                android:gravity ="center">
 
                 <ImageView
                     android:id="@+id/nux_fragment_icon"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
-                    android:layout_centerHorizontal="true"
                     android:layout_margin="5dp"
                     android:src="@drawable/app_icon"/>
+
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXTitle"
                     android:text="@string/app_name"
                     android:id="@+id/nux_help_version"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:layout_centerInParent="true"
                     android:layout_margin="8dp"
                     android:visibility="gone"/>
                 <org.wordpress.android.widgets.WPTextView
@@ -72,8 +73,6 @@
                     android:id="@+id/nux_slogan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@+id/nux_help_version"
                     android:layout_margin="5dp"/>
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXDesc"
@@ -95,7 +94,7 @@
                     android:contentDescription="@string/help"
                     android:src="@drawable/dashicon_info"
                     android:tint="@color/blue_dark" />
-            </RelativeLayout>
+            </LinearLayout>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/nux_jetpack_auth_label"
