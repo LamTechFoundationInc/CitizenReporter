@@ -47,6 +47,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.json.JSONArray;
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.editor.EditorFragmentAbstract;
@@ -55,6 +56,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.main.RipotiMainActivity;
+import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -65,6 +67,7 @@ import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPViewPager;
+import org.wordpress.passcodelock.AppLockManager;
 
 import info.hoang8f.widget.FButton;
 
@@ -115,6 +118,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private Post mOriginalPost;
     private boolean mIsNewPost;
     private boolean mIsPage;
+    private String mMediaCapturePath = "";
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -198,6 +202,21 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         }
 
+        //check for quick capture actions
+        int quickMediaType = getIntent().getIntExtra("quick-media", -1);
+
+        if (quickMediaType >= 0) {
+            // User selected 'Quick Photo' in the menu drawer
+            if (quickMediaType == Constants.QUICK_POST_PHOTO_CAMERA) {
+                launchCamera();
+            } else if (quickMediaType == Constants.QUICK_POST_PHOTO_LIBRARY) {
+                WordPressMediaUtils.launchPictureLibrary(this);
+            }
+            if (mPost != null) {
+                mPost.setQuickPostType(Post.QUICK_MEDIA_TYPE_PHOTO);
+            }
+        }
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -257,6 +276,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
 
     }
+
+    private void launchCamera() {
+        WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
+        });
+    }
+
     private void showErrorAndFinish(int errorMessageId) {
         Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();
         finish();

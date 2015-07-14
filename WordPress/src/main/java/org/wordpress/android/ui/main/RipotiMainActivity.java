@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.GCMIntentService;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -55,6 +56,7 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -376,7 +378,19 @@ public class RipotiMainActivity extends ActionBarActivity
         button_video = (ImageView)findViewById(R.id.button_video);
         button_mic = (ImageView)findViewById(R.id.button_mic);
         //
-
+        button_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean mShouldFinish = false;
+                Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                        ? Constants.QUICK_POST_PHOTO_CAMERA
+                        : Constants.QUICK_POST_PHOTO_LIBRARY);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", mShouldFinish);
+                startActivity(intent);
+            }
+        });
 
         FragmentManager fm = getFragmentManager();
 
