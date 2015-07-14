@@ -73,7 +73,7 @@ public class HelpActivity extends ActionBarActivity {
         setContentView(R.layout.help_activity_with_helpshift);
 
         WPTextView version = (WPTextView) findViewById(R.id.nux_help_version);
-        version.setText(getString(R.string.version) + " " + WordPress.versionName);
+        //version.setText(getString(R.string.version) + " " + WordPress.versionName);
         WPTextView contactUsButton = (WPTextView) findViewById(R.id.contact_us_button);
         contactUsButton.setOnClickListener(new OnClickListener() {
             @Override
