@@ -25,6 +25,11 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!--micode sound things -->
+
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -310,8 +315,6 @@
         </activity>
 
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <activity
             android:configChanges="keyboardHidden"
