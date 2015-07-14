@@ -224,6 +224,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         }
 
+        //is this from assignment
+        int assignmentID = getIntent().getIntExtra("assignment_id", 0);
+        if(assignmentID != 0){
+            mPost.setAssignment_id(assignmentID);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

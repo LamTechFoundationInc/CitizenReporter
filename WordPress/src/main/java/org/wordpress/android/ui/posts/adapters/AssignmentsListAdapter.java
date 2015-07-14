@@ -195,7 +195,6 @@ public class AssignmentsListAdapter extends BaseAdapter {
 
 
         //respond listener
-
         wrapper.getRespondButton().setOnClickListener(new View.OnClickListener() {
 
             @Override

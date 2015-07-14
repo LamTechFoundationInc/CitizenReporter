@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
@@ -65,6 +67,11 @@ public class ViewAssignmentFragment extends Fragment {
     private TextView mBounty;
     private TextView mDeadline;
     private TextView mAuthor;
+
+    private ImageView button_camera;
+    private ImageView button_video;
+    private ImageView button_mic;
+    private Post assignment;
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -118,7 +125,8 @@ public class ViewAssignmentFragment extends Fragment {
         v.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                loadPost(WordPress.currentPost);
+                assignment = WordPress.currentPost;
+                loadPost(assignment);
                 v.getViewTreeObserver().removeGlobalOnLayoutListener(this);
             }
         });
@@ -130,7 +138,58 @@ public class ViewAssignmentFragment extends Fragment {
         mLocation = (TextView) v.findViewById(R.id.text_location);
         mDeadline = (TextView) v.findViewById(R.id.assignment_list_deadline);
 
-        loadPostMeta(WordPress.currentPost);
+        //quick capture icons
+        button_camera = (ImageView)v.findViewById(R.id.button_camera);
+        button_video = (ImageView)v.findViewById(R.id.button_video);
+        button_mic = (ImageView)v.findViewById(R.id.button_mic);
+        //
+        button_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean mShouldFinish = false;
+                Intent intent = new Intent(mParentActivity, StoryBoard.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(mParentActivity.getApplicationContext())
+                        ? Constants.QUICK_POST_PHOTO_CAMERA
+                        : Constants.QUICK_POST_PHOTO_LIBRARY);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", mShouldFinish);
+                intent.putExtra("assignment_id", Integer.parseInt(assignment.getRemotePostId()));
+                startActivity(intent);
+            }
+        });
+
+        button_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean mShouldFinish = false;
+                Intent intent = new Intent(mParentActivity, StoryBoard.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(mParentActivity.getApplicationContext())
+                        ? Constants.QUICK_POST_VIDEO_CAMERA
+                        : Constants.QUICK_POST_PHOTO_LIBRARY);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", mShouldFinish);
+                intent.putExtra("assignment_id", Integer.parseInt(assignment.getRemotePostId()));
+                startActivity(intent);
+            }
+        });
+
+        button_mic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                boolean mShouldFinish = false;
+                Intent intent = new Intent(mParentActivity, StoryBoard.class);
+                intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", mShouldFinish);
+                intent.putExtra("assignment_id", Integer.parseInt(assignment.getRemotePostId()));
+                startActivity(intent);
+
+            }
+        });
+
+
+        loadPostMeta(assignment);
 
         return v;
     }
