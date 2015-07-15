@@ -70,6 +70,16 @@
 
         <!-- Account activities -->
         <activity
+        android:name=".ui.accounts.RegisterActivity"
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:windowSoftInputMode="adjustResize"
+        android:theme="@style/SignInTheme" />
+        <activity
+        android:name=".ui.accounts.EditActivity"
+        android:configChanges="orientation|keyboardHidden|screenSize"
+        android:windowSoftInputMode="adjustResize"
+        android:theme="@style/SignInTheme" />
+        <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustResize"
