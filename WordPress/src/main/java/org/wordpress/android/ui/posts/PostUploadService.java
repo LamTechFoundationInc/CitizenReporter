@@ -370,13 +370,45 @@ public class PostUploadService extends Service {
 
             assignmentidOb.put("value", mPost.getAssignment_id()+"");
 
+            //set q's
+            Map<Object, Object> qwhen = new HashMap<Object, Object>();
+
+            qwhen.put("key", "qwhen");
+
+            qwhen.put("value", mPost.getQwhen()+"");
+
+            Map<Object, Object> qwhy = new HashMap<Object, Object>();
+
+            qwhy.put("key", "qwhy");
+
+            qwhy.put("value", mPost.getQwhy()+"");
+
+            Map<Object, Object> qhow = new HashMap<Object, Object>();
+
+            qhow.put("key", "qhow");
+
+            qhow.put("value", mPost.getQhow()+"");
+
+            ArrayList<Map<Object, Object>> a = new ArrayList<Map<Object, Object>>();
+
+            if(!qhow.isEmpty())
+                a.add(qhow);
+            if(!qwhen.isEmpty())
+                a.add(qwhen);
+            if(!qwhy.isEmpty())
+                a.add(qwhy);
+            if(!assignmentidOb.isEmpty())
+                a.add(assignmentidOb);
             if (!hLatitude.isEmpty() && !hLongitude.isEmpty() && !hPublic.isEmpty()) {
-                Object[] custom_fields = {hLatitude, hLongitude, hPublic, assignmentidOb};
-                contentStruct.put("custom_fields", custom_fields);
-            }else{
-                Object[] custom_fields = {assignmentidOb};
-                contentStruct.put("custom_fields", custom_fields);
+                a.add(hLatitude);
+                a.add(hLongitude);
+                a.add(hPublic);
             }
+
+            Object[] custom_fields = a.toArray();
+
+            if(custom_fields.length>0)
+                contentStruct.put("custom_fields", custom_fields);
 
             // featured image
             if (featuredImageID != -1) {

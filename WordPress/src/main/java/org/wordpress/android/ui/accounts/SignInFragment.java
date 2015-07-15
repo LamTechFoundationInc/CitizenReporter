@@ -339,10 +339,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final View.OnClickListener mCreateAccountListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Activity activity = getActivity();
+            /*Activity activity = getActivity();
             if (activity != null) {
                 ActivityLauncher.newAccountForResult(activity);
-            }
+            }*/
+            Intent i = new Intent(getActivity(), RegisterActivity.class);
+            startActivity(i);
         }
     };
 

@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
@@ -55,18 +56,25 @@ import org.json.JSONException;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.main.RipotiMainActivity;
+import org.wordpress.android.ui.media.MediaGalleryActivity;
+import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
+import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
@@ -78,6 +86,7 @@ import org.wordpress.passcodelock.AppLockManager;
 import info.hoang8f.widget.FButton;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -188,6 +197,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
                 WordPress.wpDB.savePost(mPost);
                 mIsNewPost = true;
+
+                Log.d("cpath", "1");
             } else if (extras != null) {
                 // Load post from the postId passed in extras
                 long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
@@ -195,17 +206,23 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId, false);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId, false);
+                Log.d("cpath", "2");
             } else {
+                Log.d("cpath", "3");
                 // A postId extra must be passed to this activity
                 showErrorAndFinish(R.string.post_not_found);
                 return;
             }
         } else {
+            Log.d("cpath", "4");
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
+                Log.d("cpath", "5");
                 try {
                     mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
                     mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
+                    Log.d("cpath", "6");
                 } catch (ClassCastException e) {
+                    Log.d("cpath", "7");
                     mPost = null;
                 }
             }
@@ -311,10 +328,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
 
         //TODO: need for checking twice?
-        // if (post != null) {
+         if (mPost != null) {
             WordPress.currentPost = mPost;
             loadPost(WordPress.currentPost);
-        //}
+        }else{
+             mPost = new Post(WordPress.getCurrentLocalTableBlogId(), false);
+             WordPress.currentPost = mPost;
+             WordPress.wpDB.savePost(mPost);
+             mIsNewPost = true;
+         }
 
         setUpSlider();
 
@@ -341,7 +363,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         WordPressMediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+
+        if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
+                requestCode == RequestCodes.TAKE_VIDEO))) {
+
+                Log.d("intentback", String.valueOf(requestCode));
+
+        }
+    }
 
     private void showErrorAndFinish(int errorMessageId) {
         Toast.makeText(this, getResources().getText(errorMessageId), Toast.LENGTH_LONG).show();

@@ -264,7 +264,7 @@ public class RipotiMainActivity extends ActionBarActivity
         }
     }
     public boolean isDualPane() {
-        return true;
+        return false;
     }
 
     public void newPost(int assignment_id) {
