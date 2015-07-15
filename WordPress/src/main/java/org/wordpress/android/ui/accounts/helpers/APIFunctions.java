@@ -1,20 +1,14 @@
 package org.wordpress.android.ui.accounts.helpers;
 
-import java.io.File;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 
-import android.content.Context;
 import android.util.Log;
 
 public class APIFunctions {
