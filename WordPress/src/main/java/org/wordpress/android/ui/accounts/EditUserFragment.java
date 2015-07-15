@@ -35,6 +35,7 @@ import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UserEmailUtils;
+import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
@@ -62,6 +63,9 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
     private String phone;
     private String location="";
     private String address="";
+    private WPNetworkImageView mAvatar;
+    private ImageView default_avatar;
+    private WPTextView edit_account_label;
     public EditUserFragment() {
         mEmailChecker = new EmailChecker();
     }
@@ -387,6 +391,8 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         );
 
         mSignupButton = (WPTextView) rootView.findViewById(R.id.signup_button);
+        edit_account_label = (WPTextView) rootView.findViewById(R.id.edit_account_label);
+        edit_account_label.setText(WordPress.getCurrentBlog().getUsername());
         mSignupButton.setOnClickListener(mSignupClickListener);
         mSignupButton.setEnabled(false);
 
@@ -402,6 +408,8 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         mLocation = (EditText) rootView.findViewById(R.id.location);
         mPhone = (EditText) rootView.findViewById(R.id.phone);
         mSiteUrlTextField.setText(BuildConfig.DEFAULT_URL);
+        mAvatar = (WPNetworkImageView)rootView.findViewById(R.id.nux_fragment_icon);
+        default_avatar = (ImageView)rootView.findViewById(R.id.default_avatar);
 
         mEmailTextField.addTextChangedListener(this);
         mPasswordTextField.addTextChangedListener(this);
@@ -524,6 +532,15 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
                 mEmailTextField.setText(s_email);
                 mPhone.setText(s_phone_number);
                 mLocation.setText(s_address);
+
+                //set avatar
+                String avatar = "" + user.getString("avatar");
+                if(avatar.equals("")){
+                    default_avatar.setVisibility(View.VISIBLE);
+                    mAvatar.setVisibility(View.GONE);
+                }else {
+                    mAvatar.setImageUrl(avatar, WPNetworkImageView.ImageType.AVATAR);
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();

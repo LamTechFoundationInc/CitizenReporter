@@ -46,10 +46,16 @@
             <org.wordpress.android.widgets.WPNetworkImageView
                 android:id="@+id/nux_fragment_icon"
                 style="@style/ReaderImageView.Avatar"
-                android:layout_marginRight="@dimen/margin_large"
-                android:layout_marginTop="@dimen/margin_large"
+                android:layout_margin = "@dimen/margin_large"
                 android:background="?android:selectableItemBackground"
-                tools:src="@drawable/gravatar_placeholder"/>
+                tools:src="@drawable/gravatar_placeholder"
+                android:layout_height="100dp"/>
+            <ImageView
+                android:id="@+id/default_avatar"
+                android:src="@drawable/gravatar_placeholder"
+                android:layout_margin = "@dimen/margin_large"
+                android:layout_height="100dp"
+                android:layout_width="100dp"/>
 
             <org.wordpress.android.widgets.WPTextView
                 android:id="@+id/edit_account_label"
