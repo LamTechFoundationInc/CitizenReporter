@@ -410,7 +410,7 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         mSiteUrlTextField.setText(BuildConfig.DEFAULT_URL);
         mAvatar = (WPNetworkImageView)rootView.findViewById(R.id.nux_fragment_icon);
         default_avatar = (ImageView)rootView.findViewById(R.id.default_avatar);
-
+        default_avatar.setVisibility(View.GONE);
         mEmailTextField.addTextChangedListener(this);
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
@@ -539,6 +539,7 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
                     default_avatar.setVisibility(View.VISIBLE);
                     mAvatar.setVisibility(View.GONE);
                 }else {
+                    default_avatar.setVisibility(View.GONE);
                     mAvatar.setImageUrl(avatar, WPNetworkImageView.ImageType.AVATAR);
                 }
 
