@@ -26,6 +26,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -169,7 +170,6 @@ public class StoryBoardActivity extends ActionBarActivity implements EditorFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_edit_post_activity);
-
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
