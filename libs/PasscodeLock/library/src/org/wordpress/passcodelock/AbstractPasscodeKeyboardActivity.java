@@ -1,6 +1,7 @@
 package org.wordpress.passcodelock;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +18,9 @@ public abstract class AbstractPasscodeKeyboardActivity extends Activity {
     protected EditText mPinCodeField;
     protected InputFilter[] filters = null;
     protected TextView topMessage = null;
-    
+    private ImageView button_camera;
+    private ImageView button_video;
+    private ImageView button_mic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +70,34 @@ public abstract class AbstractPasscodeKeyboardActivity extends Activity {
                         }
                     }
                 });
+
+        //quick capture icons
+        button_camera = (ImageView)findViewById(R.id.button_camera);
+        button_video = (ImageView)findViewById(R.id.button_video);
+        button_mic = (ImageView)findViewById(R.id.button_mic);
+        //
+        button_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        button_video.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        button_mic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+            }
+        });
     }
     
     private OnClickListener defaultButtonListener = new OnClickListener() {

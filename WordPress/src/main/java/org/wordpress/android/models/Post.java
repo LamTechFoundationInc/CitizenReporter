@@ -64,10 +64,7 @@ public class Post implements Serializable {
     private String assignmentDeadline;
     private String coordinates;
 
-    private String qwho;
-    private String qwhere;
     private String qwhy;
-    private String qwhat;
     private String qwhen;
     private String qhow;
 
@@ -126,7 +123,10 @@ public class Post implements Serializable {
     }
 
     public JSONArray getJSONCategories() {
+        return null;
+/*
         JSONArray jArray = null;
+
         if (categories == null) {
             categories = "[]";
         }
@@ -140,11 +140,11 @@ public class Post implements Serializable {
         } catch (JSONException e) {
             AppLog.e(T.POSTS, e);
         }
-        return jArray;
+        return jArray;*/
     }
 
     public void setJSONCategories(JSONArray categories) {
-        this.categories = categories.toString();
+//        this.categories = categories.toString();
     }
 
     public JSONArray getCustomFields() {
@@ -584,22 +584,6 @@ public class Post implements Serializable {
         this.coordinates = coordinates;
     }
 
-    public String getQwho() {
-        return qwho;
-    }
-
-    public void setQwho(String qwho) {
-        this.qwho = qwho;
-    }
-
-    public String getQwhere() {
-        return qwhere;
-    }
-
-    public void setQwhere(String qwhere) {
-        this.qwhere = qwhere;
-    }
-
     public String getQwhy() {
         return qwhy;
     }
@@ -608,13 +592,6 @@ public class Post implements Serializable {
         this.qwhy = qwhy;
     }
 
-    public String getQwhat() {
-        return qwhat;
-    }
-
-    public void setQwhat(String qwhat) {
-        this.qwhat = qwhat;
-    }
 
     public String getQwhen() {
         return qwhen;

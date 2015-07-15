@@ -51,6 +51,7 @@ import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import net.micode.soundrecorder.SoundRecorder;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -66,6 +67,7 @@ import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
@@ -349,16 +351,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            saveAndFinish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public void finish(){
-        saveAndFinish();
-    }*/
+
     private boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(displaySummary.getText().toString());
     }
@@ -377,17 +376,36 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
-            savePost(false);
+            savePost(true);
             WordPress.currentPost = mPost;
-            Intent i = new Intent();
+            /*Intent i = new Intent();
             i.putExtra(EXTRA_SHOULD_REFRESH, true);
-            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, true);
+            i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, false);
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
+*/
 
-            //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
+
         }
-        finish();
+
+        //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
+        if (!mPost.isPublishable()) {
+            ToastUtils.showToast(this, R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
+
+        }else if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(this, R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
+
+        }else{
+
+            PostUploadService.addPostToUpload(mPost);
+            startService(new Intent(this, PostUploadService.class));
+            /*Intent i = new Intent();
+            i.putExtra(EXTRA_SHOULD_REFRESH, true);
+            setResult(RESULT_OK, i);
+            */
+            finish();
+        }
+
     }
     private void savePost(boolean isAutosave) {
         savePost(isAutosave, true);
@@ -418,13 +436,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
 
         //mPost.setKeywords(tags);
-        mPost.setJSONCategories(new JSONArray());
+
         mPost.setPostStatus(status);
     }
 
     public void loadPost(Post p){
         //setTitle(p.getTitle());
-        displaySummary.setText("" + p.getTitle());
+        if(p != null){
+            if(!p.getTitle().equals(""))
+                displaySummary.setText("" + p.getTitle());
+
+        }
     }
 
     public void setUpQuestionnaire(){
@@ -438,14 +460,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 {
                         //new Question(myResArrayList.get(0), mPost.getQwhat()),
                         new Question(myResArrayList.get(1), mPost.getQwhy()),
-                        new Question(myResArrayList.get(2), tags),
+                        new Question(myResArrayList.get(2), mPost.getKeywords()),
                         //new Question(myResArrayList.get(3), mPost.getQwhere()),
                         new Question(myResArrayList.get(4), mPost.getQwhen()),
                         new Question(myResArrayList.get(5), mPost.getQhow())
                 };
 
         GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,
-                R.layout.view_row, questions);
+                R.layout.view_row, questions, mPost);
 
         ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
         expandableLayoutListView.setAdapter(arrayAdapter);

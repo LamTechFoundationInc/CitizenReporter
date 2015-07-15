@@ -6,6 +6,7 @@ import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Post;
 import org.wordpress.android.ui.posts.Question;
 
 import info.hoang8f.widget.FButton;
@@ -27,16 +30,18 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
     Context context;
     int layoutResourceId;
     Question data[] = null;
+    Post post;
 
-    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data) {
+    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data, Post _post) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
+        this.post = _post;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View row = convertView;
         QuestionHolder holder = null;
         if(row == null)
@@ -60,20 +65,24 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
 
         final Question question = data[position];
         holder.txtTitle.setText(question.title);
-        holder.txtContent.setText(question.answer);
+        //check for defaults
+        if(!question.answer.equals("")){
+            holder.txtContent.setText(question.answer);
+            holder.filledButton.setColorFilter(context.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
 
+        }
         final QuestionHolder finalHolder = holder;
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question);
+                showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
             }
         });
 
         return row;
     }
 
-    public void showCreateSummaryDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question){
+    public void showCreateSummaryDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question, final int selectedItem){
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -127,17 +136,39 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
                 String summary = editTextSummary.getText().toString();
 
                 if (summary.trim().length() > 0) {
+                    question.setAnswer(summary);
+                    holder.answer = summary;
+
                     displaySummary.setText(summary);
                     filledButton.setColorFilter(context.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
-
+                    switch(selectedItem){
+                        case 0:
+                            post.setQwhy(summary);
+                            Log.d("get tags setwhy", summary+"");
+                            break;
+                        case 1:
+                            post.setKeywords(summary);
+                            Log.d("get tags setkeywords", summary+"");
+                            break;
+                        case 2:
+                            post.setQwhen(summary);
+                            Log.d("get tags setwhen", summary+"");
+                            break;
+                        case 3:
+                            post.setQhow(summary);
+                            Log.d("get tags sethow", summary+"");
+                            break;
+                    }
+                    WordPress.wpDB.updatePost(post);
                 } else {
                     displaySummary.setText("");
                     filledButton.setColorFilter(context.getResources().getColor(R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
 
                 }
 
-                question.setAnswer(summary);
-                holder.answer = summary;
+
+
+
 
                 dialog.dismiss();
             }

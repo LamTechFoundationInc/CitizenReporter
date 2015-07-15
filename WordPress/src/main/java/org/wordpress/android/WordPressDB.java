@@ -1363,6 +1363,10 @@ public class WordPressDB {
                 values.put("categories", categoriesJsonArray.toString());
             }
 
+            values.put("qwhy", post.getQwhy());
+            values.put("qwhen", post.getQwhen());
+            values.put("qhow", post.getQhow());
+
             values.put("localDraft", post.isLocalDraft());
             values.put("mediaPaths", post.getMediaPaths());
             values.put("mt_keywords", post.getKeywords());
@@ -1525,11 +1529,8 @@ public class WordPressDB {
                 if(!isAssignment) {
                     if(!c.getString(c.getColumnIndex("assignment_id")).equals(""))
                         post.setAssignment_id(Integer.parseInt(c.getString(c.getColumnIndex("assignment_id"))));
-                    post.setQwho(c.getString(c.getColumnIndex("qwho")));
                     post.setQwhy(c.getString(c.getColumnIndex("qwhy")));
                     post.setQwhen(c.getString(c.getColumnIndex("qwhen")));
-                    post.setQwhere(c.getString(c.getColumnIndex("qwhere")));
-                    post.setQwhat(c.getString(c.getColumnIndex("qwhat")));
                     post.setQhow(c.getString(c.getColumnIndex("qhow")));
                 }
 
