@@ -12,3 +12,4 @@ wp.helpshift.api.id = wordpress
 wp.default.url = wordpress
 wp.default.username = wordpress
 wp.default.password = wordpress
+wp.url.tos = http://en.wordpress.com/tos
