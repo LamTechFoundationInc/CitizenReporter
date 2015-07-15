@@ -14,10 +14,10 @@ import android.util.Log;
 public class APIFunctions {
 
     private JSONParser jsonParser;
-    private static String registerURL = BuildConfig.DEFAULT_URL + "/api/users/register/";
-    private static String updateURL = BuildConfig.DEFAULT_URL + "/api/users/editprofile/";
-    private static String userURL = BuildConfig.DEFAULT_URL + "/api/users/user/";
-    private static String updateDeviceURL = BuildConfig.DEFAULT_URL + "/api/users/edit_user_device/";
+    private static String registerURL = BuildConfig.API_URL + "/users/register/";
+    private static String updateURL = BuildConfig.API_URL + "/users/editprofile/";
+    private static String userURL = BuildConfig.API_URL + "/users/user/";
+    private static String updateDeviceURL = BuildConfig.API_URL + "/users/edit_user_device/";
 
     // constructor
     public APIFunctions(){
