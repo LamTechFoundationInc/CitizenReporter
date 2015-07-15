@@ -313,8 +313,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 style="@style/WordPress.NUXGreyButtonNoBg"
-                app:fixWidowWords="true"
-                android:visibility="gone"/>
+                app:fixWidowWords="true"/>
 
         </org.wordpress.android.widgets.WPLinearLayoutSizeBound>
     </LinearLayout>
