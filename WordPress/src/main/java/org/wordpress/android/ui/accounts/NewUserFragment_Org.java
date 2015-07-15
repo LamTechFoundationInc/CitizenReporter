@@ -52,6 +52,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
     private EditText mUsernameTextField;
+    private EditText mPhone;
+    private EditText mLocation;
     private WPTextView mSignupButton;
     private WPTextView mProgressTextSignIn;
     private RelativeLayout mProgressBarSignIn;
@@ -61,7 +63,9 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
     private String email;
     private String password;
     private String username;
-
+    private String phone;
+    private String location="";
+    private String address="";
     public NewUserFragment_Org() {
         mEmailChecker = new EmailChecker();
     }
@@ -100,6 +104,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         mPasswordTextField.setEnabled(false);
         mUsernameTextField.setEnabled(false);
         mSiteUrlTextField.setEnabled(false);
+        mPhone.setEnabled(false);
+        mLocation.setEnabled(false);
     }
 
     protected void updateProgress(String message) {
@@ -114,6 +120,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         mPasswordTextField.setEnabled(true);
         mUsernameTextField.setEnabled(true);
         mSiteUrlTextField.setEnabled(true);
+        mPhone.setEnabled(true);
+        mLocation.setEnabled(true);
     }
 
     protected boolean isUserDataValid() {
@@ -203,6 +211,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
             persistentEditTextHelper.clearSavedText(mEmailTextField, null);
             persistentEditTextHelper.clearSavedText(mUsernameTextField, null);
             persistentEditTextHelper.clearSavedText(mSiteUrlTextField, null);
+            persistentEditTextHelper.clearSavedText(mPhone, null);
+            persistentEditTextHelper.clearSavedText(mLocation, null);
         }
     }
 
@@ -265,6 +275,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         email = EditTextUtils.getText(mEmailTextField).trim();
         password = EditTextUtils.getText(mPasswordTextField).trim();
         username = EditTextUtils.getText(mUsernameTextField).trim();
+        phone = EditTextUtils.getText(mPhone).trim();
+        address = EditTextUtils.getText(mLocation).trim();
 
         handleLogin();
     }
@@ -292,7 +304,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         String serialNumber = "" + telephonyManager.getSimSerialNumber();
 
         APIFunctions userFunction = new APIFunctions();
-        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber);
+        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber, location, address, phone);
         try {
             String res = json.getString("result");
             if(res.equals("OK")){
@@ -389,6 +401,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
+        mLocation = (EditText) rootView.findViewById(R.id.location);
+        mPhone = (EditText) rootView.findViewById(R.id.phone);
         mSiteUrlTextField.setText(BuildConfig.DEFAULT_URL);
 
         mEmailTextField.addTextChangedListener(this);

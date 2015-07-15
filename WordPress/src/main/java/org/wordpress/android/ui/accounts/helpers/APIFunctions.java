@@ -24,26 +24,7 @@ public class APIFunctions {
         jsonParser = new JSONParser();
     }
 
-
-    public JSONObject registerUser(String username, String password, String email, String first_name, String last_name, String location, String phone_number){
-        Log.d("passed", "passed" + email + username + password);
-        // Building Parameters
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("username", username));
-        params.add(new BasicNameValuePair("password", password));
-        params.add(new BasicNameValuePair("email", email));
-        params.add(new BasicNameValuePair("firstname", first_name));
-        params.add(new BasicNameValuePair("lastname", last_name));
-        params.add(new BasicNameValuePair("location", location));
-        params.add(new BasicNameValuePair("phone_number", phone_number));
-        params.add(new BasicNameValuePair("tag", "register"));
-
-        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
-        // return json
-        return json;
-    }
-    public JSONObject newUser(String username, String password, String email, String operatorName, String deviceId, String serialNumber){
-        Log.d("passed", "passed" + email + username + password);
+    public JSONObject newUser(String username, String password, String email, String operatorName, String deviceId, String serialNumber, String location, String address, String phone_number){
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("username", username));
@@ -53,6 +34,9 @@ public class APIFunctions {
         params.add(new BasicNameValuePair("operatorName", operatorName));
         params.add(new BasicNameValuePair("deviceId", deviceId));
         params.add(new BasicNameValuePair("serialNumber", serialNumber));
+        params.add(new BasicNameValuePair("location", location));
+        params.add(new BasicNameValuePair("phone_number", phone_number));
+        params.add(new BasicNameValuePair("address", address));
 
         JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
         // return json
