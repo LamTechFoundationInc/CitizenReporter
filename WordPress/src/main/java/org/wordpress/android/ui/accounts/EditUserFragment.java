@@ -141,7 +141,7 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         if (username.equals("")) {
             showUsernameError(R.string.required_field);
             retValue = false;
-        }*/
+        }
 
         if (username.length() < 4) {
             showUsernameError(R.string.invalid_username_too_short);
@@ -151,7 +151,7 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         if (username.length() > 60) {
             showUsernameError(R.string.invalid_username_too_long);
             retValue = false;
-        }
+        }*/
 
         if (siteUrl.length() < 4) {
             showSiteUrlError(R.string.blog_name_must_be_at_least_four_characters);
