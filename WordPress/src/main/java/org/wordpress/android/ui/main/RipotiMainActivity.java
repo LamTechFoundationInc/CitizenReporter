@@ -150,8 +150,8 @@ public class RipotiMainActivity extends ActionBarActivity
 
 
     public void closePost(){
-        /*if(viewPostFragment != null)
-            getFragmentManager().beginTransaction().remove(viewPostFragment).commit();*/
+        if(viewPostFragment != null)
+            getFragmentManager().beginTransaction().remove(viewPostFragment).commit();
 
         if(viewAssignmentFragment != null)
             getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
@@ -206,8 +206,6 @@ public class RipotiMainActivity extends ActionBarActivity
 
     @Override
     public void onPostSelected(Post post) {
-        /*
-        Log.d("debug1", "are we here?");
 
         if (isFinishing()) {
             return;
@@ -237,7 +235,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
             toggleToolbar(true);
         }
-        */
+
     }
 
     @Override

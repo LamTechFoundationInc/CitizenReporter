@@ -2,11 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
-    android:background="@color/color_primary"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@color/color_primary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +57,8 @@
                 android:text="@string/edit_account"
                 style="@style/WordPress.NUXTitle"
                 app:fontVariation="light"
-                app:fixWidowWords="true"/>
+                app:fixWidowWords="true"
+                android:textColor="@color/grey_dark"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -184,7 +185,7 @@
                     android:src="@android:drawable/ic_menu_call"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
-                    android:tint="@color/grey_darken_10"/>
+                    android:tint="@color/grey_darken_30"/>
             </RelativeLayout>
 
 

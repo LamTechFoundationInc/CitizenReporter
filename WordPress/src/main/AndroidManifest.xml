@@ -78,7 +78,7 @@
         android:name=".ui.accounts.EditProfileActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:windowSoftInputMode="adjustResize"
-        android:theme="@style/CalypsoTheme" />
+        android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -143,7 +143,7 @@
             android:name=".ui.posts.EditPostActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:theme="@style/CalypsoTheme">
+            android:theme="@style/Calypso.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.posts.PostsActivity" />
