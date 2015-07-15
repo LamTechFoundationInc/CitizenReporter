@@ -8,10 +8,10 @@ import org.wordpress.android.R;
 /**
  * Created by john on 7/15/2015.
  */
-public class EditActivity extends ActionBarActivity {
+public class EditProfileActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_account_activity);
+        setContentView(R.layout.edit_account_activity);
     }
 }

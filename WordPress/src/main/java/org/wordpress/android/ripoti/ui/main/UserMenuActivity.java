@@ -25,6 +25,7 @@ import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPLaunchActivity;
+import org.wordpress.android.ui.accounts.EditProfileActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
@@ -158,7 +159,8 @@ public class UserMenuActivity extends ActionBarActivity{
         findViewById(R.id.row_settings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityLauncher.viewBlogSettingsForResult(UserMenuActivity.this, mBlog);
+                //ActivityLauncher.viewBlogSettingsForResult(UserMenuActivity.this, mBlog);
+                ActivityLauncher.viewAccountSettings(UserMenuActivity.this);
             }
         });
 
@@ -172,7 +174,9 @@ public class UserMenuActivity extends ActionBarActivity{
         findViewById(R.id.row_my_account).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                ActivityLauncher.viewAccountSettings(UserMenuActivity.this);
+
+                Intent intent = new Intent(UserMenuActivity.this, EditProfileActivity.class);
+                startActivity(intent);
             }
         });
         findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener(){

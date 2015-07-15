@@ -2,13 +2,10 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Html;
@@ -30,23 +27,19 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
-import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.helpers.APIFunctions;
-import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtils;
-import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NewUserFragment_Org extends AbstractFragment implements TextWatcher,  Runnable
+public class EditUserFragment extends AbstractFragment implements TextWatcher,  Runnable
 {
     private EditText mSiteUrlTextField;
     private EditText mEmailTextField;
@@ -66,7 +59,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
     private String phone;
     private String location="";
     private String address="";
-    public NewUserFragment_Org() {
+    public EditUserFragment() {
         mEmailChecker = new EmailChecker();
     }
 
@@ -376,7 +369,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.new_account_user_fragment_screen, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_account_user_fragment_screen, container, false);
 
         WPTextView termsOfServiceTextView = (WPTextView) rootView.findViewById(R.id.l_agree_terms_of_service);
         termsOfServiceTextView.setText(Html.fromHtml(String.format(getString(R.string.agree_terms_of_service), "<u>",
