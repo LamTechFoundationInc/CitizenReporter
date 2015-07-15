@@ -1017,4 +1017,6 @@
     <string name="registration_success">Registration completed successfully! Sign in!</string>
     <string name="registration_failed">Failed</string>
     <string name="full_name">Full Name</string>
+    <string name="update_profile_success">Profile updated successfully!</string>
+    <string name="update_profile_fail">Failed</string>
 </resources>
