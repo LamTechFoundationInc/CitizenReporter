@@ -3,6 +3,7 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.models.Blog;
 import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.EditTextUtils;
@@ -295,7 +298,9 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         String serialNumber = "" + telephonyManager.getSimSerialNumber();
 
         APIFunctions userFunction = new APIFunctions();
-        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber, location, address, phone, false);
+        Blog blog = WordPress.getCurrentBlog();
+
+        JSONObject json = userFunction.newUser(blog.getUsername(), username, password, email, operatorName, deviceId, serialNumber, location, address, phone, false);
         try {
             String res = json.getString("result");
             if(res.equals("OK")){
@@ -442,6 +447,9 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         });
         initPasswordVisibilityButton(rootView, mPasswordTextField);
         initInfoButton(rootView);
+
+        new getValues().execute();
+
         return rootView;
     }
 
@@ -452,4 +460,77 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
             return false;
         }
     };
+
+    class getValues extends AsyncTask<JSONObject, JSONObject, JSONObject> {
+
+
+        protected JSONObject doInBackground(JSONObject... args) {
+
+            APIFunctions userFunction = new APIFunctions();
+            String username = WordPress.getCurrentBlog().getUsername();
+
+            JSONObject json = userFunction.getUser(username);
+            JSONObject user = null;
+            try {
+                String res = json.getString("result");
+
+                if(res.equals("OK")){
+
+                    user = new JSONObject(json.getString("user"));
+
+                }else{
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return user;
+        }
+        protected void onPostExecute(JSONObject user){
+
+            try {
+                String fullname = "";
+
+                String s_first_name = "" + user.get("first_name");
+                if(s_first_name.equals("false") || s_first_name.equals("null")) {
+                    s_first_name = "";
+                }else{
+                    fullname += s_first_name;
+                }
+
+                String s_last_name = "" + user.get("last_name");
+                if(s_last_name.equals("false") || s_last_name.equals("null")){
+                    s_first_name = "";
+                }else{
+                    fullname += " "+s_last_name;
+                }
+
+                String s_email = "" + user.get("email");
+                if(s_email.equals("false") || s_email.equals("null"))
+                    s_email = "";
+
+                String s_phone_number = "" + user.get("phone_number");
+                if(s_phone_number.equals("false") || s_phone_number.equals("null"))
+                    s_phone_number = "";
+
+                String s_address = "" + user.get("address");
+                if(s_address.equals("false") || s_address.equals("null"))
+                    s_address = "";
+
+
+
+                mUsernameTextField.setText(fullname);
+                mEmailTextField.setText(s_email);
+                mPhone.setText(s_phone_number);
+                mLocation.setText(s_address);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
 }

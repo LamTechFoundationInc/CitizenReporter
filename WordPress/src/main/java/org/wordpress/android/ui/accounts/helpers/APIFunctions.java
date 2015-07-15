@@ -8,6 +8,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.WordPress;
 
 import android.util.Log;
 
@@ -24,7 +25,7 @@ public class APIFunctions {
         jsonParser = new JSONParser();
     }
 
-    public JSONObject newUser(String username, String password, String email, String operatorName, String deviceId, String serialNumber, String location, String address, String phone_number, boolean newUser){
+    public JSONObject newUser(String username, String full_name, String password, String email, String operatorName, String deviceId, String serialNumber, String location, String address, String phone_number, boolean newUser){
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("username", username));
@@ -43,6 +44,7 @@ public class APIFunctions {
             url = registerURL;
         }else{
             url = updateURL;
+            params.add(new BasicNameValuePair("full_name", full_name));
         }
 
         JSONObject json = jsonParser.getJSONFromUrl(url, params);
