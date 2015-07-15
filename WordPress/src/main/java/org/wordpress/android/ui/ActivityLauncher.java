@@ -29,6 +29,7 @@ import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
 import org.wordpress.android.ui.stats.StatsSinglePostDetailsActivity;
 import org.wordpress.android.ui.stats.models.PostModel;
+import org.wordpress.android.ui.storyboard.StoryBoardActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HelpshiftHelper;
@@ -129,7 +130,7 @@ public class ActivityLauncher {
     }
 
     public static void editBlogPostOrPageForResult(Activity activity, long postOrPageId, boolean isPage) {
-        Intent intent = new Intent(activity.getApplicationContext(), EditPostActivity.class);
+        Intent intent = new Intent(activity.getApplicationContext(), StoryBoardActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, postOrPageId);
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);

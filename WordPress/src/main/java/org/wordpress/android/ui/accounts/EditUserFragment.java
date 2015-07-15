@@ -82,9 +82,7 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
 
     private boolean fieldsFilled() {
         return EditTextUtils.getText(mEmailTextField).trim().length() > 0
-                && EditTextUtils.getText(mPasswordTextField).trim().length() > 0
-                && EditTextUtils.getText(mUsernameTextField).trim().length() > 0
-                && EditTextUtils.getText(mSiteUrlTextField).trim().length() > 0;
+                && EditTextUtils.getText(mUsernameTextField).trim().length() > 0;
     }
 
     protected void startProgress(String message) {
@@ -151,22 +149,21 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         if (username.length() > 60) {
             showUsernameError(R.string.invalid_username_too_long);
             retValue = false;
-        }*/
-
+        }
         if (siteUrl.length() < 4) {
             showSiteUrlError(R.string.blog_name_must_be_at_least_four_characters);
             retValue = false;
-        }
+        }*/
 
-        if (password.equals("")) {
+
+        if (!password.equals("")) {
             showPasswordError(R.string.required_field);
-            retValue = false;
+            if (password.length() < 4) {
+                showPasswordError(R.string.invalid_password_message);
+                retValue = false;
+            }
         }
 
-        if (password.length() < 4) {
-            showPasswordError(R.string.invalid_password_message);
-            retValue = false;
-        }
 
         return retValue;
     }
@@ -298,7 +295,7 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         String serialNumber = "" + telephonyManager.getSimSerialNumber();
 
         APIFunctions userFunction = new APIFunctions();
-        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber, location, address, phone);
+        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber, location, address, phone, false);
         try {
             String res = json.getString("result");
             if(res.equals("OK")){

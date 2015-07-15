@@ -24,7 +24,7 @@ public class APIFunctions {
         jsonParser = new JSONParser();
     }
 
-    public JSONObject newUser(String username, String password, String email, String operatorName, String deviceId, String serialNumber, String location, String address, String phone_number){
+    public JSONObject newUser(String username, String password, String email, String operatorName, String deviceId, String serialNumber, String location, String address, String phone_number, boolean newUser){
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("username", username));
@@ -38,7 +38,14 @@ public class APIFunctions {
         params.add(new BasicNameValuePair("phone_number", phone_number));
         params.add(new BasicNameValuePair("address", address));
 
-        JSONObject json = jsonParser.getJSONFromUrl(registerURL, params);
+        String url;
+        if(newUser){
+            url = registerURL;
+        }else{
+            url = updateURL;
+        }
+
+        JSONObject json = jsonParser.getJSONFromUrl(url, params);
         // return json
         return json;
     }

@@ -304,7 +304,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         String serialNumber = "" + telephonyManager.getSimSerialNumber();
 
         APIFunctions userFunction = new APIFunctions();
-        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber, location, address, phone);
+        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber, location, address, phone, true);
         try {
             String res = json.getString("result");
             if(res.equals("OK")){
