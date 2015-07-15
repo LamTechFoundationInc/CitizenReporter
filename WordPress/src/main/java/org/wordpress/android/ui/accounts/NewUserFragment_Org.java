@@ -2,8 +2,14 @@ package org.wordpress.android.ui.accounts;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -19,23 +25,29 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtils;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UserEmailUtils;
 import org.wordpress.android.widgets.WPTextView;
 import org.wordpress.emailchecker.EmailChecker;
 import org.wordpress.persistentedittext.PersistentEditTextHelper;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NewUserFragment_Org extends AbstractFragment implements TextWatcher {
+public class NewUserFragment_Org extends AbstractFragment implements TextWatcher,  Runnable
+{
     private EditText mSiteUrlTextField;
     private EditText mEmailTextField;
     private EditText mPasswordTextField;
@@ -46,6 +58,9 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
     private EmailChecker mEmailChecker;
     private boolean mEmailAutoCorrected;
     private boolean mAutoCompleteUrl;
+    private String email;
+    private String password;
+    private String username;
 
     public NewUserFragment_Org() {
         mEmailChecker = new EmailChecker();
@@ -247,57 +262,76 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         startProgress(getString(R.string.validating_user_data));
 
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
-        final String email = EditTextUtils.getText(mEmailTextField).trim();
-        final String password = EditTextUtils.getText(mPasswordTextField).trim();
-        final String username = EditTextUtils.getText(mUsernameTextField).trim();
-        final String siteName = siteUrlToSiteName(siteUrl);
-        final String language = CreateUserAndBlog.getDeviceLanguage(getActivity().getResources());
+        email = EditTextUtils.getText(mEmailTextField).trim();
+        password = EditTextUtils.getText(mPasswordTextField).trim();
+        username = EditTextUtils.getText(mUsernameTextField).trim();
 
-        CreateUserAndBlog createUserAndBlog = new CreateUserAndBlog(email, username, password,
-                siteUrl, siteName, language, getRestClientUtils(), getActivity(), new ErrorListener(),
-                new CreateUserAndBlog.Callback() {
-                    @Override
-                    public void onStepFinished(CreateUserAndBlog.Step step) {
-                        if (!isAdded()) {
-                            return;
-                        }
-                        switch (step) {
-                            case VALIDATE_USER:
-                                updateProgress(getString(R.string.validating_site_data));
-                                break;
-                            case VALIDATE_SITE:
-                                updateProgress(getString(R.string.creating_your_account));
-                                break;
-                            case CREATE_USER:
-                                updateProgress(getString(R.string.creating_your_site));
-                                break;
-                            case CREATE_SITE:
-                                // no messages
-                            case AUTHENTICATE_USER:
-                            default:
-                                break;
-                        }
-                    }
+        handleLogin();
+    }
 
-                    @Override
-                    public void onSuccess(JSONObject createSiteResponse) {
-                        AnalyticsUtils.refreshMetadata(username, email);
-                        AnalyticsTracker.track(AnalyticsTracker.Stat.CREATED_ACCOUNT);
-                        endProgress();
-                        if (isAdded()) {
-                            finishThisStuff(username, password);
-                        }
-                    }
+    private void handleLogin ()
+    {
+       // txtStatus.setText("Connecting to server...");
+        new Thread(this).start();
+    }
+    public void run ()
+    {
+        TelephonyManager telephonyManager = ((TelephonyManager) getActivity().getApplicationContext().getSystemService(getActivity().getApplicationContext().TELEPHONY_SERVICE));
+        //get mobile carrier
+        String operatorName = "";
+        int simState = telephonyManager.getSimState();
+        switch (simState) {
+            case TelephonyManager.SIM_STATE_READY:
+                // do something
+                operatorName = "" + telephonyManager.getNetworkOperatorName();
+                break;
+        }
+        //get device IMEI number
+        String deviceId = "" + telephonyManager.getDeviceId();
+        //get sms serial number
+        String serialNumber = "" + telephonyManager.getSimSerialNumber();
 
-                    @Override
-                    public void onError(int messageId) {
-                        endProgress();
-                        if (isAdded()) {
-                            showError(getString(messageId));
-                        }
-                    }
-                });
-        createUserAndBlog.startCreateUserAndBlogProcess();
+        APIFunctions userFunction = new APIFunctions();
+        JSONObject json = userFunction.newUser(username, password, email, operatorName, deviceId, serialNumber);
+        try {
+            String res = json.getString("result");
+            if(res.equals("OK")){
+                mHandler.sendEmptyMessage(0);
+            }else{
+                Message msgErr= mHandler.obtainMessage(1);
+                msgErr.getData().putString("err",json.getString("message"));
+                mHandler.sendMessage(msgErr);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+    private Handler mHandler = new Handler ()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what)
+            {
+                case 0:
+                    loginSuccess();
+                    break;
+                case 1:
+                    loginFailed(msg.getData().getString("err"));
+                default:
+            }
+        }
+    };
+
+    private void loginFailed (String err)
+    {
+        ToastUtils.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.registration_failed) + ": " + err);
+    }
+    private void loginSuccess ()
+    {
+        ToastUtils.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.registration_success));
+
+        getActivity().finish();
     }
 
     private void autocorrectEmail() {
@@ -355,13 +389,14 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         mPasswordTextField = (EditText) rootView.findViewById(R.id.password);
         mUsernameTextField = (EditText) rootView.findViewById(R.id.username);
         mSiteUrlTextField = (EditText) rootView.findViewById(R.id.site_url);
+        mSiteUrlTextField.setText(BuildConfig.DEFAULT_URL);
 
         mEmailTextField.addTextChangedListener(this);
         mPasswordTextField.addTextChangedListener(this);
         mUsernameTextField.addTextChangedListener(this);
-        mSiteUrlTextField.addTextChangedListener(this);
-        mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
-        mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
+        //mSiteUrlTextField.addTextChangedListener(this);
+        //mSiteUrlTextField.setOnKeyListener(mSiteUrlKeyListener);
+        //mSiteUrlTextField.setOnEditorActionListener(mEditorAction);
 
         mUsernameTextField.addTextChangedListener(new TextWatcher() {
             @Override

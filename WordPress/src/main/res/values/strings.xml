@@ -1011,5 +1011,8 @@
         <item>audio/amr</item>
         <item>audio/3gpp</item>
     </string-array>
-    <!-- add for libra end -->
+
+    <string name="register">Register</string>
+    <string name="registration_success">Registration completed successfully! Sign in!</string>
+    <string name="registration_failed">Failed</string>
 </resources>
