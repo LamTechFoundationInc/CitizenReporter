@@ -328,13 +328,13 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
 
     private void loginFailed (String err)
     {
-        ToastUtils.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.registration_failed) + ": " + err);
+        ToastUtils.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.update_profile_fail) + ": " + err);
 
         endProgress();
     }
     private void loginSuccess ()
     {
-        ToastUtils.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.registration_success));
+        ToastUtils.showToast(getActivity().getApplicationContext(), getResources().getString(R.string.update_profile_success));
 
         getActivity().finish();
     }
