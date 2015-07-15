@@ -78,7 +78,7 @@
         android:name=".ui.accounts.EditProfileActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:windowSoftInputMode="adjustResize"
-        android:theme="@style/Calypso" />
+        android:theme="@style/CalypsoTheme" />
         <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

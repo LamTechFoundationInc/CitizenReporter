@@ -137,10 +137,11 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
             retValue = false;
         }
 
+        /*Password check not required
         if (username.equals("")) {
             showUsernameError(R.string.required_field);
             retValue = false;
-        }
+        }*/
 
         if (username.length() < 4) {
             showUsernameError(R.string.invalid_username_too_short);
