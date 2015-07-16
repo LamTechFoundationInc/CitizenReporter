@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
@@ -68,16 +69,19 @@ import org.wordpress.android.ui.media.MediaGalleryActivity;
 import org.wordpress.android.ui.media.MediaGalleryPickerActivity;
 import org.wordpress.android.ui.media.MediaPickerActivity;
 import org.wordpress.android.ui.media.WordPressMediaUtils;
+import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
+import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPViewPager;
@@ -164,6 +168,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private Post mPost;
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
+    private boolean mMediaUploadServiceStarted;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -363,17 +368,135 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         WordPressMediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
                 requestCode == RequestCodes.TAKE_VIDEO))) {
-
-                Log.d("intentback", String.valueOf(requestCode));
-
+            switch (requestCode) {
+                case RequestCodes.TAKE_PHOTO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            File f = new File(mMediaCapturePath);
+                            Uri capturedImageUri = Uri.fromFile(f);
+                            if (!addMedia(capturedImageUri)) {
+                                ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                            }
+                            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                                    + Environment.getExternalStorageDirectory())));
+                            AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
+                        } catch (RuntimeException e) {
+                            AppLog.e(AppLog.T.POSTS, e);
+                        } catch (OutOfMemoryError e) {
+                            AppLog.e(AppLog.T.POSTS, e);
+                        }
+                    } /*else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
+                        // TODO: check if it was mQuickMediaType > -1
+                        // Quick Photo was cancelled, delete post and finish activity
+                        WordPress.wpDB.deletePost(getPost());
+                        finish();
+                    }*/
+                    break;
+                case RequestCodes.TAKE_VIDEO:
+                    if (resultCode == Activity.RESULT_OK) {
+                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
+                        if (!addMedia(capturedVideoUri)) {
+                            ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                        }
+                    }/* else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
+                        // TODO: check if it was mQuickMediaType > -1
+                        // Quick Photo was cancelled, delete post and finish activity
+                        WordPress.wpDB.deletePost(getPost());
+                        finish();
+                    }*/
+                    break;
+            }
         }
+    }
+    private void queueFileForUpload(String path) {
+        // Invalid file path
+        if (TextUtils.isEmpty(path)) {
+            Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // File not found
+        File file = new File(path);
+        if (!file.exists()) {
+            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Blog blog = WordPress.getCurrentBlog();
+        long currentTime = System.currentTimeMillis();
+        String mimeType = MediaUtils.getMediaFileMimeType(file);
+        String fileName = MediaUtils.getMediaFileName(file, mimeType);
+        MediaFile mediaFile = new MediaFile();
+
+        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+        mediaFile.setFileName(fileName);
+        mediaFile.setFilePath(path);
+        mediaFile.setUploadState("queued");
+        mediaFile.setDateCreatedGMT(currentTime);
+        mediaFile.setMediaId(String.valueOf(currentTime));
+
+        if (mimeType != null && mimeType.startsWith("image")) {
+            // get width and height
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            bfo.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, bfo);
+            mediaFile.setWidth(bfo.outWidth);
+            mediaFile.setHeight(bfo.outHeight);
+        }
+
+        if (!TextUtils.isEmpty(mimeType)) {
+            mediaFile.setMimeType(mimeType);
+        }
+
+
+        WordPress.wpDB.saveMediaFile(mediaFile);
+        startMediaUploadService();
+    }
+    /**
+     * Starts the upload service to upload selected media.
+     */
+    private void startMediaUploadService() {
+        if (!mMediaUploadServiceStarted) {
+            startService(new Intent(this, MediaUploadService.class));
+            mMediaUploadServiceStarted = true;
+        }
+    }
+    private boolean addMedia(Uri imageUri) {
+        if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
+            imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
+        }
+
+        if (imageUri == null) {
+            return false;
+        }
+
+        String mediaTitle;
+        if (MediaUtils.isVideo(imageUri.toString())) {
+            mediaTitle = getResources().getString(R.string.video);
+        } else {
+            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
+        }
+
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setPostID(mPost.getLocalTablePostId());
+        mediaFile.setTitle(mediaTitle);
+        mediaFile.setFilePath(imageUri.toString());
+        if (imageUri.getEncodedPath() != null) {
+            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
+        }
+        WordPress.wpDB.saveMediaFile(mediaFile);
+        Log.d("imageStored", imageUri.getPath());
+        queueFileForUpload(imageUri.getPath());
+
+        //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
+        return true;
     }
 
     private void showErrorAndFinish(int errorMessageId) {

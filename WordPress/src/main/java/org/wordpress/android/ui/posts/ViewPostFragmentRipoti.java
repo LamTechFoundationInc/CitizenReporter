@@ -116,6 +116,8 @@ public class ViewPostFragmentRipoti extends Fragment {
             }
         });
 
+        getActivity().setTitle(getResources().getString(R.string.story_board));
+
         mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
         mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
         mShareUrlButton = (ImageButton) v.findViewById(R.id.sharePostLink);
@@ -143,7 +145,6 @@ public class ViewPostFragmentRipoti extends Fragment {
                 }
             }
         });
-
 
         mShareUrlButton.setOnClickListener(new ImageButton.OnClickListener() {
             public void onClick(View v) {
