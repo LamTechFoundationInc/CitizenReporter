@@ -91,6 +91,8 @@ import info.hoang8f.widget.FButton;
 
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -423,7 +425,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
 
         // File not found
-        File file = new File(path);
+        File file = null;
+        try {
+            file = new File(new URI(path));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
             return;
@@ -493,7 +500,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
         WordPress.wpDB.saveMediaFile(mediaFile);
         Log.d("imageStored", imageUri.getPath());
-        queueFileForUpload(imageUri.getPath());
+
+            queueFileForUpload(imageUri.toString());
+
 
         //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;

@@ -6,14 +6,20 @@ import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.sqlite.SQLiteException;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -26,6 +32,8 @@ import com.google.gson.reflect.TypeToken;
 import com.wordpress.rest.RestClient;
 import com.wordpress.rest.RestRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -40,6 +48,7 @@ import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
@@ -69,14 +78,20 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
@@ -804,5 +819,209 @@ public class WordPress extends Application {
         @Override
         public void onActivityStopped(Activity arg0) {
         }
+    }
+
+
+    //GCM stuff
+    private  final int MAX_ATTEMPTS = 5;
+    private  final int BACKOFF_MILLI_SECONDS = 2000;
+    private  final Random random = new Random();
+
+
+    // Register this account with the server.
+    public void register(final Context context, final String regId) {
+
+        Log.i(GCMConfigORG.TAG, "registering device (regId = " + regId + ")");
+
+        String serverUrl = GCMConfigORG.YOUR_SERVER_URL;
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("regId", regId);
+
+        long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
+
+        // Once GCM returns a registration id, we need to register on our server
+        // As the server might be down, we will retry it a couple
+        // times.
+        for (int i = 1; i <= MAX_ATTEMPTS; i++) {
+
+            Log.d(GCMConfigORG.TAG, "Attempt #" + i + " to register");
+
+            //Send Broadcast to Show message on screen
+            displayMessageOnScreen(context, context.getString(
+                    R.string.server_registering, i, MAX_ATTEMPTS));
+
+            // Post registration values to web server
+            //post(serverUrl, params);
+
+            //update user profile with device id
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String username = getUserName();
+
+            APIFunctions userFunction = new APIFunctions();
+            JSONObject json = userFunction.updateUserDevice(regId, username);
+            String responseMessage = "";
+            try {
+                String res = json.getString("result");
+                if(res.equals("OK")){
+                    responseMessage = json.getString("message");
+
+                    //set device registered in preferences
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("rD", "1");
+                    editor.commit();
+
+                }else{
+                    responseMessage = json.getString("error");
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            GCMRegistrar.setRegisteredOnServer(context, true);
+
+            //Send Broadcast to Show message on screen
+            String message = context.getString(R.string.server_registered);
+            displayMessageOnScreen(context, message);
+
+            return;
+        }
+
+        String message = context.getString(R.string.server_register_error,
+                MAX_ATTEMPTS);
+
+        //Send Broadcast to Show message on screen
+        displayMessageOnScreen(context, message);
+    }
+
+    private String getUserName()
+    {
+       return WordPress.getCurrentBlog().getUsername();
+    }
+
+    // Unregister this account/device pair within the server.
+    public void unregister(final Context context, final String regId) {
+
+        Log.i(GCMConfigORG.TAG, "unregistering device (regId = " + regId + ")");
+
+        String serverUrl = GCMConfigORG.YOUR_SERVER_URL + "/unregister";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("regId", regId);
+
+        try {
+            post(serverUrl, params);
+            GCMRegistrar.setRegisteredOnServer(context, false);
+            String message = context.getString(R.string.server_unregistered);
+            displayMessageOnScreen(context, message);
+        } catch (IOException e) {
+
+            // At this point the device is unregistered from GCM, but still
+            // registered in the our server.
+            // We could try to unregister again, but it is not necessary:
+            // if the server tries to send a message to the device, it will get
+            // a "NotRegistered" error message and should unregister the device.
+
+            String message = context.getString(R.string.server_unregister_error,
+                    e.getMessage());
+            displayMessageOnScreen(context, message);
+        }
+    }
+
+    // Issue a POST request to the server.
+    private static void post(String endpoint, Map<String, String> params)
+            throws IOException {
+
+        URL url;
+        try {
+
+            url = new URL(endpoint);
+
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("invalid url: " + endpoint);
+        }
+
+        StringBuilder bodyBuilder = new StringBuilder();
+        Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+
+        // constructs the POST body using the parameters
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> param = iterator.next();
+            bodyBuilder.append(param.getKey()).append('=')
+                    .append(param.getValue());
+            if (iterator.hasNext()) {
+                bodyBuilder.append('&');
+            }
+        }
+
+        String body = bodyBuilder.toString();
+
+        Log.v(GCMConfigORG.TAG, "Posting '" + body + "' to " + url);
+
+        byte[] bytes = body.getBytes();
+
+        HttpURLConnection conn = null;
+        try {
+
+            Log.e("URL", "> " + url);
+
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setFixedLengthStreamingMode(bytes.length);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded;charset=UTF-8");
+            // post the request
+            OutputStream out = conn.getOutputStream();
+            out.write(bytes);
+            out.close();
+
+            // handle the response
+            int status = conn.getResponseCode();
+
+            // If response is not success
+            if (status != 200) {
+
+                throw new IOException("Post failed with error code " + status);
+            }
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+    }
+
+
+
+    // Checking for all possible internet providers
+    public boolean isConnectingToInternet(){
+
+        ConnectivityManager connectivity =
+                (ConnectivityManager) getSystemService(
+                        Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null)
+        {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                    {
+                        return true;
+                    }
+
+        }
+        return false;
+    }
+
+    // Notifies UI to display a message.
+    public void displayMessageOnScreen(Context context, String message) {
+
+        Intent intent = new Intent(GCMConfigORG.DISPLAY_MESSAGE_ACTION);
+        intent.putExtra(GCMConfigORG.EXTRA_MESSAGE, message);
+
+        // Send Broadcast to Broadcast receiver with message
+        context.sendBroadcast(intent);
+
     }
 }
