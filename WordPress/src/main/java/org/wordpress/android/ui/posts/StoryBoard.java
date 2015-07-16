@@ -386,8 +386,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                             if (!addMedia(capturedImageUri)) {
                                 ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                             }
-                            this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
-                                    + Environment.getExternalStorageDirectory())));
+                            //this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
+                             //       + Environment.getExternalStorageDirectory())));
                             AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_ADDED_PHOTO_VIA_LOCAL_LIBRARY);
                         } catch (RuntimeException e) {
                             AppLog.e(AppLog.T.POSTS, e);
@@ -426,11 +426,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         // File not found
         File file = null;
-        try {
-            file = new File(new URI(path));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+
+        file = new File(path);
+
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
             return;
@@ -484,25 +482,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             return false;
         }
 
-        String mediaTitle;
-        if (MediaUtils.isVideo(imageUri.toString())) {
-            mediaTitle = getResources().getString(R.string.video);
-        } else {
-            mediaTitle = ImageUtils.getTitleForWPImageSpan(this, imageUri.getEncodedPath());
-        }
-
-        MediaFile mediaFile = new MediaFile();
-        mediaFile.setPostID(mPost.getLocalTablePostId());
-        mediaFile.setTitle(mediaTitle);
-        mediaFile.setFilePath(imageUri.toString());
-        if (imageUri.getEncodedPath() != null) {
-            mediaFile.setVideo(MediaUtils.isVideo(imageUri.toString()));
-        }
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        Log.d("imageStored", imageUri.getPath());
-
-            queueFileForUpload(imageUri.toString());
-
+        queueFileForUpload(imageUri.toString());
 
         //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;

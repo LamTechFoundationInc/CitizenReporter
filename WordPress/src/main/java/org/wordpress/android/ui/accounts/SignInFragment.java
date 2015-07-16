@@ -3,12 +3,17 @@ package org.wordpress.android.ui.accounts;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -26,12 +31,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.GCMConfigORG;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -442,6 +450,7 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
                 } else {
                     BlogUtils.addBlogs(userBlogList, mUsername, mPassword, mHttpUsername, mHttpPassword);
                 }
+
 
                 // refresh first blog
                 refreshFirstBlogContent();
@@ -872,4 +881,5 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             refreshBlogContent(firstBlog);
         }
     }
+
 }

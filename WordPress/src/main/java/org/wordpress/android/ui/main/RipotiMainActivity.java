@@ -5,11 +5,15 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,11 +25,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gcm.GCMRegistrar;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.Constants;
-import org.wordpress.android.GCMIntentService;
+import org.wordpress.android.GCMConfigORG;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -238,6 +243,13 @@ public class RipotiMainActivity extends ActionBarActivity
 
     }
 
+    public void checkIfRegistered(){
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String rD = settings.getString("rD", "0");
+        if(rD.equals("0"))
+            registerDevice();
+    }
+
     @Override
     public void onSinglePostLoaded() {
 
@@ -319,6 +331,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ripoti_main_screen);
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -433,8 +446,14 @@ public class RipotiMainActivity extends ActionBarActivity
 
         WordPress.currentPost = null;
 
-
+        checkIfRegistered();
         //attemptToSelectPost();
+
+        if(getIntent().getExtras()!=null){
+            if(getIntent().hasExtra("assignment_refresh")){
+                requestAssignments();
+            }
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -533,7 +552,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
         if (!TextUtils.isEmpty(noteId)) {
             NotificationsListFragment.openNote(this, noteId, shouldShowKeyboard, false);
-            GCMIntentService.clearNotificationsMap();
+            //GCMIntentService.clearNotificationsMap();
         }
     }
 
@@ -875,5 +894,127 @@ public class RipotiMainActivity extends ActionBarActivity
             finish();
         }
 
+    }
+
+    WordPress aController;
+    AsyncTask<Void, Void, Void> mRegisterTask;
+    public void registerDevice(){
+        //Get Global Controller Class object (see application tag in AndroidManifest.xml)
+        aController = (WordPress)getApplicationContext();
+
+        // Check if Internet present
+        if (!aController.isConnectingToInternet()) {
+
+            // Internet Connection is not present
+            aController.showAlertDialog(this,
+                    "Internet Connection Error",
+                    "Please connect to Internet connection", false);
+            // stop executing code by return
+            return;
+        }
+
+        // Getting name, email from intent
+        Intent i = getIntent();
+        String name, email;
+        name = i.getStringExtra("name");
+        email = i.getStringExtra("email");
+
+        // Make sure the device has the proper dependencies.
+        GCMRegistrar.checkDevice(getApplicationContext());
+
+        // Make sure the manifest permissions was properly set
+        GCMRegistrar.checkManifest(getApplicationContext());
+
+        // Register custom Broadcast receiver to show messages on activity
+        registerReceiver(mHandleMessageReceiver, new IntentFilter(
+                GCMConfigORG.DISPLAY_MESSAGE_ACTION));
+
+        // Get GCM registration id
+        final String regId = GCMRegistrar.getRegistrationId(getApplicationContext());
+
+        Log.d("simple1", "s");
+
+        // Check if regid already presents
+        if (regId.equals("")) {
+            Log.d("simple1", "2");
+            // Register with GCM
+            GCMRegistrar.register(getApplicationContext(), GCMConfigORG.GOOGLE_SENDER_ID);
+
+        } else {
+            Log.d("simple1", "3");
+            // Device is already registered on GCM Server
+            if (GCMRegistrar.isRegisteredOnServer(getApplicationContext())) {
+                Log.d("simple1", "4");
+                // Skips registration.
+                //Toast.makeText(getApplicationContext(), "Already registered with GCM Server", Toast.LENGTH_LONG).show();
+                Log.d("already registered", "sdfd");
+            } else {
+                Log.d("simple1", "5");
+                // Try to register again, but not in the UI thread.
+                // It's also necessary to cancel the thread onDestroy(),
+                // hence the use of AsyncTask instead of a raw thread.
+
+                final Context context = this;
+                mRegisterTask = new AsyncTask<Void, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+
+                        // Register on our server
+                        // On server creates a new user
+                        aController.register(context, regId);
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void result) {
+                        mRegisterTask = null;
+
+                    }
+
+                };
+
+                // execute AsyncTask
+                mRegisterTask.execute(null, null, null);
+            }
+        }
+    }
+
+    //Create a broadcast receiver to get message and show on screen
+    private final BroadcastReceiver mHandleMessageReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String newMessage = intent.getExtras().getString(GCMConfigORG.EXTRA_MESSAGE);
+
+            // Waking up mobile if it is sleeping
+            aController.acquireWakeLock(getApplicationContext());
+
+            //Toast.makeText(getApplicationContext(), "Got Message: " + newMessage, Toast.LENGTH_LONG).show();
+
+            // Releasing wake lock
+            aController.releaseWakeLock();
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        // Cancel AsyncTask
+        if (mRegisterTask != null) {
+            mRegisterTask.cancel(true);
+        }
+        try {
+            // Unregister Broadcast Receiver
+            unregisterReceiver(mHandleMessageReceiver);
+
+            //Clear internal resources.
+            GCMRegistrar.onDestroy(getApplicationContext());
+
+        } catch (Exception e) {
+            Log.e("UnRegister Receiver Error", "> " + e.getMessage());
+        }
+        super.onDestroy();
     }
 }

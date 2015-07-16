@@ -389,8 +389,10 @@
         <service android:name=".ui.reader.services.ReaderCommentService"
             android:label="Reader Comment Service"
             android:exported="false"/>
-
+        <!--
         <service android:name="org.wordpress.android.GCMIntentService"/>
+        -->
+        <service android:name=".GCMIntentService"/>
 
         <service
             android:name=".ui.suggestion.service.SuggestionService"
@@ -401,6 +403,18 @@
         <uses-library android:required="false" android:name="com.sec.android.app.multiwindow" />
         <meta-data android:name="com.sec.android.support.multiwindow" android:value="true" />
 
-        <receiver android:name=".ui.notifications.NotificationDismissBroadcastReceiver" />
+        <receiver
+            android:name="com.google.android.gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+
+                <!-- Receives the actual messages. -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <!-- Receives the registration id. -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="org.wordpress.android" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

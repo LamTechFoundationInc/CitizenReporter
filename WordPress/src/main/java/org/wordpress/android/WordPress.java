@@ -2,10 +2,12 @@ package org.wordpress.android;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -16,6 +18,7 @@ import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
@@ -848,43 +851,43 @@ public class WordPress extends Application {
             Log.d(GCMConfigORG.TAG, "Attempt #" + i + " to register");
 
             //Send Broadcast to Show message on screen
-            displayMessageOnScreen(context, context.getString(
-                    R.string.server_registering, i, MAX_ATTEMPTS));
+            //displayMessageOnScreen(context, context.getString( R.string.server_registering, i, MAX_ATTEMPTS));
 
             // Post registration values to web server
             //post(serverUrl, params);
 
             //update user profile with device id
-            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String username = getUserName();
+            if(WordPress.currentBlog!=null) {
+                String username = WordPress.getCurrentBlog().getUsername();
 
-            APIFunctions userFunction = new APIFunctions();
-            JSONObject json = userFunction.updateUserDevice(regId, username);
-            String responseMessage = "";
-            try {
-                String res = json.getString("result");
-                if(res.equals("OK")){
-                    responseMessage = json.getString("message");
+                APIFunctions userFunction = new APIFunctions();
+                JSONObject json = userFunction.updateUserDevice(regId, username);
+                String responseMessage = "";
+                try {
+                    String res = json.getString("result");
+                    if (res.equals("OK")) {
+                        responseMessage = json.getString("message");
 
-                    //set device registered in preferences
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("rD", "1");
-                    editor.commit();
+                        //set device registered in preferences
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("rD", "1");
+                        editor.commit();
 
-                }else{
-                    responseMessage = json.getString("error");
+                    } else {
+                        responseMessage = json.getString("error");
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                GCMRegistrar.setRegisteredOnServer(context, true);
+
+                //Send Broadcast to Show message on screen
+                String message = context.getString(R.string.server_registered);
+                //displayMessageOnScreen(context, message);
             }
-
-            GCMRegistrar.setRegisteredOnServer(context, true);
-
-            //Send Broadcast to Show message on screen
-            String message = context.getString(R.string.server_registered);
-            displayMessageOnScreen(context, message);
-
             return;
         }
 
@@ -892,13 +895,35 @@ public class WordPress extends Application {
                 MAX_ATTEMPTS);
 
         //Send Broadcast to Show message on screen
-        displayMessageOnScreen(context, message);
+        //ageOnScreen(context, message);
+    }
+    //Function to display simple Alert Dialog
+    public void showAlertDialog(Context context, String title, String message,
+                                Boolean status) {
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+        // Set Dialog Title
+        alertDialog.setTitle(title);
+
+        // Set Dialog Message
+        alertDialog.setMessage(message);
+
+        if(status != null)
+            // Set alert dialog icon
+            alertDialog.setIcon( R.drawable.app_icon);
+
+        // Set OK Button
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        // Show Alert Message
+        alertDialog.show();
     }
 
-    private String getUserName()
-    {
-       return WordPress.getCurrentBlog().getUsername();
-    }
+
 
     // Unregister this account/device pair within the server.
     public void unregister(final Context context, final String regId) {
@@ -913,7 +938,7 @@ public class WordPress extends Application {
             post(serverUrl, params);
             GCMRegistrar.setRegisteredOnServer(context, false);
             String message = context.getString(R.string.server_unregistered);
-            displayMessageOnScreen(context, message);
+            //ageOnScreen(context, message);
         } catch (IOException e) {
 
             // At this point the device is unregistered from GCM, but still
@@ -924,7 +949,7 @@ public class WordPress extends Application {
 
             String message = context.getString(R.string.server_unregister_error,
                     e.getMessage());
-            displayMessageOnScreen(context, message);
+            //ageOnScreen(context, message);
         }
     }
 
@@ -1023,5 +1048,22 @@ public class WordPress extends Application {
         // Send Broadcast to Broadcast receiver with message
         context.sendBroadcast(intent);
 
+    }
+    private PowerManager.WakeLock wakeLock;
+
+    public  void acquireWakeLock(Context context) {
+        if (wakeLock != null) wakeLock.release();
+
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+
+        wakeLock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK |
+                PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                PowerManager.ON_AFTER_RELEASE, "WakeLock");
+
+        wakeLock.acquire();
+    }
+
+    public  void releaseWakeLock() {
+        if (wakeLock != null) wakeLock.release(); wakeLock = null;
     }
 }
