@@ -57,7 +57,7 @@ public class ViewPostFragmentRipoti extends Fragment {
 
     private SuggestionAdapter mSuggestionAdapter;
     private SuggestionServiceConnectionManager mSuggestionServiceConnectionManager;
-
+private TextView displaySummary;
     @Override
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
@@ -119,6 +119,7 @@ public class ViewPostFragmentRipoti extends Fragment {
         getActivity().setTitle(getResources().getString(R.string.story_board));
 
         mTitleTextView = (TextView) v.findViewById(R.id.postTitle);
+        displaySummary = (TextView)v.findViewById(R.id.displaySummary);
         mContentTextView = (TextView) v.findViewById(R.id.viewPostTextView);
         mShareUrlButton = (ImageButton) v.findViewById(R.id.sharePostLink);
         mViewPostButton = (ImageButton) v.findViewById(R.id.viewPost);
@@ -274,6 +275,7 @@ public class ViewPostFragmentRipoti extends Fragment {
                             return;
 
                         mTitleTextView.setText(title);
+                        displaySummary.setText(title);
 
                         if (post.isLocalDraft()) {
                             mContentTextView.setVisibility(View.VISIBLE);

@@ -17,6 +17,7 @@ import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.util.AnalyticsUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.CoreEvents;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
@@ -231,6 +233,11 @@ public class UserMenuActivity extends ActionBarActivity{
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(UserMenuActivity.this, StoryBoard.class);
+                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                        ? Constants.QUICK_POST_PHOTO_CAMERA
+                        : Constants.QUICK_POST_PHOTO_LIBRARY);
+                intent.putExtra("isNew", true);
+                intent.putExtra("shouldFinish", false);
                 startActivity(intent);
             }
         });

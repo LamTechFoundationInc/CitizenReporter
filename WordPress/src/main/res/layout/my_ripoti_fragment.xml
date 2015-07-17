@@ -215,7 +215,8 @@
             <!--Blog Posts-->
             <RelativeLayout
                 android:id="@+id/row_blog_posts"
-                style="@style/MySiteListRowLayout">
+                style="@style/MySiteListRowLayout"
+                android:visibility="gone">
 
                 <View
                     android:id="@+id/postsGlowBackground"

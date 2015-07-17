@@ -426,12 +426,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         // File not found
         File file = null;
-
-        file = new File(path);
+        URI fUri = null;
+        try {
+            fUri = new URI(path);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        file = new File(fUri.getPath());
 
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-            return;
+            //return;
         }
 
         Blog blog = WordPress.getCurrentBlog();
