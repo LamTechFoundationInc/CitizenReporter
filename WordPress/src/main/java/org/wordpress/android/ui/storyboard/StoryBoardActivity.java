@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.storyboard;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.NotificationManager;
@@ -20,40 +19,22 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.webkit.URLUtil;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.andexert.expandablelayout.library.ExpandableLayoutListView;
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -65,7 +46,6 @@ import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListene
 import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
-import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.RequestCodes;
@@ -81,8 +61,6 @@ import org.wordpress.android.ui.media.services.MediaUploadService;
 import org.wordpress.android.ui.posts.EditPostPreviewFragment;
 import org.wordpress.android.ui.posts.EditPostSettingsFragment;
 import org.wordpress.android.ui.posts.PostUploadService;
-import org.wordpress.android.ui.posts.Question;
-import org.wordpress.android.ui.posts.adapters.GuideArrayAdapter;
 import org.wordpress.android.ui.suggestion.adapters.TagSuggestionAdapter;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
@@ -97,7 +75,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ToastUtils.Duration;
 import org.wordpress.android.util.WPHtml;
-import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.android.util.helpers.MediaGalleryImageSpan;
@@ -113,7 +90,6 @@ import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -121,38 +97,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import de.greenrobot.event.EventBus;
-import info.hoang8f.widget.FButton;
 
-public class StoryBoardActivity extends ActionBarActivity implements EditorFragmentListener, BaseSliderView.OnSliderClickListener,
-        ViewPagerEx.OnPageChangeListener,
-        View.OnClickListener {
-
-private SliderLayout mDemoSlider;
-
-private LinearLayout summaryPane;
-private LinearLayout guidePane;
-
-private TextView displaySummary;
-private EditText editTextSummary;
-
-private String summary="";
-private RelativeLayout yesMedia;
-private RelativeLayout noMedia;
-
-private TextView text_summary;
-private TextView text_template;
-
-private PostLocation mPostLocation;
-private LocationHelper mLocationHelper;
-
-private FButton enableLocation;
-
-private Dialog summaryDialog;
-
-private ImageView button_camera;
-private ImageView button_video;
-private ImageView button_mic;
-
+public class StoryBoardActivity extends ActionBarActivity implements EditorFragmentListener {
     public static final String EXTRA_POSTID = "postId";
     public static final String EXTRA_IS_PAGE = "isPage";
     public static final String EXTRA_IS_NEW_POST = "isNewPost";
@@ -224,7 +170,6 @@ private ImageView button_mic;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_edit_post_activity);
-
 
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
@@ -305,6 +250,8 @@ private ImageView button_mic;
             trackEditorCreatedPost(action, getIntent());
         }
 
+        setTitle(StringUtils.unescapeHTML(WordPress.getCurrentBlog().getBlogName()));
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(fragmentManager);
 
         // Set up the ViewPager with the sections adapter.
@@ -334,65 +281,6 @@ private ImageView button_mic;
             }
         });
         ActivityId.trackLastActivity(ActivityId.POST_EDITOR);
-
-        //is this from assignment
-        int assignmentID = getIntent().getIntExtra("assignment_id", 0);
-        if(assignmentID != 0){
-            mPost.setAssignment_id(assignmentID);
-        }
-        Log.d("IAMGOD", "HERE");
-        setTitle(getResources().getString(R.string.story_board));
-
-        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
-
-        summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
-        guidePane = (LinearLayout)findViewById(R.id.guidePane);
-        displaySummary = (TextView)findViewById(R.id.displaySummary);
-
-        yesMedia = (RelativeLayout)findViewById(R.id.yesMediaPane);
-        noMedia = (RelativeLayout)findViewById(R.id.noMediaPane);
-
-        text_summary = (TextView)findViewById(R.id.text_summary);
-        text_template= (TextView)findViewById(R.id.text_template);
-
-        text_summary.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                boolean showTemplate = false;
-                togglePanes(showTemplate);
-            }
-        });
-        text_template.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                boolean showTemplate = true;
-                togglePanes(showTemplate);
-            }
-        });
-
-
-
-        //on click summary pane, show pop up dialog for post section
-        summaryPane.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                showCreateSummaryDialog();
-            }
-        });
-
-        //quick capture icons
-        button_camera = (ImageView)findViewById(R.id.button_camera);
-        button_video = (ImageView)findViewById(R.id.button_video);
-        button_mic = (ImageView)findViewById(R.id.button_mic);
-
-        setUpSlider();
-
-        setUpQuestionnaire();
-    }
-
-    @Override
-    public void onClick(View view) {
-
     }
 
     class AutoSaveTask extends TimerTask {
@@ -411,14 +299,6 @@ private ImageView button_mic;
         refreshBlogMedia();
         mAutoSaveTimer = new Timer();
         mAutoSaveTimer.scheduleAtFixedRate(new AutoSaveTask(), AUTOSAVE_INTERVAL_MILLIS, AUTOSAVE_INTERVAL_MILLIS);
-
-        //TODO: use onactivityresult?
-        if(summaryDialog !=null) {
-            if (summaryDialog.isShowing()) {
-                //resuming from enable location settings?
-                initLocation();
-            }
-        }
     }
 
     @Override
@@ -430,7 +310,6 @@ private ImageView button_mic;
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        mDemoSlider.stopAutoCycle();
         super.onStop();
     }
 
@@ -452,7 +331,7 @@ private ImageView button_mic;
     protected void onDestroy() {
         super.onDestroy();
 
-        AnalyticsTracker.track(Stat.EDITOR_CLOSED_POST);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CLOSED_POST);
 
         if (mSuggestionServiceConnectionManager != null) {
             mSuggestionServiceConnectionManager.unbindFromService();
@@ -539,22 +418,22 @@ private ImageView button_mic;
         switch (status) {
             case PUBLISHED:
                 if (mPost.isUploaded()) {
-                    AnalyticsTracker.track(Stat.EDITOR_UPDATED_POST);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
-                    AnalyticsTracker.track(Stat.EDITOR_PUBLISHED_POST,
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_PUBLISHED_POST,
                             getWordCountTrackingProperties());
                 }
                 break;
             case SCHEDULED:
                 if (mPost.isUploaded()) {
-                    AnalyticsTracker.track(Stat.EDITOR_UPDATED_POST);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_UPDATED_POST);
                 } else {
-                    AnalyticsTracker.track(Stat.EDITOR_SCHEDULED_POST,
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SCHEDULED_POST,
                             getWordCountTrackingProperties());
                 }
                 break;
             case DRAFT:
-                AnalyticsTracker.track(Stat.EDITOR_SAVED_DRAFT);
+                AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_SAVED_DRAFT);
                 break;
             default:
                 // No-op
@@ -693,12 +572,12 @@ private ImageView button_mic;
             normalizedSourceName = "quick-media";
         }
         properties.put("created_post_source", normalizedSourceName);
-        AnalyticsTracker.track(Stat.EDITOR_CREATED_POST, properties);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.EDITOR_CREATED_POST, properties);
     }
 
     private void updatePostObject(boolean isAutosave) {
         if (mPost == null) {
-            AppLog.e(T.POSTS, "Attempted to save an invalid Post.");
+            AppLog.e(AppLog.T.POSTS, "Attempted to save an invalid Post.");
             return;
         }
 
@@ -1361,12 +1240,12 @@ private ImageView button_mic;
     }
 
     /**
-     * Handles result from {@link MediaPickerActivity}. Uploads local
+     * Handles result from {@link org.wordpress.android.ui.media.MediaPickerActivity}. Uploads local
      * media to users blog then adds a gallery to the Post with all the selected media.
      *
      * @param data
      *  contains the selected media content with key
-     *  {@link MediaPickerActivity#SELECTED_CONTENT_RESULTS_KEY}
+     *  {@link org.wordpress.android.ui.media.MediaPickerActivity#SELECTED_CONTENT_RESULTS_KEY}
      */
     private void handleGalleryResult(Intent data) {
         if (data != null) {
@@ -1421,11 +1300,11 @@ private ImageView button_mic;
 
 
     /**
-     * Handles result from {@link MediaPickerActivity} by adding the
+     * Handles result from {@link org.wordpress.android.ui.media.MediaPickerActivity} by adding the
      * selected media to the Post.
      *
      * @param data
-     *  result {@link Intent} with selected media items
+     *  result {@link android.content.Intent} with selected media items
      */
     private void handleMediaSelectionResult(Intent data) {
         if (data != null) {
@@ -1461,7 +1340,7 @@ private ImageView button_mic;
     }
 
     /**
-     * Create image {@link MediaSource}'s for media selection.
+     * Create image {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
      *
      * @return
      *  list containing all sources to gather image media from
@@ -1488,7 +1367,7 @@ private ImageView button_mic;
     }
 
     /**
-     * Create video {@link MediaSource}'s for media selection.
+     * Create video {@link org.wordpress.mediapicker.source.MediaSource}'s for media selection.
      *
      * @return
      *  list containing all sources to gather video media from
@@ -1562,7 +1441,7 @@ private ImageView button_mic;
     }
 
     /**
-     * Starts {@link MediaPickerActivity} after refreshing the blog media.
+     * Starts {@link org.wordpress.android.ui.media.MediaPickerActivity} after refreshing the blog media.
      */
     private void startMediaSelection() {
         Intent intent = new Intent(this, MediaPickerActivity.class);
@@ -1595,7 +1474,7 @@ private ImageView button_mic;
                 @Override
                 public void onFailure(final ApiHelper.ErrorType errorType, String errorMessage, Throwable throwable) {
                     mBlogMediaStatus = 0;
-                    ToastUtils.showToast(StoryBoardActivity.this, R.string.error_refresh_media, Duration.SHORT);
+                    ToastUtils.showToast(StoryBoardActivity.this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
                 }
             };
             ApiHelper.SyncMediaLibraryTask getMediaTask = new ApiHelper.SyncMediaLibraryTask(0,
@@ -1603,7 +1482,7 @@ private ImageView button_mic;
             getMediaTask.execute(apiArgs);
         } else {
             mBlogMediaStatus = 0;
-            ToastUtils.showToast(this, R.string.error_refresh_media, Duration.SHORT);
+            ToastUtils.showToast(this, R.string.error_refresh_media, ToastUtils.Duration.SHORT);
         }
     }
 
@@ -1634,7 +1513,7 @@ private ImageView button_mic;
      * @param path
      *  local path of the media file to upload
      * @param mediaIdOut
-     *  the new {@link MediaFile} ID is added if non-null
+     *  the new {@link org.wordpress.android.util.helpers.MediaFile} ID is added if non-null
      */
     private void queueFileForUpload(String path, ArrayList<String> mediaIdOut) {
         // Invalid file path
@@ -1706,211 +1585,5 @@ private ImageView button_mic;
     @Override
     public void saveMediaFile(MediaFile mediaFile) {
         WordPress.wpDB.saveMediaFile(mediaFile);
-    }
-
-    public void setUpQuestionnaire(){
-
-        String[] myResArray = getResources().getStringArray(R.array.fivew_and_h);
-        List<String> myResArrayList = Arrays.asList(myResArray);
-
-        String tags = mPost.getKeywords();
-
-        Question questions[] = new Question[]
-                {
-                        //new Question(myResArrayList.get(0), mPost.getQwhat()),
-                        new Question(myResArrayList.get(1), mPost.getQwhy()),
-                        new Question(myResArrayList.get(2), mPost.getKeywords()),
-                        //new Question(myResArrayList.get(3), mPost.getQwhere()),
-                        new Question(myResArrayList.get(4), mPost.getQwhen()),
-                        new Question(myResArrayList.get(5), mPost.getQhow())
-                };
-
-        GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,
-                R.layout.view_row, questions, mPost);
-
-        ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
-        expandableLayoutListView.setAdapter(arrayAdapter);
-    }
-
-    public void togglePanes(boolean showTemplate){
-        LinearLayout.LayoutParams activeParam = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        activeParam.setMargins(3, 3, 3, 3);
-
-        LinearLayout.LayoutParams inActiveParam = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        inActiveParam.setMargins(5, 5, 5, 5);
-
-        if (showTemplate){
-            summaryPane.setVisibility(View.GONE);
-            guidePane.setVisibility(View.VISIBLE);
-
-            text_summary.setTextColor(getResources().getColor(R.color.reader_hyperlink));
-            text_template.setTextColor(getResources().getColor(R.color.black));
-
-            text_summary.setLayoutParams(inActiveParam);
-            text_template.setLayoutParams(activeParam);
-
-            text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-
-            text_template.setBackgroundColor(getResources().getColor(R.color.grey_lighten_10));
-            text_summary.setBackgroundColor(getResources().getColor(R.color.grey_lighten_20));
-
-        }else{
-            summaryPane.setVisibility(View.VISIBLE);
-            guidePane.setVisibility(View.GONE);
-
-            text_summary.setTextColor(getResources().getColor(R.color.black));
-            text_template.setTextColor(getResources().getColor(R.color.reader_hyperlink));
-
-            text_summary.setLayoutParams(activeParam);
-            text_template.setLayoutParams(inActiveParam);
-
-            text_template.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            text_summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-
-            text_summary.setBackgroundColor(getResources().getColor(R.color.grey_lighten_10));
-            text_template.setBackgroundColor(getResources().getColor(R.color.grey_lighten_20));
-        }
-    }
-
-    public void setUpSlider(){
-        HashMap<String,String> file_maps = new HashMap<String, String>();
-        file_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        file_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        file_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        file_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-        for(String name : file_maps.keySet()){
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description(name)
-                    .image(file_maps.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra",name);
-
-            mDemoSlider.addSlider(textSliderView);
-        }
-        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
-        mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-        mDemoSlider.setDuration(4000);
-        mDemoSlider.addOnPageChangeListener(this);
-
-        toggleMediaPane(false);
-    }
-
-    public void toggleMediaPane(boolean hasMedia){
-        if(hasMedia){
-            noMedia.setVisibility(View.GONE);
-            yesMedia.setVisibility(View.VISIBLE);
-        }else{
-            yesMedia.setVisibility(View.GONE);
-            noMedia.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void showCreateSummaryDialog(){
-
-        summaryDialog = new Dialog(StoryBoardActivity.this);
-        summaryDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-        summaryDialog.setContentView(R.layout.summary_fragment);
-        summaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
-        final FButton submitButton = (FButton)summaryDialog.findViewById(R.id.submitButton);
-        submitButton.setEnabled(false);
-
-        final EditText editTextSummary = (EditText)summaryDialog.findViewById(R.id.editTextSummary);
-
-        //find current value of summary
-        summary = "" + displaySummary.getText().toString();
-        //if it's not default & not empty edit editTextSummary
-        if(!summary.equals(getResources().getString(R.string.summary_prompt)) && (!summary.equals(""))){
-            editTextSummary.setText(summary);
-            submitButton.setEnabled(true);
-        }else{
-            summary = "";
-        }
-
-        editTextSummary.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                String newSummary = "" + editTextSummary.getText().toString();
-                if (newSummary.length() > 0) {
-                    summary = newSummary;
-                    submitButton.setEnabled(true);
-                } else {
-                    summary = "";
-                    submitButton.setEnabled(false);
-                }
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        summaryDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                summaryDialog.dismiss();
-            }
-        });
-
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (summary.trim().length() > 0) {
-                    displaySummary.setText(summary);
-                    if(!summary.equals(getResources().getString(R.string.summary_prompt))){
-                        mPost.setTitle(summary);
-                    }
-                } else {
-                    displaySummary.setText(getResources().getString(R.string.summary_prompt));
-                }
-                summaryDialog.dismiss();
-            }
-        });
-
-        enableLocation = (FButton)summaryDialog.findViewById(R.id.enableLocation);
-        enableLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(callGPSSettingIntent);
-            }
-        });
-
-        initLocation();
-
-        summaryDialog.show();
-    }
-
-
-
-
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-        Toast.makeText(this,slider.getBundle().get("extra") + "",Toast.LENGTH_SHORT).show();
-    }
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-    @Override
-    public void onPageSelected(int position) {
-        Log.d("Slider Demo", "Page Changed: " + position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {}
-
-    public void initLocation(){
-
     }
 }

@@ -31,6 +31,7 @@ import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
+import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.LessonsActivity;
 import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
@@ -232,13 +233,8 @@ public class UserMenuActivity extends ActionBarActivity{
         findViewById(R.id.row_new_post).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(UserMenuActivity.this, StoryBoard.class);
-                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                        ? Constants.QUICK_POST_PHOTO_CAMERA
-                        : Constants.QUICK_POST_PHOTO_LIBRARY);
-                intent.putExtra("isNew", true);
-                intent.putExtra("shouldFinish", false);
-                startActivity(intent);
+                boolean isPage = false;
+                ActivityLauncher.addNewBlogPostOrPageForResult(UserMenuActivity.this, mBlog, isPage);
             }
         });
 
