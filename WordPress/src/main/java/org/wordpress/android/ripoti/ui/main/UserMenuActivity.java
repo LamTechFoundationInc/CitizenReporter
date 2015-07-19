@@ -29,6 +29,7 @@ import org.wordpress.android.ui.WPLaunchActivity;
 import org.wordpress.android.ui.accounts.EditProfileActivity;
 import org.wordpress.android.ui.accounts.HelpActivity;
 import org.wordpress.android.ui.accounts.SignInActivity;
+import org.wordpress.android.ui.chat.ChatActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
@@ -237,7 +238,13 @@ public class UserMenuActivity extends ActionBarActivity{
                 ActivityLauncher.addNewBlogPostOrPageForResult(UserMenuActivity.this, mBlog, isPage);
             }
         });
-
+        findViewById(R.id.row_messages).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(UserMenuActivity.this, ChatActivity.class);
+                startActivity(intent);
+            }
+        });
         refreshBlogDetails();
     }
 

@@ -458,7 +458,7 @@ public class WordPressDB {
         db.insert(TABLE_MESSAGES, null, values);
         db.close();
     }
-    public List<Message> getMessages(String user_id) {
+    public List<Message> getMessages() {
         List<Message> messagesList = new ArrayList<Message>();
         // Select All Query
         //String selectQuery = "SELECT * FROM " + TABLE_MESSAGES + " WHERE " + COLUMN_USER + " ='" + user_id + "'";

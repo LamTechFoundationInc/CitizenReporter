@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout.LayoutParams;
@@ -25,6 +26,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,12 +41,7 @@ import java.util.Map;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 public class ChatActivity extends ActionBarActivity {
-
-    private View rootView;
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
     ListView gridView;
-    SimpleDBHandler dbHandler;
     private ArrayList<Card> cards;
     CardGridArrayAdapter mCardArrayAdapter;
     List<Message> messagesList;
@@ -61,27 +59,25 @@ public class ChatActivity extends ActionBarActivity {
     private EditText chatText;
     private ImageView buttonSend;
     private ChatArrayAdapter adClass;
+    private String friend_id;
+    private WordPressDB db;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_activity);
 
-        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        user_id = pref.getString("user_id", "0");
-
         gridView = (ListView) findViewById(R.id.messagesList);
 
         chatText = (EditText)findViewById(R.id.chatText);
         buttonSend = (ImageView)findViewById(R.id.buttonSend);
 
-        dbHandler = new SimpleDBHandler(getActivity().getApplicationContext(), null, null, 1);
+        db = WordPress.wpDB;
 
-        messagesList = dbHandler.getMessages(getArguments().getString(USER_ID));
+        messagesList = db.getMessages();
 
-        adClass = new ChatArrayAdapter(getActivity(), messagesList);
+        adClass = new ChatArrayAdapter(this, messagesList);
         gridView.setAdapter(adClass);
-
 
         chatText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -106,12 +102,11 @@ public class ChatActivity extends ActionBarActivity {
 
         Message message = new Message();
         message.setMessage(message_text);
-        message.setUser(getArguments().getString(USER_ID));
         message.setIsMine("1");
 
-        dbHandler.addMessage(message);
+        db.addMessage(message);
 
-        new SendMessage(getActivity(), user_id, getArguments().getString(USER_ID), message.getMessage()).execute();
+        new SendMessage(this, user_id, message.getMessage()).execute();
 
         chatText.setText("");
         adClass.add(message);
@@ -119,118 +114,6 @@ public class ChatActivity extends ActionBarActivity {
         return true;
     }
 
-    public static MessagesFragment newInstance(int sectionNumber, String _friend_id, String _friend_name) {
-        MessagesFragment fragment = new MessagesFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        args.putString(USER_ID, _friend_id);
-        args.putString(USER_NAME, _friend_name);
-
-        fragment.setHasOptionsMenu(true);
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    public MessagesFragment() {
-
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.clear();
-
-        inflater.inflate(R.menu.friend, menu);
-
-        friendIcon = menu.getItem(0);
-
-        new setIcon().execute();
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_message) {
-
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, FriendBooksFragment.newInstance(8, getArguments().getString(USER_ID), getArguments().getString(USER_NAME)))
-                    .commit();
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    class setIcon extends AsyncTask<String, String, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-
-        }
-        protected String doInBackground(String... args) {
-
-            String fid = getArguments().getString(USER_ID);
-            String image_value = "http://graph.facebook.com/"+fid+"/picture?type=normal";
-
-            Log.d("im", "im: " + image_value);
-
-            String final_image_value="";
-
-            try
-            {
-                URL obj = new URL(image_value);
-                URLConnection conn = obj.openConnection();
-                Map<String, List<String>> map = conn.getHeaderFields();
-
-                final_image_value = map.get("Location").toString();
-
-                final_image_value = final_image_value.replace("[", "");
-
-                final_image_value = final_image_value.replace("]", "");
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                URL url = new URL(final_image_value);
-                InputStream is = url.openStream();
-                friendDrawable = Drawable.createFromStream(is, "src");
-
-            } catch (MalformedURLException e) {
-                // e.printStackTrace();
-            } catch (IOException e) {
-                // e.printStackTrace();
-            }
-
-            return null;
-        }
-        protected void onPostExecute(String file_url) {
-
-            if(friendIcon!=null){
-                friendIcon.setIcon(friendDrawable);
-            }
-
-        }
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        ((MainActivity) activity).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER), "");
-    }
 
 
     public class ChatArrayAdapter  extends ArrayAdapter<Message> {
@@ -241,7 +124,6 @@ public class ChatActivity extends ActionBarActivity {
             super(context, R.layout.drawer_list_footer_row, TextValue);
             this.context = context;
             this.TextValue= TextValue;
-
         }
 
         @Override

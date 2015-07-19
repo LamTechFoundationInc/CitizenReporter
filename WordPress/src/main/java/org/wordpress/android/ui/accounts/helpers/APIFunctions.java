@@ -19,6 +19,7 @@ public class APIFunctions {
     private static String updateURL = BuildConfig.API_URL + "/users/editprofile/";
     private static String userURL = BuildConfig.API_URL + "/users/user/";
     private static String updateDeviceURL = BuildConfig.API_URL + "/users/edit_user_device/";
+    private static String sendMessageUrl = BuildConfig.API_URL + "/users/send_message/";
 
     // constructor
     public APIFunctions(){
@@ -98,4 +99,11 @@ public class APIFunctions {
         return json;
     }
 
+    public JSONObject sendMessage(String username) {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", username));
+        JSONObject json = jsonParser.getJSONFromUrl(sendMessageUrl, params);
+        // return json
+        return json;
+    }
 }

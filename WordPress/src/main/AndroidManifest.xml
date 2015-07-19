@@ -186,6 +186,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.chat.ChatActivity"
+            android:theme="@style/Calypso.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.main.RipotiMainActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity

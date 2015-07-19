@@ -1038,4 +1038,6 @@
     <string name="options_unregister">Unregister</string>
     <string name="options_clear">Clear</string>
     <string name="options_exit">Exit</string>
+
+    <string name="admin_messages">Admin Messages</string>
 </resources>
