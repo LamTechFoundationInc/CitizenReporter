@@ -19,6 +19,7 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.ui.chat.Message;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
@@ -88,7 +89,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 35;
+    private static final int DATABASE_VERSION = 36;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -135,6 +136,23 @@ public class WordPressDB {
             + "blog_id text, wp_id integer, category_name text not null);";
     private static final String CATEGORIES_TABLE = "cats";
 
+    //messages
+
+    public static final String TABLE_MESSAGES= "messages";
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_BOOK = "book";
+    public static final String COLUMN_MESSAGE = "message";
+    public static final String COLUMN_USER = "user";
+    public static final String COLUMN_TYPE = "type";
+    public static final String COLUMN_IS_MINE = "is_mine";
+
+
+    private static final String CREATE_MESSAGES_TABLE = "CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGES + " ("
+            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+            + COLUMN_MESSAGE + " TEXT,"
+            + COLUMN_USER + " TEXT,"
+            + COLUMN_IS_MINE + " TEXT"
+            + "); ";
     // for capturing blogID
     private static final String ADD_BLOGID = "alter table accounts add blogId integer;";
     private static final String UPDATE_BLOGID = "update accounts set blogId = 1;";
@@ -353,6 +371,9 @@ public class WordPressDB {
                 db.execSQL(ADD_POST_WHO);
                 db.execSQL(ADD_POST_WHAT);
                 db.execSQL(ADD_POST_WHERE);
+                currentVersion = 36;
+            case 36:
+                db.execSQL(CREATE_MESSAGES_TABLE);
                 currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
@@ -424,6 +445,42 @@ public class WordPressDB {
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
         return db.insert(BLOGS_TABLE, null, values) > -1;
+    }
+    public void addMessage(Message message) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_MESSAGE, message.getMessage());
+        values.put(COLUMN_USER, message.getUser());
+        values.put(COLUMN_IS_MINE , message.getIsMine());
+
+
+        db.insert(TABLE_MESSAGES, null, values);
+        db.close();
+    }
+    public List<Message> getMessages(String user_id) {
+        List<Message> messagesList = new ArrayList<Message>();
+        // Select All Query
+        //String selectQuery = "SELECT * FROM " + TABLE_MESSAGES + " WHERE " + COLUMN_USER + " ='" + user_id + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_MESSAGES;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Message content = new Message();
+
+                content.setMessage((cursor.getString(1)));
+                content.setUser((cursor.getString(2)));
+                content.setIsMine((cursor.getString(3)));
+
+                messagesList.add(content);
+            } while (cursor.moveToNext());
+        }
+
+        // return messages as a list
+        return messagesList;
     }
 
     public List<Integer> getAllBlogsIDs() {

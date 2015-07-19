@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,7 +24,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.infinitedimensions.somanami.helpers.SimpleDBHandler;
+import org.wordpress.android.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,19 +61,19 @@ public class ChatActivity extends ActionBarActivity {
     private EditText chatText;
     private ImageView buttonSend;
     private ChatArrayAdapter adClass;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.chat_activity);
 
-                             Bundle savedInstanceState) {
-
-        pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         user_id = pref.getString("user_id", "0");
 
-        rootView = inflater.inflate(R.layout.fragment_messages, container, false);
-        gridView = (ListView) rootView.findViewById(R.id.messagesList);
+        gridView = (ListView) findViewById(R.id.messagesList);
 
-        chatText = (EditText)rootView.findViewById(R.id.chatText);
-        buttonSend = (ImageView)rootView.findViewById(R.id.buttonSend);
+        chatText = (EditText)findViewById(R.id.chatText);
+        buttonSend = (ImageView)findViewById(R.id.buttonSend);
 
         dbHandler = new SimpleDBHandler(getActivity().getApplicationContext(), null, null, 1);
 
@@ -97,9 +98,6 @@ public class ChatActivity extends ActionBarActivity {
                 sendChatMessage("" + chatText.getText().toString());
             }
         });
-
-
-        return rootView;
     }
 
     public boolean sendChatMessage(String message_text){
