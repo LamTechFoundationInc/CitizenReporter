@@ -22,8 +22,10 @@ import java.net.URISyntaxException;
 public class SendMessage extends AsyncTask<Void, Void, String> {
 
     private Context ctx;
-    public SendMessage(Context ctx){
+    private String message;
+    public SendMessage(Context ctx, String message){
         this.ctx = ctx;
+        this.message = message;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class SendMessage extends AsyncTask<Void, Void, String> {
         APIFunctions userFunction = new APIFunctions();
         String username = WordPress.getCurrentBlog().getUsername();
 
-        JSONObject json = userFunction.sendMessage(username);
+        JSONObject json = userFunction.sendMessage(username, message);
         String result="";
         try {
             result  = json.getString("result");

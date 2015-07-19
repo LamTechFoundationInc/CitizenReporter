@@ -106,11 +106,9 @@ public class ChatActivity extends ActionBarActivity {
 
         db.addMessage(message);
 
-        new SendMessage(this, user_id, message.getMessage()).execute();
-
+        new SendMessage(this, message.getMessage()).execute();
         chatText.setText("");
         adClass.add(message);
-
         return true;
     }
 
