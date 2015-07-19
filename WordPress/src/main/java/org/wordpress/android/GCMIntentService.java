@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
+import org.wordpress.android.ui.ChatActivity;
+import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 
 public class GCMIntentService extends GCMBaseIntentService {
@@ -135,17 +137,22 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         String title = context.getString(R.string.app_name) + " | New ";
 
+        Intent notificationIntent = null;
+
         if(messageType==0){
             title += "Assignment";
-            
+            notificationIntent = new Intent(context, RipotiMainActivity.class);
+
         }else if (messageType == 1){
 
             title += "Feedback";
+            notificationIntent = new Intent(context, CommentsActivity.class);
+
         }else{
             title += "Chat";
+            notificationIntent = new Intent(context, ChatActivity.class);
         }
 
-        Intent notificationIntent = new Intent(context, RipotiMainActivity.class);
         // set intent so it does not start a new activity
         Bundle bundle = new Bundle();
         bundle.putString("assignment_refresh", "1");
@@ -165,7 +172,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         // Vibrate if vibrate is enabled
         notification.defaults |= Notification.DEFAULT_VIBRATE;
-        notificationManager.notify(0, notification);
+        notificationManager.notify(messageType, notification);
 
     }
 
