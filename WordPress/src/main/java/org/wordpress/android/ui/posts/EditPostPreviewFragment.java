@@ -14,12 +14,13 @@ import android.widget.TextView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.ui.storyboard.StoryBoardActivity;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPHtml;
 
 public class EditPostPreviewFragment extends Fragment {
     // TODO: remove mActivity and rely on getActivity()
-    private EditPostActivity mActivity;
+    private StoryBoardActivity mActivity;
     private WebView mWebView;
     private TextView mTextView;
     private LoadPostPreviewTask mLoadTask;
@@ -27,7 +28,7 @@ public class EditPostPreviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mActivity = (EditPostActivity)getActivity();
+        mActivity = (StoryBoardActivity)getActivity();
 
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.edit_post_preview_fragment, container, false);

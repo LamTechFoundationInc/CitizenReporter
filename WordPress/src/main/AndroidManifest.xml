@@ -152,6 +152,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.storyboard.StoryBoardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:theme="@style/Calypso.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.main.RipotiMainActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.posts.PostsActivity"
             android:theme="@style/Calypso.NoActionBar" >
             <intent-filter>

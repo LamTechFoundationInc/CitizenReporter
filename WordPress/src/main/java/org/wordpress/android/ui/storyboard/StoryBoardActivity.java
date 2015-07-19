@@ -43,7 +43,6 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.editor.EditorFragmentAbstract;
 import org.wordpress.android.editor.EditorFragmentAbstract.EditorFragmentListener;
-import org.wordpress.android.editor.LegacyEditorFragment;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostStatus;
@@ -294,7 +293,7 @@ public class StoryBoardActivity extends ActionBarActivity implements EditorFragm
         super.onResume();
 
         registerReceiver(mGalleryReceiver,
-                new IntentFilter(LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
+                new IntentFilter(StoryBoardEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED));
 
         refreshBlogMedia();
         mAutoSaveTimer = new Timer();
@@ -662,7 +661,7 @@ public class StoryBoardActivity extends ActionBarActivity implements EditorFragm
             switch (position) {
                 case 0:
                     // TODO: switch between legacy and new editor here (AB test?)
-                    return new LegacyEditorFragment();
+                    return new StoryBoardEditorFragment();
                 case 1:
                     return new EditPostSettingsFragment();
                 default:
@@ -1382,8 +1381,8 @@ public class StoryBoardActivity extends ActionBarActivity implements EditorFragm
     private BroadcastReceiver mGalleryReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (LegacyEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
-                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(LegacyEditorFragment.EXTRA_MEDIA_GALLERY));
+            if (StoryBoardEditorFragment.ACTION_MEDIA_GALLERY_TOUCHED.equals(intent.getAction())) {
+                startMediaGalleryActivity((MediaGallery)intent.getSerializableExtra(StoryBoardEditorFragment.EXTRA_MEDIA_GALLERY));
             }
         }
     };

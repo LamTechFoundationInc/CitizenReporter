@@ -122,7 +122,7 @@ public class ActivityLauncher {
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
         WordPress.wpDB.savePost(newPost);
 
-        Intent intent = new Intent(context, EditPostActivity.class);
+        Intent intent = new Intent(context, StoryBoardActivity.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);

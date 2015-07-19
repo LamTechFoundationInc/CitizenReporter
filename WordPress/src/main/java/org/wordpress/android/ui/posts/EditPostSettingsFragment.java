@@ -47,6 +47,7 @@ import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.models.PostStatus;
 import org.wordpress.android.ui.RequestCodes;
+import org.wordpress.android.ui.storyboard.StoryBoardActivity;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.EditTextUtils;
@@ -93,7 +94,7 @@ public class EditPostSettingsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mPost = ((EditPostActivity) getActivity()).getPost();
+        mPost = ((StoryBoardActivity) getActivity()).getPost();
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.edit_post_settings_fragment, container, false);
 
         if (rootView == null || mPost == null) {

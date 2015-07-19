@@ -18,6 +18,9 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     private WordPress aController = null;
 
+    private int messageType;
+    private String message;
+
     public GCMIntentService() {
         // Call extended class Constructor GCMBaseIntentService
         super(GCMConfigORG.GOOGLE_SENDER_ID);
@@ -60,7 +63,18 @@ public class GCMIntentService extends GCMBaseIntentService {
             aController = (WordPress) getApplicationContext();
 
         Log.i(TAG, "Received message");
-        String message = intent.getExtras().getString("price");
+
+        //compose message depending on type
+        if(intent.hasExtra("assignment")){
+            messageType = 0;
+            message = intent.getExtras().getString("assignment");
+        }else if(intent.hasExtra("feedback")){
+            messageType = 1;
+            message = intent.getExtras().getString("feedback");
+        }else if(intent.hasExtra("chat")){
+            messageType = 2;
+            message = intent.getExtras().getString("chat");
+        }
 
         aController.displayMessageOnScreen(context, message);
         // notifies user
@@ -112,14 +126,24 @@ public class GCMIntentService extends GCMBaseIntentService {
     /**
      * Create a notification to inform the user that server has sent a message.
      */
-    private static void generateNotification(Context context, String message) {
+    private void generateNotification(Context context, String message) {
         int icon = R.drawable.noticon_clock;
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         Notification notification = new Notification(icon, message, when);
 
-        String title = context.getString(R.string.app_name) + " | New Assignment";
+        String title = context.getString(R.string.app_name) + " | New ";
+
+        if(messageType==0){
+            title += "Assignment";
+            
+        }else if (messageType == 1){
+
+            title += "Feedback";
+        }else{
+            title += "Chat";
+        }
 
         Intent notificationIntent = new Intent(context, RipotiMainActivity.class);
         // set intent so it does not start a new activity
@@ -149,4 +173,8 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     public static int PUSH_NOTIFICATION_ID=0;
+
+    public boolean shouldCircularizeNoteIcon(String type) {
+        return false;
+    }
 }
