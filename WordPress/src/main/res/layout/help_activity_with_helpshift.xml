@@ -53,21 +53,24 @@
                     android:text="@string/contact_us"
                     android:id="@+id/contact_us_button"
                     android:layout_width="match_parent"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
                     android:text="@string/browse_our_faq_button"
                     android:id="@+id/faq_button"
                     android:layout_width="match_parent"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/WordPress.NUXPrimaryButton"
                     android:text="@string/reader_title_applog"
                     android:id="@+id/applog_button"
                     android:layout_width="match_parent"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:layout_width="wrap_content"

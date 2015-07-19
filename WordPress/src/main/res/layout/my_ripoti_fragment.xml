@@ -371,7 +371,7 @@
             </RelativeLayout>
 
             <!--Configuration-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
+            <LinearLayout android:visibility="gone" style="@style/MySiteListHeaderLayout">
 
                 <org.wordpress.android.widgets.WPTextView
                     style="@style/MySiteListHeaderTextView"
@@ -438,7 +438,7 @@
 
 
             <!--Account-->
-            <LinearLayout style="@style/MySiteListHeaderLayout">
+            <LinearLayout android:visibility="gone" style="@style/MySiteListHeaderLayout">
 
                 <View style="@style/MySiteListSectionDividerView" />
 
