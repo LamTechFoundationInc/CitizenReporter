@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
-import org.wordpress.android.ui.ChatActivity;
+import org.wordpress.android.ui.chat.ChatActivity;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 
