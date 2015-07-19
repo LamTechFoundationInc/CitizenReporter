@@ -11,6 +11,7 @@ import android.util.Log;
 import com.google.android.gcm.GCMBaseIntentService;
 
 import org.wordpress.android.ui.chat.ChatActivity;
+import org.wordpress.android.ui.chat.Message;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 
@@ -149,6 +150,12 @@ public class GCMIntentService extends GCMBaseIntentService {
             notificationIntent = new Intent(context, CommentsActivity.class);
 
         }else{
+            //insert to db
+            Message chat = new Message();
+            chat.setMessage(message.trim());
+            chat.setIsMine("2");
+            WordPress.wpDB.addMessage(chat);
+
             title += "Chat";
             notificationIntent = new Intent(context, ChatActivity.class);
         }

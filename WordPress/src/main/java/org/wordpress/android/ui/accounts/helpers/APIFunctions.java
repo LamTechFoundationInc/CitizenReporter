@@ -102,7 +102,8 @@ public class APIFunctions {
     public JSONObject sendMessage(String username, String message) {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("username", username));
-        params.add(new BasicNameValuePair("message", message));
+        params.add(new BasicNameValuePair("message_string", message));
+        Log.d("message", username + message + sendMessageUrl + ": params");
         JSONObject json = jsonParser.getJSONFromUrl(sendMessageUrl, params);
         // return json
         return json;

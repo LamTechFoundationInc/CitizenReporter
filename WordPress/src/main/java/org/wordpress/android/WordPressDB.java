@@ -454,9 +454,8 @@ public class WordPressDB {
         values.put(COLUMN_USER, message.getUser());
         values.put(COLUMN_IS_MINE , message.getIsMine());
 
-
         db.insert(TABLE_MESSAGES, null, values);
-        db.close();
+
     }
     public List<Message> getMessages() {
         List<Message> messagesList = new ArrayList<Message>();
