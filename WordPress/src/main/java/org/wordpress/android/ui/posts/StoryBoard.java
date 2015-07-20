@@ -143,6 +143,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private ImageView button_video;
     private ImageView button_mic;
     private String mMediaCapturePath = "";
+
+    private HashMap<String,File> media_map;
+    private boolean hasMedia = false;
+    
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -269,7 +273,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         setTitle(getResources().getString(R.string.story_board));
 
         mDemoSlider = (SliderLayout)findViewById(R.id.slider);
-
+        media_map = new HashMap<String, File>();
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
         guidePane = (LinearLayout)findViewById(R.id.guidePane);
         displaySummary = (TextView)findViewById(R.id.displaySummary);
@@ -428,15 +432,21 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         File file = null;
         URI fUri = null;
         try {
-            fUri = new URI(path);
+            fUri = new URI(path);            
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
         file = new File(fUri.getPath());
 
+        path = fUri.getPath();
+
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-            //return;
+            
+        }else{
+            //Add media to slider and refresh
+            media_map.put(mPost.getTitle(), file);
+            setUpSlider();
         }
 
         Blog blog = WordPress.getCurrentBlog();
@@ -665,17 +675,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void setUpSlider(){
-        HashMap<String,String> file_maps = new HashMap<String, String>();
-        file_maps.put("Hannibal", "http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        file_maps.put("Big Bang Theory", "http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        file_maps.put("House of Cards", "http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        file_maps.put("Game of Thrones", "http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-        for(String name : file_maps.keySet()){
+
+        for(String name : media_map.keySet()){
             TextSliderView textSliderView = new TextSliderView(this);
             // initialize a SliderLayout
             textSliderView
                     .description(name)
-                    .image(file_maps.get(name))
+                    .image(media_map.get(name))
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
 
@@ -692,7 +698,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mDemoSlider.setDuration(4000);
         mDemoSlider.addOnPageChangeListener(this);
 
-        toggleMediaPane(false);
+        if(media_map.size()>0){
+            hasMedia = true;
+        }
+
+        toggleMediaPane(hasMedia);
     }
 
     public void toggleMediaPane(boolean hasMedia){

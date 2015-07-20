@@ -1039,6 +1039,6 @@
     <string name="options_clear">Clear</string>
     <string name="options_exit">Exit</string>
 
-    <string name="admin_messages">Admin Messages</string>
-    <string name="chat_title">Admin Messages</string>
+    <string name="admin_messages">Support Channel</string>
+    <string name="chat_title">@string/admin_messages</string>
 </resources>
