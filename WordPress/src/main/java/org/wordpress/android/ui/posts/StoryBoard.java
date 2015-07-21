@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -93,8 +95,10 @@ import info.hoang8f.widget.FButton;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -447,18 +451,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
             
         }else{
-            //Add thumbnail to slider and refresh
-
-            //Generate Thumbnail
-            String thumbnailURL = generateThumb(file, mediaType);
-            File thumb = new File(thumbnailURL);
-
-            if(thumb.exists()){
-                //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
-                Random randomGenerator = new Random();
-                media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
-                setUpSlider();
-            }
 
             Blog blog = WordPress.getCurrentBlog();
             long currentTime = System.currentTimeMillis();
@@ -486,6 +478,20 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mediaFile.setMimeType(mimeType);
             }
 
+            //Add thumbnail to slider and refresh
+
+            //Generate Thumbnail
+            String thumbnailURL = generateThumb(file, mimeType, currentTime);
+            File thumb = new File(thumbnailURL);
+
+            if(thumb.exists()){
+                //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+                Random randomGenerator = new Random();
+                media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
+                setUpSlider();
+            }
+
+
             WordPress.wpDB.saveMediaFile(mediaFile);
             startMediaUploadService();
         }
@@ -494,7 +500,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     /*
         Generate Thumbnail
      */
-    public String generateThumb(File file, int mediaType){
+    public String generateThumb(File file, String mimeType, long mediaCreationTime){
         String thumbnailUri = "";
         //create thumbnails folder if not exists
         String app_name = getResources().getString(R.string.app_name);
@@ -507,10 +513,35 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
 
         //create thumb according to type
-        switch(mediaType){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String mt = dateFormat.format(mediaCreationTime);
+
+        File thisThumb = new File(mThumbsDir.getAbsolutePath() + "/" + mt+".jpg");
+
+        //if thumbnail does not exist
+        if(!thisThumb.exists()){
+
+            //Create thumbnail
+            Bitmap bitThumb = null;
+            String filename=null;
+
+            if(mimeType.startsWith("video")){
+                bitThumb = ThumbnailUtils.createVideoThumbnail(file.getAbsolutePath(), MediaStore.Video.Thumbnails.MICRO_KIND);
+            }else if(mimeType.startsWith("image")){
+                bitThumb = BitmapFactory.decodeFile(file.getAbsolutePath());
+            }
+
+            try{
+                filename = mThumbsDir.getAbsolutePath() + "/" + mt+".jpg";
+
+                FileOutputStream out = new FileOutputStream(filename);
+                bitThumb.compress(Bitmap.CompressFormat.JPEG, 30, out);
+                out.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
-
 
         return thumbnailUri;
     }
