@@ -360,9 +360,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     private void launchMic(){
-
-        Intent i = new Intent(getApplicationContext(), SoundRecorder.class);
-        startActivity(i);
+        WordPressMediaUtils.launchMic(this, new WordPressMediaUtils.LaunchRecorderCallback(){
+            @Override
+            public void onMediaRecorderPathReady(String mediaCapturePath){
+                mMediaCapturePath = mediaCapturePath;
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
+        });
     }
     private void launchCamera() {
         WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {

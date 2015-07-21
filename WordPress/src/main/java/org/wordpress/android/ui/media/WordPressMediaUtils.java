@@ -16,6 +16,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
 
+import net.micode.soundrecorder.SoundRecorder;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.RequestCodes;
@@ -38,6 +40,9 @@ public class WordPressMediaUtils {
     }
     public interface LaunchVideoCameraCallback {
         void onMediaCapturePathReady(String mediaCapturePath);
+    }
+    public interface LaunchRecorderCallback{
+        void onMediaRecorderPathReady(String mediaCapturePath);
     }
     private static void showSDCardRequiredDialog(Context context) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
@@ -125,7 +130,33 @@ public class WordPressMediaUtils {
         }
         return intent;
     }
+    private static Intent prepareLaunchMic(Context context, LaunchRecorderCallback callback) {
+        String state = android.os.Environment.getExternalStorageState();
+        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+            showSDCardRequiredDialog(context);
+            return null;
+        }
 
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+
+        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".mp3";
+        Intent intent = new Intent(context, SoundRecorder.class);
+        intent.putExtra("dir", Uri.fromFile(new File(mediaCapturePath)));
+
+        if (callback != null) {
+            callback.onMediaRecorderPathReady(mediaCapturePath);
+        }
+        // make sure the directory we plan to store the recording in exists
+        File directory = new File(mediaCapturePath).getParentFile();
+        if (!directory.exists() && !directory.mkdirs()) {
+            try {
+                throw new IOException("Path to file could not be created.");
+            } catch (IOException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+        return intent;
+    }
     public static void launchPictureLibrary(Activity activity) {
         AppLockManager.getInstance().setExtendedTimeout();
         activity.startActivityForResult(preparePictureLibraryIntent(activity),
@@ -147,7 +178,13 @@ public class WordPressMediaUtils {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         return Intent.createChooser(intent, context.getString(R.string.pick_photo));
     }
-
+    public static void launchMic(Activity activity, LaunchRecorderCallback callback){
+        Intent intent = prepareLaunchMic(activity, callback);
+        if(intent !=null){
+            AppLockManager.getInstance().setExtendedTimeout();
+            activity.startActivityForResult(intent, RequestCodes.TAKE_AUDIO);
+        }
+    }
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
         Intent intent = preparelaunchCamera(activity, callback);
         if (intent != null) {
