@@ -5,8 +5,8 @@ package org.wordpress.android.ui.posts;
  */
 public class Question {
 
-    public String title;
-    public String answer;
+    public String title="";
+    public String answer="";
 
     public Question(String title, String answer) {
         super();
