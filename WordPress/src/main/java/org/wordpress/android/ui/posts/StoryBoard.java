@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -54,6 +55,7 @@ import net.micode.soundrecorder.SoundRecorder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
@@ -494,7 +496,22 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
      */
     public String generateThumb(File file, int mediaType){
         String thumbnailUri = "";
-        
+        //create thumbnails folder if not exists
+        String app_name = getResources().getString(R.string.app_name);
+
+        File mThumbsDir = new File(Environment.getExternalStorageDirectory(), app_name+"/thumbnails");
+        if (!mThumbsDir.exists()) {
+            if (!mThumbsDir.mkdirs()) {
+                return thumbnailUri;
+            }
+        }
+
+        //create thumb according to type
+        switch(mediaType){
+
+        }
+
+
         return thumbnailUri;
     }
 
