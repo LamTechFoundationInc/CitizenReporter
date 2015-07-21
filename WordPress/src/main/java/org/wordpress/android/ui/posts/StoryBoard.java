@@ -216,7 +216,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 WordPress.wpDB.savePost(mPost);
                 mIsNewPost = true;
 
-                Log.d("cpath", "1");
             } else if (extras != null) {
                 // Load post from the postId passed in extras
                 long localTablePostId = extras.getLong(EXTRA_POSTID, -1);
@@ -224,23 +223,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mIsNewPost = extras.getBoolean(EXTRA_IS_NEW_POST);
                 mPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId, false);
                 mOriginalPost = WordPress.wpDB.getPostForLocalTablePostId(localTablePostId, false);
-                Log.d("cpath", "2");
             } else {
-                Log.d("cpath", "3");
                 // A postId extra must be passed to this activity
                 showErrorAndFinish(R.string.post_not_found);
                 return;
             }
         } else {
-            Log.d("cpath", "4");
             if (savedInstanceState.containsKey(STATE_KEY_ORIGINAL_POST)) {
-                Log.d("cpath", "5");
                 try {
                     mPost = (Post) savedInstanceState.getSerializable(STATE_KEY_CURRENT_POST);
                     mOriginalPost = (Post) savedInstanceState.getSerializable(STATE_KEY_ORIGINAL_POST);
-                    Log.d("cpath", "6");
                 } catch (ClassCastException e) {
-                    Log.d("cpath", "7");
                     mPost = null;
                 }
             }
@@ -378,10 +371,21 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         });
     }
     private void launchVideoCamera() {
+        WordPressMediaUtils.launchVideoCamera_SD(this, new WordPressMediaUtils.LaunchVideoCameraCallback() {
+            @Override
+            public void onMediaCapturePathReady(String mediaCapturePath) {
+                mMediaCapturePath = mediaCapturePath;
+                AppLockManager.getInstance().setExtendedTimeout();
+            }
+        });
+    }
+    /*
+    private void launchVideoCamera() {
+
         WordPressMediaUtils.launchVideoCamera(this);
         AppLockManager.getInstance().setExtendedTimeout();
     }
-
+    */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -393,8 +397,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
-                            Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri, 1)) {
+                            if (!addMedia(f, 1)) {
                                 ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                             }
                             //this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
@@ -414,8 +417,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     break;
                 case RequestCodes.TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
-                        Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                        if (!addMedia(capturedVideoUri, 2)) {
+                        //Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
+                        File f = new File(mMediaCapturePath);
+                        if (!addMedia(f, 2)) {
                             ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                         }
                     }/* else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
@@ -428,12 +432,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         }
     }
-    private void queueFileForUpload(String path, int mediaType) {
+    private void queueFileForUpload(File file, int mediaType) {
         // Invalid file path
-        if (TextUtils.isEmpty(path)) {
+        if (TextUtils.isEmpty(file.getAbsolutePath())) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
             return;
         }
+        /*
 
         // File not found
         File file = null;
@@ -443,9 +448,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        file = new File(fUri.getPath());
+        file = new File(path);
 
         path = fUri.getPath();
+
+        Log.d("path", path);*/
 
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
@@ -460,7 +467,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
             mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
             mediaFile.setFileName(fileName);
-            mediaFile.setFilePath(path);
+            mediaFile.setFilePath(file.getAbsolutePath());
             mediaFile.setUploadState("queued");
             mediaFile.setDateCreatedGMT(currentTime);
             mediaFile.setMediaId(String.valueOf(currentTime));
@@ -469,7 +476,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 // get width and height
                 BitmapFactory.Options bfo = new BitmapFactory.Options();
                 bfo.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(path, bfo);
+                BitmapFactory.decodeFile(file.getAbsolutePath(), bfo);
                 mediaFile.setWidth(bfo.outWidth);
                 mediaFile.setHeight(bfo.outHeight);
             }
@@ -559,7 +566,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mMediaUploadServiceStarted = true;
         }
     }
-    private boolean addMedia(Uri imageUri, int mediaType) {
+    private boolean addMedia(File file, int mediaType) {
+        Uri imageUri = Uri.fromFile(file);
+
         if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
             imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
         }
@@ -568,7 +577,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             return false;
         }
 
-        queueFileForUpload(imageUri.toString(), mediaType);
+        queueFileForUpload(file, mediaType);
 
         //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;
@@ -893,7 +902,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     @Override
     public void onPageSelected(int position) {
-        Log.d("Slider Demo", "Page Changed: " + position);
     }
 
     @Override

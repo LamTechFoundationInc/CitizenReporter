@@ -36,7 +36,9 @@ public class WordPressMediaUtils {
     public interface LaunchCameraCallback {
         void onMediaCapturePathReady(String mediaCapturePath);
     }
-
+    public interface LaunchVideoCameraCallback {
+        void onMediaCapturePathReady(String mediaCapturePath);
+    }
     private static void showSDCardRequiredDialog(Context context) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
         dialogBuilder.setTitle(context.getResources().getText(R.string.sdcard_title));
@@ -85,9 +87,43 @@ public class WordPressMediaUtils {
         AppLockManager.getInstance().setExtendedTimeout();
         fragment.startActivityForResult(prepareVideoCameraIntent(), RequestCodes.TAKE_VIDEO);
     }
-
+    public static void launchVideoCamera_SD(Activity activity, LaunchVideoCameraCallback callback) {
+        Intent intent = prepareVideoCameraIntent_SD(activity, callback);
+        if (intent != null) {
+            AppLockManager.getInstance().setExtendedTimeout();
+            activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
+        }
+    }
     private static Intent prepareVideoCameraIntent() {
         return new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+    }
+
+    private static Intent prepareVideoCameraIntent_SD(Context context, LaunchVideoCameraCallback callback) {
+        String state = android.os.Environment.getExternalStorageState();
+        if (!state.equals(android.os.Environment.MEDIA_MOUNTED)) {
+            showSDCardRequiredDialog(context);
+            return null;
+        }
+
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+
+        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".mp4";
+        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mediaCapturePath)));
+
+        if (callback != null) {
+            callback.onMediaCapturePathReady(mediaCapturePath);
+        }
+        // make sure the directory we plan to store the recording in exists
+        File directory = new File(mediaCapturePath).getParentFile();
+        if (!directory.exists() && !directory.mkdirs()) {
+            try {
+                throw new IOException("Path to file could not be created.");
+            } catch (IOException e) {
+                AppLog.e(T.POSTS, e);
+            }
+        }
+        return intent;
     }
 
     public static void launchPictureLibrary(Activity activity) {
@@ -151,7 +187,6 @@ public class WordPressMediaUtils {
         if (callback != null) {
             callback.onMediaCapturePathReady(mediaCapturePath);
         }
-
         // make sure the directory we plan to store the recording in exists
         File directory = new File(mediaCapturePath).getParentFile();
         if (!directory.exists() && !directory.mkdirs()) {
