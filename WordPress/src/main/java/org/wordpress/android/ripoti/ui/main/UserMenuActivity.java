@@ -34,7 +34,6 @@ import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.media.MediaAddFragment;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.LessonsActivity;
-import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
 import org.wordpress.android.ui.stats.service.StatsService;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;

@@ -482,15 +482,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
             //Generate Thumbnail
             String thumbnailURL = generateThumb(file, mimeType, currentTime);
+
             File thumb = new File(thumbnailURL);
 
             if(thumb.exists()){
+                mediaFile.setThumbnailURL(thumbnailURL);
+
                 //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
                 Random randomGenerator = new Random();
                 media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
                 setUpSlider();
             }
-
 
             WordPress.wpDB.saveMediaFile(mediaFile);
             startMediaUploadService();
@@ -516,7 +518,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String mt = dateFormat.format(mediaCreationTime);
 
-        File thisThumb = new File(mThumbsDir.getAbsolutePath() + "/" + mt+".jpg");
+        thumbnailUri = mThumbsDir.getAbsolutePath() + "/" + mt+".jpg";
+
+        File thisThumb = new File(thumbnailUri);
 
         //if thumbnail does not exist
         if(!thisThumb.exists()){

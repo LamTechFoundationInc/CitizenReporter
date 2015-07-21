@@ -24,6 +24,7 @@ import org.wordpress.android.ui.media.WordPressMediaUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
 import org.wordpress.android.ui.posts.PagesActivity;
 import org.wordpress.android.ui.posts.PostsActivity;
+import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.SettingsActivity;
 import org.wordpress.android.ui.stats.StatsActivity;
@@ -122,7 +123,7 @@ public class ActivityLauncher {
         Post newPost = new Post(blog.getLocalTableBlogId(), isPage);
         WordPress.wpDB.savePost(newPost);
 
-        Intent intent = new Intent(context, StoryBoardActivity.class);
+        Intent intent = new Intent(context, StoryBoard.class);
         intent.putExtra(EditPostActivity.EXTRA_POSTID, newPost.getLocalTablePostId());
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, isPage);
         intent.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
