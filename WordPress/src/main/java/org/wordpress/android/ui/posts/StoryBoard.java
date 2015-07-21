@@ -99,6 +99,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Timer;
 
 public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSliderClickListener,
@@ -445,7 +446,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             
         }else{
             //Add media to slider and refresh
-            media_map.put(mPost.getTitle(), file);
+            //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+            Random randomGenerator = new Random();
+            media_map.put(String.valueOf(randomGenerator.nextInt(10000)), file);
             setUpSlider();
         }
 
