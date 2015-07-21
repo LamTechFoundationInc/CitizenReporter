@@ -66,12 +66,10 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         final Question question = data[position];
         holder.txtTitle.setText(question.title);
         //check for defaults
-        if(question!=null){
-
+        if(question.answer!=null){
             if(!question.answer.equals("")){
                 holder.txtContent.setText(question.answer);
                 holder.filledButton.setColorFilter(context.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
-
             }
         }
         final QuestionHolder finalHolder = holder;
