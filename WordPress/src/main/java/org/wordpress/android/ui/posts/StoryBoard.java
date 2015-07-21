@@ -388,7 +388,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         try {
                             File f = new File(mMediaCapturePath);
                             Uri capturedImageUri = Uri.fromFile(f);
-                            if (!addMedia(capturedImageUri)) {
+                            if (!addMedia(capturedImageUri, 1)) {
                                 ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                             }
                             //this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
@@ -409,7 +409,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 case RequestCodes.TAKE_VIDEO:
                     if (resultCode == Activity.RESULT_OK) {
                         Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
-                        if (!addMedia(capturedVideoUri)) {
+                        if (!addMedia(capturedVideoUri, 2)) {
                             ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                         }
                     }/* else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
@@ -422,7 +422,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         }
     }
-    private void queueFileForUpload(String path) {
+    private void queueFileForUpload(String path, int mediaType) {
         // Invalid file path
         if (TextUtils.isEmpty(path)) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
@@ -445,43 +445,59 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
             
         }else{
-            //Add media to slider and refresh
-            //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
-            Random randomGenerator = new Random();
-            media_map.put(String.valueOf(randomGenerator.nextInt(10000)), file);
-            setUpSlider();
+            //Add thumbnail to slider and refresh
+
+            //Generate Thumbnail
+            String thumbnailURL = generateThumb(file, mediaType);
+            File thumb = new File(thumbnailURL);
+
+            if(thumb.exists()){
+                //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+                Random randomGenerator = new Random();
+                media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
+                setUpSlider();
+            }
+
+            Blog blog = WordPress.getCurrentBlog();
+            long currentTime = System.currentTimeMillis();
+            String mimeType = MediaUtils.getMediaFileMimeType(file);
+            String fileName = MediaUtils.getMediaFileName(file, mimeType);
+            MediaFile mediaFile = new MediaFile();
+
+            mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
+            mediaFile.setFileName(fileName);
+            mediaFile.setFilePath(path);
+            mediaFile.setUploadState("queued");
+            mediaFile.setDateCreatedGMT(currentTime);
+            mediaFile.setMediaId(String.valueOf(currentTime));
+
+            if (mimeType != null && mimeType.startsWith("image")) {
+                // get width and height
+                BitmapFactory.Options bfo = new BitmapFactory.Options();
+                bfo.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(path, bfo);
+                mediaFile.setWidth(bfo.outWidth);
+                mediaFile.setHeight(bfo.outHeight);
+            }
+
+            if (!TextUtils.isEmpty(mimeType)) {
+                mediaFile.setMimeType(mimeType);
+            }
+
+            WordPress.wpDB.saveMediaFile(mediaFile);
+            startMediaUploadService();
         }
-
-        Blog blog = WordPress.getCurrentBlog();
-        long currentTime = System.currentTimeMillis();
-        String mimeType = MediaUtils.getMediaFileMimeType(file);
-        String fileName = MediaUtils.getMediaFileName(file, mimeType);
-        MediaFile mediaFile = new MediaFile();
-
-        mediaFile.setBlogId(String.valueOf(blog.getLocalTableBlogId()));
-        mediaFile.setFileName(fileName);
-        mediaFile.setFilePath(path);
-        mediaFile.setUploadState("queued");
-        mediaFile.setDateCreatedGMT(currentTime);
-        mediaFile.setMediaId(String.valueOf(currentTime));
-
-        if (mimeType != null && mimeType.startsWith("image")) {
-            // get width and height
-            BitmapFactory.Options bfo = new BitmapFactory.Options();
-            bfo.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, bfo);
-            mediaFile.setWidth(bfo.outWidth);
-            mediaFile.setHeight(bfo.outHeight);
-        }
-
-        if (!TextUtils.isEmpty(mimeType)) {
-            mediaFile.setMimeType(mimeType);
-        }
-
-
-        WordPress.wpDB.saveMediaFile(mediaFile);
-        startMediaUploadService();
     }
+
+    /*
+        Generate Thumbnail
+     */
+    public String generateThumb(File file, int mediaType){
+        String thumbnailUri = "";
+        
+        return thumbnailUri;
+    }
+
     /**
      * Starts the upload service to upload selected media.
      */
@@ -491,7 +507,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mMediaUploadServiceStarted = true;
         }
     }
-    private boolean addMedia(Uri imageUri) {
+    private boolean addMedia(Uri imageUri, int mediaType) {
         if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
             imageUri = MediaUtils.downloadExternalMedia(this, imageUri);
         }
@@ -500,7 +516,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             return false;
         }
 
-        queueFileForUpload(imageUri.toString());
+        queueFileForUpload(imageUri.toString(), mediaType);
 
         //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;
