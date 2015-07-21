@@ -96,6 +96,9 @@ import info.hoang8f.widget.FButton;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -438,21 +441,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
             return;
         }
-        /*
-
-        // File not found
-        File file = null;
-        URI fUri = null;
-        try {
-            fUri = new URI(path);            
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        file = new File(path);
-
-        path = fUri.getPath();
-
-        Log.d("path", path);*/
 
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
@@ -488,13 +476,37 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             //Add thumbnail to slider and refresh
 
             //Generate Thumbnail
-            String thumbnailURL = generateThumb(file, mimeType, currentTime);
+            File thumb = null;
 
-            File thumb = new File(thumbnailURL);
+            if(mimeType.startsWith("image") || (mimeType.startsWith("video"))) {
+                String thumbnailURL = generateThumb(file, mimeType, currentTime);
 
-            if(thumb.exists()){
-                mediaFile.setThumbnailURL(thumbnailURL);
+                 thumb = new File(thumbnailURL);
+                 if(thumb.exists()) {
+                     mediaFile.setThumbnailURL(thumbnailURL);
+                 }
 
+            }else{
+                //it's audio
+                String app_name = getResources().getString(R.string.app_name);
+                thumb = new File(Environment.getExternalStorageDirectory(), app_name+"/thumbnails/thumb_audio.png");
+                if(!thumb.exists()) {
+                    try {
+                        InputStream inputStream = getResources().openRawResource(R.raw.thumb_audio);
+                        OutputStream out = new FileOutputStream(thumb);
+                        byte buf[] = new byte[1024];
+                        int len;
+                        while ((len = inputStream.read(buf)) > 0)
+                            out.write(buf, 0, len);
+                        out.close();
+                        inputStream.close();
+                    } catch (IOException e) {
+
+                    }
+                }
+            }
+
+            if (thumb.exists()) {
                 //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
                 Random randomGenerator = new Random();
                 media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
