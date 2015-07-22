@@ -353,6 +353,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
              mIsNewPost = true;
          }
 
+
         setUpSlider();
 
         setUpQuestionnaire();
@@ -471,6 +472,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mediaFile.setUploadState("queued");
             mediaFile.setDateCreatedGMT(currentTime);
             mediaFile.setMediaId(String.valueOf(currentTime));
+            mediaFile.setPostID(mPost.getLocalTablePostId());
 
             if (mimeType != null && mimeType.startsWith("image")) {
                 // get width and height
@@ -620,7 +622,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     private boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(displaySummary.getText().toString());
