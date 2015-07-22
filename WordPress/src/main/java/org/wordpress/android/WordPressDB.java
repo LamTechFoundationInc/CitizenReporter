@@ -1998,7 +1998,44 @@ public class WordPressDB {
 
         return db.rawQuery("SELECT id as _id, * FROM " + MEDIA_TABLE + " WHERE blogId=? AND mediaId IN " + mediaIdsStr, new String[] { blogId });
     }
+    public ArrayList<MediaFile> getMediaFilesForPost(Post post) {
+        ArrayList<MediaFile> mediaFiles = new ArrayList<MediaFile>();
 
+        Cursor c = db.query(MEDIA_TABLE, null, "postID=?",
+                new String[]{String.valueOf(post.getLocalTablePostId())}, null, null, null);
+
+        try {
+            if (c.moveToFirst()) {
+                MediaFile mf = new MediaFile();
+                mf.setId(c.getInt(0));
+                mf.setPostID(c.getInt(1));
+                mf.setFilePath(c.getString(2));
+                mf.setFileName(c.getString(3));
+                mf.setTitle(c.getString(4));
+                mf.setDescription(c.getString(5));
+                mf.setCaption(c.getString(6));
+                mf.setHorizontalAlignment(c.getInt(7));
+                mf.setWidth(c.getInt(8));
+                mf.setHeight(c.getInt(9));
+                mf.setMimeType(c.getString(10));
+                mf.setFeatured(c.getInt(11) > 0);
+                mf.setVideo(c.getInt(12) > 0);
+                mf.setFeaturedInPost(c.getInt(13) > 0);
+                mf.setFileURL(c.getString(14));
+                mf.setThumbnailURL(c.getString(15));
+                mf.setMediaId(c.getString(16));
+                mf.setBlogId(c.getString(17));
+                mf.setDateCreatedGMT(c.getLong(18));
+                mf.setUploadState(c.getString(19));
+                mf.setVideoPressShortCode(c.getString(20));
+
+                mediaFiles.add(mf);
+            }
+        } finally {
+            c.close();
+        }
+        return mediaFiles;
+    }
     public MediaFile getMediaFile(String src, Post post) {
         Cursor c = db.query(MEDIA_TABLE, null, "postID=? AND filePath=?",
                 new String[]{String.valueOf(post.getLocalTablePostId()), src}, null, null, null);

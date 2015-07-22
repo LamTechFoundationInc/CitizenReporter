@@ -353,6 +353,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
              mIsNewPost = true;
          }
 
+        ArrayList<MediaFile> postMedia = WordPress.wpDB.getMediaFilesForPost(mPost);
+
+        if(postMedia.size()>0){
+
+        }
+
+        Log.d("postmedia", postMedia.size()+"");
 
         setUpSlider();
 
