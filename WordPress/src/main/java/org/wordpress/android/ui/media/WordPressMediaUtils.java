@@ -141,7 +141,7 @@ public class WordPressMediaUtils {
 
         String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".mp3";
         Intent intent = new Intent(context, SoundRecorder.class);
-        intent.putExtra("dir", Uri.fromFile(new File(mediaCapturePath)));
+        intent.putExtra("dir", new File(mediaCapturePath));
 
         if (callback != null) {
             callback.onMediaRecorderPathReady(mediaCapturePath);

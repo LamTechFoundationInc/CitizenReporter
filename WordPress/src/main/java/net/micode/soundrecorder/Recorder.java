@@ -24,7 +24,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.TextUtils;
 
 public class Recorder implements OnCompletionListener, OnErrorListener {
@@ -34,7 +33,7 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
 
     private static final String SAMPLE_LENGTH_KEY = "sample_length";
 
-    public static final String SAMPLE_DEFAULT_DIR = "/sound_recorder";
+   // public static final String SAMPLE_DEFAULT_DIR = "/storymaker";
 
     public static final int IDLE_STATE = 0;
 
@@ -75,10 +74,10 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
 
     private MediaPlayer mPlayer = null;
 
-    public Recorder(Context context) {
+    public Recorder(Context context, File sampleDir) {
         mContext = context;
-        File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                + SAMPLE_DEFAULT_DIR);
+     //   File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+       //         + SAMPLE_DEFAULT_DIR);
         if (!sampleDir.exists()) {
             sampleDir.mkdirs();
         }
@@ -223,13 +222,6 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
         mSampleLength = 0;
         mSampleFile = null;
         mState = IDLE_STATE;
-
-        File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                + SAMPLE_DEFAULT_DIR);
-        if (!sampleDir.exists()) {
-            sampleDir.mkdirs();
-        }
-        mSampleDir = sampleDir;
 
         signalStateChanged(IDLE_STATE);
     }

@@ -22,8 +22,6 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
-import org.wordpress.android.R;
-
 public class SoundRecorderPreferenceActivity extends PreferenceActivity {
     private static final String RECORD_TYPE = "pref_key_record_type";
 
@@ -34,21 +32,21 @@ public class SoundRecorderPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        addPreferencesFromResource(R.xml.preferences);
+    //    addPreferencesFromResource(R.xml.preferences);
     }
 
     public static String getRecordType(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        return settings.getString(RECORD_TYPE, context.getString(R.string.prefDefault_recordType));
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        return settings.getString(RECORD_TYPE, "audio/mpeg");
     }
 
     public static boolean isHighQuality(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         return settings.getBoolean(ENABLE_HIGH_QUALITY, true);
     }
 
     public static boolean isEnabledSoundEffect(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         return settings.getBoolean(ENABLE_SOUND_EFFECT, true);
     }
 }

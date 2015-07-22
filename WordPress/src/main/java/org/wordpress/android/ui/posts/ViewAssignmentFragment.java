@@ -189,7 +189,7 @@ public class ViewAssignmentFragment extends Fragment {
         });
 
 
-        loadPostMeta(assignment);
+
 
         return v;
     }
@@ -332,7 +332,7 @@ public class ViewAssignmentFragment extends Fragment {
                             return;
 
                         mTitleTextView.setText(title);
-
+                        loadPostMeta(post);
                         if (post.isLocalDraft()) {
                             mContentTextView.setVisibility(View.VISIBLE);
                             webView.setVisibility(View.GONE);

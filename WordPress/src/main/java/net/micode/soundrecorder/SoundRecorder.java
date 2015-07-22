@@ -16,6 +16,12 @@
 
 package net.micode.soundrecorder;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -55,11 +61,6 @@ import android.widget.Toast;
 
 import org.wordpress.android.R;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-
 public class SoundRecorder extends Activity implements Button.OnClickListener,
         Recorder.OnStateChangedListener {
     private static final String TAG = "SoundRecorder";
@@ -71,7 +72,9 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
     private static final String MAX_FILE_SIZE_KEY = "max_file_size";
 
     private static final String AUDIO_3GPP = "audio/3gpp";
-
+    
+    private static final String AUDIO_MP3 = "audio/mpeg";
+    
     private static final String AUDIO_AMR = "audio/amr";
 
     private static final String AUDIO_ANY = "audio/*";
@@ -79,13 +82,17 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
     private static final String ANY_ANY = "*/*";
 
     private static final String FILE_EXTENSION_AMR = ".amr";
+    
+    private static final String FILE_EXTENSION_MP3 = ".mp3";
 
     private static final String FILE_EXTENSION_3GPP = ".3gpp";
 
-    public static final int BITRATE_AMR = 2 * 1024 * 8; // bits/sec
+    public static final int BITRATE_AMR = 16 * 1024; // bits/sec
 
-    public static final int BITRATE_3GPP = 20 * 1024 * 8; // bits/sec
-
+    public static final int BITRATE_3GPP = 160 * 1024; // bits/sec
+    
+    public static final int BITRATE_MP3 = 320 * 1024; // bits/sec
+    
     private static final int SEEK_BAR_MAX = 10000;
 
     private static final long WHEEL_SPEED_NORMAL = 1800;
@@ -136,6 +143,8 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
     private int mLastButtonId;
 
     private final Handler mHandler = new Handler();
+    
+    private String mFileName;
 
     private Runnable mUpdateTimer = new Runnable() {
         public void run() {
@@ -185,8 +194,6 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
 
     private WheelImageView mSmallWheelRight;
 
-    private RecordNameEditText mFileNameEditText;
-
     private LinearLayout mTimerLayout;
 
     private LinearLayout mVUMeterLayout;
@@ -208,10 +215,24 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
     @Override
     public void onCreate(Bundle icycle) {
         super.onCreate(icycle);
+        
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        
         initInternalState(getIntent());
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_audio_recorder);
 
-        mRecorder = new Recorder(this);
+        if (getIntent().hasExtra("dir"))
+        {
+        	File fileDir = (File)getIntent().getExtras().get("dir");
+        	mRecorder = new Recorder(this, fileDir);
+        }
+        else
+        {
+        	File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+        	                  + "sound_recorder");
+        	mRecorder = new Recorder(this, sampleDir);
+        }
+        
         mRecorder.setOnStateChangedListener(this);
         mReceiver = new RecorderReceiver();
         mRemainingTimeCalculator = new RemainingTimeCalculator();
@@ -258,7 +279,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
         mShowFinishButton = false;
         if (i != null) {
             String s = i.getType();
-            if (AUDIO_AMR.equals(s) || AUDIO_3GPP.equals(s) || AUDIO_ANY.equals(s)
+            if (AUDIO_MP3.equals(s) ||AUDIO_AMR.equals(s) || AUDIO_3GPP.equals(s) || AUDIO_ANY.equals(s)
                     || ANY_ANY.equals(s)) {
                 mRequestedType = s;
                 mShowFinishButton = true;
@@ -269,7 +290,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 return;
             }
 
-            final String EXTRA_MAX_BYTES = MediaStore.Audio.Media.EXTRA_MAX_BYTES;
+            final String EXTRA_MAX_BYTES = android.provider.MediaStore.Audio.Media.EXTRA_MAX_BYTES;
             mMaxFileSize = i.getLongExtra(EXTRA_MAX_BYTES, -1);
         }
 
@@ -284,7 +305,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        setContentView(R.layout.main);
+        setContentView(R.layout.activity_audio_recorder);
         initResourceRefs();
         updateUi(false);
     }
@@ -331,18 +352,9 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
         mWheelRight = (WheelImageView) findViewById(R.id.wheel_right);
         mSmallWheelLeft = (WheelImageView) findViewById(R.id.wheel_small_left);
         mSmallWheelRight = (WheelImageView) findViewById(R.id.wheel_small_right);
-        mFileNameEditText = (RecordNameEditText) findViewById(R.id.file_name);
 
         resetFileNameEditText();
-        mFileNameEditText.setNameChangeListener(new RecordNameEditText.OnNameChangeListener() {
-            @Override
-            public void onNameChanged(String name) {
-                if (!TextUtils.isEmpty(name)) {
-                    mRecorder.renameSampleFile(name);
-                }
-            }
-        });
-
+        
         mTimerLayout = (LinearLayout) findViewById(R.id.time_calculator);
         mVUMeterLayout = (LinearLayout) findViewById(R.id.vumeter_layout);
         mSeekBarLayout = (LinearLayout) findViewById(R.id.play_seek_bar_layout);
@@ -375,11 +387,13 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
             extension = FILE_EXTENSION_AMR;
         } else if (AUDIO_3GPP.equals(mRequestedType)) {
             extension = FILE_EXTENSION_3GPP;
+        } else if (AUDIO_MP3.equals(mRequestedType)) {
+            extension = FILE_EXTENSION_MP3;
         }
 
         // for audio which is used for mms, we can only use english file name
         // mShowFinishButon indicates whether this is an audio for mms
-        mFileNameEditText.initFileName(mRecorder.getRecordDir(), extension, mShowFinishButton);
+      //  mFileNameEditText.initFileName(mRecorder.getRecordDir(), extension, mShowFinishButton);
     }
 
     private void startRecordPlayingAnimation() {
@@ -464,12 +478,13 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
 
         switch (button.getId()) {
             case R.id.newButton:
-                mFileNameEditText.clearFocus();
                 saveSample();
                 mRecorder.reset();
                 resetFileNameEditText();
                 break;
             case R.id.recordButton:
+                mFinishButton.setVisibility(View.VISIBLE);
+
                 showOverwriteConfirmDialogIfConflicts();
                 break;
             case R.id.stopButton:
@@ -510,9 +525,15 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 mRemainingTimeCalculator.setBitRate(BITRATE_AMR);
                 int outputfileformat = isHighQuality ? MediaRecorder.OutputFormat.AMR_WB
                         : MediaRecorder.OutputFormat.AMR_NB;
-                mRecorder.startRecording(outputfileformat, mFileNameEditText.getText().toString(),
+                mRecorder.startRecording(outputfileformat, mFileName,
                         FILE_EXTENSION_AMR, isHighQuality, mMaxFileSize);
-            } else if (AUDIO_3GPP.equals(mRequestedType)) {
+            } else if (AUDIO_MP3.equals(mRequestedType)) {
+                mRemainingTimeCalculator.setBitRate(BITRATE_MP3);
+                int outputfileformat = isHighQuality ? MediaRecorder.OutputFormat.MPEG_4
+                        : MediaRecorder.OutputFormat.MPEG_4;
+                mRecorder.startRecording(outputfileformat, mFileName,
+                        FILE_EXTENSION_MP3, isHighQuality, mMaxFileSize);
+            }else if (AUDIO_3GPP.equals(mRequestedType)) {
                 // HACKME: for HD2, there is an issue with high quality 3gpp
                 // use low quality instead
                 if (Build.MODEL.equals("HTC HD2")) {
@@ -520,8 +541,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 }
 
                 mRemainingTimeCalculator.setBitRate(BITRATE_3GPP);
-                mRecorder.startRecording(MediaRecorder.OutputFormat.THREE_GPP, mFileNameEditText
-                        .getText().toString(), FILE_EXTENSION_3GPP, isHighQuality, mMaxFileSize);
+                mRecorder.startRecording(MediaRecorder.OutputFormat.THREE_GPP, mFileName, FILE_EXTENSION_3GPP, isHighQuality, mMaxFileSize);
             } else {
                 throw new IllegalArgumentException("Invalid output file type requested");
             }
@@ -581,8 +601,25 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
         }
 
         if (mRecorder.state() == Recorder.RECORDING_STATE) {
-            String preExtension = AUDIO_AMR.equals(mRequestedType) ? FILE_EXTENSION_AMR
-                    : FILE_EXTENSION_3GPP;
+            String preExtension = "";
+            
+            if(AUDIO_AMR.equals(mRequestedType)){
+            	
+            	preExtension = FILE_EXTENSION_AMR;
+            	
+            }else if(AUDIO_MP3.equals(mRequestedType)){
+            	
+            	preExtension = FILE_EXTENSION_AMR;
+            	
+            }else{
+            	
+            	preExtension = FILE_EXTENSION_3GPP;
+            	
+            }
+            
+            
+            
+            
             if (!mRecorder.sampleFile().getName().endsWith(preExtension)) {
                 // the extension is changed need to stop current recording
                 mRecorder.reset();
@@ -591,13 +628,15 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 // restore state
                 if (!mShowFinishButton) {
                     String fileName = mRecorder.sampleFile().getName().replace(preExtension, "");
-                    mFileNameEditText.setText(fileName);
+                    mFileName = fileName;
                 }
 
                 if (AUDIO_AMR.equals(mRequestedType)) {
                     mRemainingTimeCalculator.setBitRate(BITRATE_AMR);
                 } else if (AUDIO_3GPP.equals(mRequestedType)) {
                     mRemainingTimeCalculator.setBitRate(BITRATE_3GPP);
+                }else{
+                	mRemainingTimeCalculator.setBitRate(BITRATE_MP3);
                 }
             }
         } else {
@@ -629,7 +668,6 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 || mMaxFileSize != -1) {
             mRecorder.stop();
             saveSample();
-            mFileNameEditText.clearFocus();
             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
                     .cancel(RecorderService.NOTIFICATION_ID);
         }
@@ -705,7 +743,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
     }
 
     private void showOverwriteConfirmDialogIfConflicts() {
-        String fileName = mFileNameEditText.getText().toString()
+        String fileName = mFileName
                 + (AUDIO_AMR.equals(mRequestedType) ? FILE_EXTENSION_AMR : FILE_EXTENSION_3GPP);
 
         if (mRecorder.isRecordExisted(fileName) && !mShowFinishButton) {
@@ -954,7 +992,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
         boolean ongoing = state == Recorder.RECORDING_STATE || state == Recorder.PLAYING_STATE;
 
         long time = mRecorder.progress();
-        String timeStr = String.format(mTimerFormat, time / 60, time % 60);
+        String timeStr = String.format(mTimerFormat, time / 60, time % 60, Locale.US);
         mTimerLayout.removeAllViews();
         for (int i = 0; i < timeStr.length(); i++) {
             mTimerLayout.addView(getTimerImage(timeStr.charAt(i)));
@@ -971,7 +1009,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
 
     private void setTimerView(float progress) {
         long time = (long) (progress * mRecorder.sampleLength());
-        String timeStr = String.format(mTimerFormat, time / 60, time % 60);
+        String timeStr = String.format(mTimerFormat, time / 60, time % 60, Locale.US);
         mTimerLayout.removeAllViews();
         for (int i = 0; i < timeStr.length(); i++) {
             mTimerLayout.addView(getTimerImage(timeStr.charAt(i)));
@@ -1096,12 +1134,10 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
 
                     mVUMeterLayout.setVisibility(View.GONE);
                     mSeekBarLayout.setVisibility(View.VISIBLE);
-                    mStartTime.setText(String.format(mTimerFormat, 0, 0));
+                    mStartTime.setText(String.format(mTimerFormat, 0, 0, Locale.US));
                     mTotalTime.setText(String.format(mTimerFormat, mRecorder.sampleLength() / 60,
-                            mRecorder.sampleLength() % 60));
+                            mRecorder.sampleLength() % 60, Locale.US));
                 }
-                mFileNameEditText.setEnabled(true);
-                mFileNameEditText.clearFocus();
 
                 if (mRecorder.sampleLength() > 0) {
                     if (mRecorder.state() == Recorder.PLAYING_PAUSED_STATE) {
@@ -1144,8 +1180,6 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 mVUMeterLayout.setVisibility(View.VISIBLE);
                 mSeekBarLayout.setVisibility(View.GONE);
 
-                mFileNameEditText.setEnabled(false);
-
                 startRecordPlayingAnimation();
                 mPreviousVUMax = 0;
                 break;
@@ -1162,9 +1196,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
 
                 mVUMeterLayout.setVisibility(View.GONE);
                 mSeekBarLayout.setVisibility(View.VISIBLE);
-
-                mFileNameEditText.setEnabled(false);
-
+                
                 if (SoundRecorderPreferenceActivity.isEnabledSoundEffect(this)) {
                     mSoundPool.play(mPlaySound, 1.0f, 1.0f, 0, 0, 1);
                 }
@@ -1222,13 +1254,14 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 || mRecorder.state() == Recorder.PLAYING_STATE) {
             return false;
         } else {
-            getMenuInflater().inflate(R.layout.view_list_menu, menu);
+         //   getMenuInflater().inflate(R.layout.view_list_menu, menu);
             return true;
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	/*
         Intent intent;
         switch (item.getItemId()) {
             case R.id.menu_fm:
@@ -1244,7 +1277,7 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
                 break;
             default:
                 break;
-        }
+        }*/
         return true;
     }
 

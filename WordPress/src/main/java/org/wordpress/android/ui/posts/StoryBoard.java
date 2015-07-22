@@ -27,6 +27,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -358,6 +359,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.storyboard_menu, menu);
+        return true;
+    }
+
 
     private void launchMic(){
         WordPressMediaUtils.launchMic(this, new WordPressMediaUtils.LaunchRecorderCallback(){
@@ -606,7 +614,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home || item.getItemId()== R.id.save) {
             saveAndFinish();
             return true;
         }
@@ -618,7 +626,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         return TextUtils.isEmpty(displaySummary.getText().toString());
     }
     private void saveAndFinish() {
-        savePost(true);
+        //savePost(true);
         if (hasEmptyContentFields()) {
             // new and empty post? delete it
             if (mIsNewPost) {

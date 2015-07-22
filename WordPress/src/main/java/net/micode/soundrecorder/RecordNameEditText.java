@@ -16,6 +16,10 @@
 
 package net.micode.soundrecorder;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.text.TextUtils;
@@ -23,12 +27,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-
-import org.wordpress.android.R;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 public class RecordNameEditText extends EditText {
 
@@ -83,7 +81,7 @@ public class RecordNameEditText extends EditText {
 
         // initialize the default name
         if (!englishOnly) {
-            setText(getProperFileName(mContext.getString(R.string.default_record_name)));
+            setText("[name]");
         } else {
             SimpleDateFormat dataFormat = new SimpleDateFormat("MMddHHmmss");
             setText(getProperFileName("rec_" + dataFormat.format(Calendar.getInstance().getTime())));

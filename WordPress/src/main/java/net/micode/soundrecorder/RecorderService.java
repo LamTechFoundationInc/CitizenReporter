@@ -16,6 +16,11 @@
 
 package net.micode.soundrecorder;
 
+
+import java.io.File;
+import java.io.IOException;
+
+
 import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -23,6 +28,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -31,13 +37,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
+import android.preference.PreferenceManager;
 
 import org.wordpress.android.R;
-
-import java.io.File;
-import java.io.IOException;
 
 public class RecorderService extends Service implements MediaRecorder.OnErrorListener {
 
@@ -81,20 +83,9 @@ public class RecorderService extends Service implements MediaRecorder.OnErrorLis
 
     private Notification mLowStorageNotification;
 
-    private TelephonyManager mTeleManager;
-
     private WakeLock mWakeLock;
 
     private KeyguardManager mKeyguardManager;
-
-    private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            if (state != TelephonyManager.CALL_STATE_IDLE) {
-                localStopRecording();
-            }
-        }
-    };
 
     private final Handler mHandler = new Handler();
 
@@ -107,7 +98,8 @@ public class RecorderService extends Service implements MediaRecorder.OnErrorLis
     };
 
     private boolean mNeedUpdateRemainingTime;
-
+    private int mAudioSampleRate = -1;
+    
     @Override
     public void onCreate() {
         super.onCreate();
@@ -116,11 +108,13 @@ public class RecorderService extends Service implements MediaRecorder.OnErrorLis
         mRemainingTimeCalculator = new RemainingTimeCalculator();
         mNeedUpdateRemainingTime = false;
         mNotifiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mTeleManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        mTeleManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SoundRecorder");
         mKeyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mAudioSampleRate = Integer.parseInt(settings.getString("p_audio_samplerate", "22050"));
+        
     }
 
     @Override
@@ -159,7 +153,6 @@ public class RecorderService extends Service implements MediaRecorder.OnErrorLis
 
     @Override
     public void onDestroy() {
-        mTeleManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);
         if (mWakeLock.isHeld()) {
             mWakeLock.release();
         }
@@ -186,19 +179,34 @@ public class RecorderService extends Service implements MediaRecorder.OnErrorLis
             }
 
             mRecorder = new MediaRecorder();
-            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
+            
             if (outputfileformat == MediaRecorder.OutputFormat.THREE_GPP) {
                 mRemainingTimeCalculator.setBitRate(SoundRecorder.BITRATE_3GPP);
-                mRecorder.setAudioSamplingRate(highQuality ? 44100 : 22050);
+              //
+                mRecorder.setAudioChannels(1);
+                mRecorder.setAudioSamplingRate(mAudioSampleRate);
+                mRecorder.setAudioEncodingBitRate(SoundRecorder.BITRATE_3GPP);
                 mRecorder.setOutputFormat(outputfileformat);
                 mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-            } else {
+            } else if (outputfileformat == MediaRecorder.OutputFormat.AMR_NB){
                 mRemainingTimeCalculator.setBitRate(SoundRecorder.BITRATE_AMR);
                 mRecorder.setAudioSamplingRate(highQuality ? 16000 : 8000);
+                
                 mRecorder.setOutputFormat(outputfileformat);
                 mRecorder.setAudioEncoder(highQuality ? MediaRecorder.AudioEncoder.AMR_WB
                         : MediaRecorder.AudioEncoder.AMR_NB);
+            }else{
+            	mRemainingTimeCalculator.setBitRate(SoundRecorder.BITRATE_MP3);
+                //
+                  mRecorder.setAudioChannels(1);
+                  mRecorder.setAudioSamplingRate(mAudioSampleRate);
+                  mRecorder.setAudioEncodingBitRate(SoundRecorder.BITRATE_MP3);
+                  mRecorder.setOutputFormat(outputfileformat);
+                  mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             }
+            
+            
             mRecorder.setOutputFile(path);
             mRecorder.setOnErrorListener(this);
 
