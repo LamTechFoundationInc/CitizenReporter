@@ -224,13 +224,13 @@ public class SoundRecorder extends Activity implements Button.OnClickListener,
         if (getIntent().hasExtra("dir"))
         {
         	File fileDir = (File)getIntent().getExtras().get("dir");
-        	mRecorder = new Recorder(this, fileDir);
+        	mRecorder = new Recorder(this, fileDir, getIntent().getExtras().getString("filename"));
         }
         else
         {
         	File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
         	                  + "sound_recorder");
-        	mRecorder = new Recorder(this, sampleDir);
+        	mRecorder = new Recorder(this, sampleDir, getIntent().getExtras().getString("filename"));
         }
         
         mRecorder.setOnStateChangedListener(this);

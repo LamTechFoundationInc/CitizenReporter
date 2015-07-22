@@ -109,10 +109,11 @@ public class WordPressMediaUtils {
             showSDCardRequiredDialog(context);
             return null;
         }
+        String app_name = context.getResources().getString(R.string.app_name);
 
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        File path = new File(Environment.getExternalStorageDirectory(), app_name + "/video");
 
-        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".mp4";
+        String mediaCapturePath = path + File.separator + "wp-" + System.currentTimeMillis() + ".mp4";
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mediaCapturePath)));
 
@@ -136,12 +137,14 @@ public class WordPressMediaUtils {
             showSDCardRequiredDialog(context);
             return null;
         }
+        String app_name = context.getResources().getString(R.string.app_name);
 
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-
-        String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".mp3";
+        File path = new File(Environment.getExternalStorageDirectory(), app_name + "/audio");
+        String filename = "wp-" + System.currentTimeMillis() + ".mp3";
+        String mediaCapturePath = path + File.separator + filename;
         Intent intent = new Intent(context, SoundRecorder.class);
-        intent.putExtra("dir", new File(mediaCapturePath));
+        intent.putExtra("dir", path);
+        intent.putExtra("filename", filename);
 
         if (callback != null) {
             callback.onMediaRecorderPathReady(mediaCapturePath);
@@ -215,6 +218,7 @@ public class WordPressMediaUtils {
     }
 
     private static Intent getLaunchCameraIntent(LaunchCameraCallback callback) {
+
         File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
         String mediaCapturePath = path + File.separator + "Camera" + File.separator + "wp-" + System.currentTimeMillis() + ".jpg";

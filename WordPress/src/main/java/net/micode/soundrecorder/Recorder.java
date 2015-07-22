@@ -25,6 +25,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 public class Recorder implements OnCompletionListener, OnErrorListener {
     private static final String SAMPLE_PREFIX = "recording";
@@ -74,7 +75,9 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
 
     private MediaPlayer mPlayer = null;
 
-    public Recorder(Context context, File sampleDir) {
+    String mFileName;
+
+    public Recorder(Context context, File sampleDir, String filename) {
         mContext = context;
      //   File sampleDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
        //         + SAMPLE_DEFAULT_DIR);
@@ -82,6 +85,8 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
             sampleDir.mkdirs();
         }
         mSampleDir = sampleDir;
+
+        mFileName = filename;
 
         syncStateWithService();
     }
@@ -181,10 +186,12 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
             if (!TextUtils.isEmpty(name)) {
                 String oldName = mSampleFile.getAbsolutePath();
                 String extension = oldName.substring(oldName.lastIndexOf('.'));
-                File newFile = new File(mSampleFile.getParent() + "/" + name + extension);
+                File newFile = new File(mSampleDir.getAbsolutePath() + "/" + mFileName);
+                Log.d("rename", newFile.getAbsolutePath().toString());
                 if (!TextUtils.equals(oldName, newFile.getAbsolutePath())) {
                     if (mSampleFile.renameTo(newFile)) {
                         mSampleFile = newFile;
+                        Log.d("rename2", newFile.getAbsolutePath().toString());
                     }
                 }
             }
@@ -241,7 +248,20 @@ public class Recorder implements OnCompletionListener, OnErrorListener {
         if (mSampleFile == null) {
             try {
                 mSampleFile = File.createTempFile(SAMPLE_PREFIX, extension, mSampleDir);
+                Log.d("rename", "1");
                 renameSampleFile(name);
+                if (mSampleFile != null && mState != RECORDING_STATE && mState != PLAYING_STATE) {
+                        String oldName = mSampleFile.getAbsolutePath();
+                        File newFile = new File(mSampleDir.getAbsolutePath() + "/" + mFileName);
+                        Log.d("rename", newFile.getAbsolutePath().toString());
+                        if (!TextUtils.equals(oldName, newFile.getAbsolutePath())) {
+                            if (mSampleFile.renameTo(newFile)) {
+                                mSampleFile = newFile;
+                                Log.d("rename2", newFile.getAbsolutePath().toString());
+                            }
+                        }
+
+                }
             } catch (IOException e) {
                 setError(STORAGE_ACCESS_ERROR);
                 return;
