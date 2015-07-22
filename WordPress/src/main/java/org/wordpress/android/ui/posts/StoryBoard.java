@@ -105,6 +105,7 @@ import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -499,6 +500,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             if (!TextUtils.isEmpty(mimeType)) {
                 mediaFile.setMimeType(mimeType);
             }
+
+            //attach object to post
+            attachObjectToPost(mimeType, file);
 
             //Add thumbnail to slider and refresh
             generateThumbAndAddToSlider(mediaFile);
@@ -922,6 +926,34 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         initLocation();
 
         summaryDialog.show();
+    }
+
+    public void attachObjectToPost(String mimeType, File file){
+        String attachURL = "";
+
+        //get name
+        String filename = file.getName();
+
+        Calendar c = Calendar.getInstance();
+        String year = c.get(Calendar.YEAR) + "";
+        int month_int = c.get(Calendar.MONTH) + 1;
+        String month = String.format("%02d", month_int);
+
+        //compose file url
+        String file_url = BuildConfig.DEFAULT_URL + "/wp/wp-content/uploads/" + year + "/" + month + "/wpid-" + filename;
+
+        Log.d("file_url", file_url);
+
+        if(mimeType.startsWith("image")){
+            attachURL = "<a href=\""+file_url+"\"><img class=\"alignnone size-medium wp-image-400\" src=\""+file_url+"\" alt=\""+filename+"\" width=\"300\" height=\"225\" /></a>";
+        }else if(mimeType.startsWith("video")){
+
+        }else if(mimeType.startsWith("audio")){
+
+        }
+
+        String old_description = mPost.getDescription() + "";
+        mPost.setDescription(old_description + "\n" + attachURL);
     }
 
     @Override
