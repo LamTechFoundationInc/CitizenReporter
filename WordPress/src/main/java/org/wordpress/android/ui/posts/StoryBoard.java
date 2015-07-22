@@ -356,15 +356,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         ArrayList<MediaFile> postMedia = WordPress.wpDB.getMediaFilesForPost(mPost);
 
         if(postMedia.size()>0){
-
+            for(int i = 0; i<postMedia.size(); i++){
+                Log.d("are we here?", postMedia.get(i).getFilePath() + ":" + postMedia.get(i).getPostID());
+                generateThumbAndAddToSlider(postMedia.get(i));
+            }
         }
-
-        Log.d("postmedia", postMedia.size()+"");
-
-        setUpSlider();
-
+        Log.d("are we here2?", mPost.getLocalTablePostId() + "");
         setUpQuestionnaire();
-
 
     }
     @Override
@@ -376,9 +374,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
 
     private void launchMic(){
-        WordPressMediaUtils.launchMic(this, new WordPressMediaUtils.LaunchRecorderCallback(){
+        WordPressMediaUtils.launchMic(this, new WordPressMediaUtils.LaunchRecorderCallback() {
             @Override
-            public void onMediaRecorderPathReady(String mediaCapturePath){
+            public void onMediaRecorderPathReady(String mediaCapturePath) {
                 mMediaCapturePath = mediaCapturePath;
                 AppLockManager.getInstance().setExtendedTimeout();
             }
@@ -420,7 +418,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     if (resultCode == Activity.RESULT_OK) {
                         try {
                             File f = new File(mMediaCapturePath);
-                            if (!addMedia(f, 1)) {
+                            if (!addMedia(f)) {
                                 ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                             }
                             //this.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://"
@@ -442,7 +440,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     if (resultCode == Activity.RESULT_OK) {
                         //Uri capturedVideoUri = MediaUtils.getLastRecordedVideoUri(this);
                         File f = new File(mMediaCapturePath);
-                        if (!addMedia(f, 2)) {
+                        if (!addMedia(f)) {
                             ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
                         }
                     }/* else if (TextUtils.isEmpty(mEditorFragment.getContent())) {
@@ -452,10 +450,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         finish();
                     }*/
                     break;
+                case RequestCodes.TAKE_AUDIO:
+                     if(resultCode == Activity.RESULT_OK){
+                         File f = new File(mMediaCapturePath);
+                         if (!addMedia(f)) {
+                             ToastUtils.showToast(this, R.string.gallery_error, ToastUtils.Duration.SHORT);
+                         }
+                     }
+                    break;
             }
         }
     }
-    private void queueFileForUpload(File file, int mediaType) {
+    private void queueFileForUpload(File file) {
         // Invalid file path
         if (TextUtils.isEmpty(file.getAbsolutePath())) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
@@ -495,44 +501,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
 
             //Add thumbnail to slider and refresh
-
-            //Generate Thumbnail
-            File thumb = null;
-
-            if(mimeType.startsWith("image") || (mimeType.startsWith("video"))) {
-                String thumbnailURL = generateThumb(file, mimeType, currentTime);
-
-                 thumb = new File(thumbnailURL);
-                 if(thumb.exists()) {
-                     mediaFile.setThumbnailURL(thumbnailURL);
-                 }
-
-            }else{
-                //it's audio
-                String app_name = getResources().getString(R.string.app_name);
-                thumb = new File(Environment.getExternalStorageDirectory(), app_name+"/thumbnails/thumb_audio.png");
-                if(!thumb.exists()) {
-                    try {
-                        InputStream inputStream = getResources().openRawResource(R.raw.thumb_audio);
-                        OutputStream out = new FileOutputStream(thumb);
-                        byte buf[] = new byte[1024];
-                        int len;
-                        while ((len = inputStream.read(buf)) > 0)
-                            out.write(buf, 0, len);
-                        out.close();
-                        inputStream.close();
-                    } catch (IOException e) {
-
-                    }
-                }
-            }
-
-            if (thumb.exists()) {
-                //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
-                Random randomGenerator = new Random();
-                media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
-                setUpSlider();
-            }
+            generateThumbAndAddToSlider(mediaFile);
 
             WordPress.wpDB.saveMediaFile(mediaFile);
             startMediaUploadService();
@@ -542,6 +511,50 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     /*
         Generate Thumbnail
      */
+    public void generateThumbAndAddToSlider(MediaFile mediaFile){
+
+        String mimeType = mediaFile.getMimeType();
+
+        File file = new File(mediaFile.getFilePath());
+
+        //Generate Thumbnail
+        File thumb = null;
+
+        if(mimeType.startsWith("image") || (mimeType.startsWith("video"))) {
+            String thumbnailURL = generateThumb(file, mimeType, mediaFile.getDateCreatedGMT());
+
+            thumb = new File(thumbnailURL);
+            if(thumb.exists()) {
+                mediaFile.setThumbnailURL(thumbnailURL);
+            }
+
+        }else{
+            //it's audio
+            String app_name = getResources().getString(R.string.app_name);
+            thumb = new File(Environment.getExternalStorageDirectory(), app_name+"/thumbnails/thumb_audio.png");
+            if(!thumb.exists()) {
+                try {
+                    InputStream inputStream = getResources().openRawResource(R.raw.thumb_audio);
+                    OutputStream out = new FileOutputStream(thumb);
+                    byte buf[] = new byte[1024];
+                    int len;
+                    while ((len = inputStream.read(buf)) > 0)
+                        out.write(buf, 0, len);
+                    out.close();
+                    inputStream.close();
+                } catch (IOException e) {
+
+                }
+            }
+        }
+
+        if (thumb.exists()) {
+            //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+            Random randomGenerator = new Random();
+            media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
+            setUpSlider();
+        }
+    }
     public String generateThumb(File file, String mimeType, long mediaCreationTime){
         String thumbnailUri = "";
         //create thumbnails folder if not exists
@@ -599,7 +612,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mMediaUploadServiceStarted = true;
         }
     }
-    private boolean addMedia(File file, int mediaType) {
+    private boolean addMedia(File file) {
         Uri imageUri = Uri.fromFile(file);
 
         if (!MediaUtils.isInMediaStore(imageUri) && !imageUri.toString().startsWith("/")) {
@@ -610,7 +623,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             return false;
         }
 
-        queueFileForUpload(file, mediaType);
+        queueFileForUpload(file);
 
         //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;
@@ -655,7 +668,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             i.putExtra(EXTRA_SAVED_AS_LOCAL_DRAFT, false);
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
-*/
+            */
 
 
         }
@@ -792,7 +805,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             TextSliderView textSliderView = new TextSliderView(this);
             // initialize a SliderLayout
             textSliderView
-                    .description(name)
+                    .description("")
                     .image(media_map.get(name))
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
@@ -810,8 +823,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mDemoSlider.setDuration(4000);
         mDemoSlider.addOnPageChangeListener(this);
 
+
         if(media_map.size()>0){
             hasMedia = true;
+            if(media_map.size()<2){
+                mDemoSlider.setEnabled(false);
+            }else{
+                mDemoSlider.setEnabled(true);
+            }
         }
 
         toggleMediaPane(hasMedia);

@@ -89,7 +89,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 36;
+    private static final int DATABASE_VERSION = 37;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -224,6 +224,9 @@ public class WordPressDB {
     private static final String ADD_POST_WHEN = "alter table posts add qwhen text default '';";
      private static final String ADD_POST_WHO = "alter table posts add qwho text default '';";
     private static final String ADD_POST_WHERE = "alter table posts add qwhere text default '';";
+
+    //permenent id
+    private static final String ADD_POST_PERMID = "alter table posts add perm_id text default '';";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
@@ -375,6 +378,9 @@ public class WordPressDB {
             case 36:
                 db.execSQL(CREATE_MESSAGES_TABLE);
                 currentVersion++;
+            case 37:
+                db.execSQL(ADD_POST_PERMID);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -452,7 +458,7 @@ public class WordPressDB {
 
         values.put(COLUMN_MESSAGE, message.getMessage());
         values.put(COLUMN_USER, message.getUser());
-        values.put(COLUMN_IS_MINE , message.getIsMine());
+        values.put(COLUMN_IS_MINE, message.getIsMine());
 
         db.insert(TABLE_MESSAGES, null, values);
 
@@ -1073,18 +1079,21 @@ public class WordPressDB {
                                     values.put("assignment_id", customField.get("value").toString());
 
                                 //questionnare questions
-                                if (customField.get("key").equals("qwho"))
-                                    values.put("qwho", customField.get("value").toString());
-                                if (customField.get("key").equals("qwhere"))
-                                    values.put("qwhere", customField.get("value").toString());
-                                if (customField.get("key").equals("qwhat"))
-                                    values.put("qwhat", customField.get("value").toString());
-                                if (customField.get("key").equals("qwhy"))
-                                    values.put("qwhy", customField.get("value").toString());
-                                if (customField.get("key").equals("qwhen"))
-                                    values.put("qwhen", customField.get("value").toString());
-                                if (customField.get("key").equals("qhow"))
-                                    values.put("qhow", customField.get("value").toString());
+                                    //watch out for null values
+                                    if(!customField.get("value").toString().equals("null")) {
+                                        if (customField.get("key").equals("qwho"))
+                                            values.put("qwho", customField.get("value").toString());
+                                        if (customField.get("key").equals("qwhere"))
+                                            values.put("qwhere", customField.get("value").toString());
+                                        if (customField.get("key").equals("qwhat"))
+                                            values.put("qwhat", customField.get("value").toString());
+                                        if (customField.get("key").equals("qwhy"))
+                                            values.put("qwhy", customField.get("value").toString());
+                                        if (customField.get("key").equals("qwhen"))
+                                            values.put("qwhen", customField.get("value").toString());
+                                        if (customField.get("key").equals("qhow"))
+                                            values.put("qhow", customField.get("value").toString());
+                                    }
 
                                 //assignments custom fields
                                 if(isAssignment){
