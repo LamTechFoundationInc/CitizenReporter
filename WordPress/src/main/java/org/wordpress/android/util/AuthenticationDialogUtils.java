@@ -10,12 +10,12 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.ui.accounts.SignInActivity;
+import org.codeforafrica.citizenreporter.starreports.R;
+import org.codeforafrica.citizenreporter.starreports.WordPress;
+import org.codeforafrica.citizenreporter.starreports.ui.accounts.SignInActivity;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils.Duration;
-import org.wordpress.android.widgets.AuthErrorDialogFragment;
+import org.codeforafrica.citizenreporter.starreports.widgets.AuthErrorDialogFragment;
 
 import static org.wordpress.android.util.ToastUtils.showToast;
 

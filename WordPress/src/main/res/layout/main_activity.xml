@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <org.wordpress.android.widgets.SlidingTabLayout
+    <org.codeforafrica.citizenreporter.starreports.widgets.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:paddingLeft="@dimen/tabstrip_padding"
         android:paddingRight="@dimen/tabstrip_padding" />
 
-    <org.wordpress.android.widgets.WPMainViewPager
+    <org.codeforafrica.citizenreporter.starreports.widgets.WPMainViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

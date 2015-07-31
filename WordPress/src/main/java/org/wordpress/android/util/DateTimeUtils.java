@@ -2,8 +2,8 @@ package org.wordpress.android.util;
 
 import android.text.format.DateUtils;
 
-import org.wordpress.android.R;
-import org.wordpress.android.WordPress;
+import org.codeforafrica.citizenreporter.starreports.R;
+import org.codeforafrica.citizenreporter.starreports.WordPress;
 
 import java.text.DateFormat;
 import java.text.ParseException;

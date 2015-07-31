@@ -5,9 +5,10 @@ import android.content.Intent;
 import android.test.RenamingDelegatingContext;
 import android.test.ServiceTestCase;
 
+import org.codeforafrica.citizenreporter.starreports.test.BuildConfig;
 import org.wordpress.android.mocks.RestClientFactoryTest;
 import org.wordpress.android.mocks.XMLRPCFactoryTest;
-import org.wordpress.android.ui.posts.PostUploadService;
+import org.codeforafrica.citizenreporter.starreports.ui.posts.PostUploadService;
 import org.wordpress.android.util.AppLog;
 
 public class PostUploadServiceTest extends ServiceTestCase<PostUploadService> {

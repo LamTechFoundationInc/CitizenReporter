@@ -9,9 +9,9 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.codeforafrica.citizenreporter.starreports.models.AccountHelper;
+import org.codeforafrica.citizenreporter.starreports.models.Blog;
+import org.codeforafrica.citizenreporter.starreports.networking.SelfSignedSSLCertsManager;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

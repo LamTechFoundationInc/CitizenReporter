@@ -8,8 +8,8 @@ import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.BrowserCompatHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 
-import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.networking.WPTrustManager;
+import org.codeforafrica.citizenreporter.starreports.networking.SelfSignedSSLCertsManager;
+import org.codeforafrica.citizenreporter.starreports.networking.WPTrustManager;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 

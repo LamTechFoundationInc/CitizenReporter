@@ -2,8 +2,8 @@ package org.wordpress.android.mocks;
 
 import android.content.Context;
 
-import org.wordpress.android.networking.OAuthAuthenticator;
-import org.wordpress.android.networking.OAuthAuthenticatorFactoryAbstract;
+import org.codeforafrica.citizenreporter.starreports.networking.OAuthAuthenticator;
+import org.codeforafrica.citizenreporter.starreports.networking.OAuthAuthenticatorFactoryAbstract;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 
