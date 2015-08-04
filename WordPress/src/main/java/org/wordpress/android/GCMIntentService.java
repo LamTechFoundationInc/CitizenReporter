@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -14,6 +15,7 @@ import org.wordpress.android.ui.chat.ChatActivity;
 import org.wordpress.android.ui.chat.Message;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
+import org.wordpress.android.ui.posts.StoryBoard;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
@@ -126,9 +128,33 @@ public class GCMIntentService extends GCMBaseIntentService {
         return super.onRecoverableError(context, errorId);
     }
 
-    /**
-     * Create a notification to inform the user that server has sent a message.
-     */
+    private void assignmentNotification(Context context, String message){
+            Intent intent = new Intent(this, StoryBoard.class);
+            PendingIntent imageIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            PendingIntent videoIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            PendingIntent audioIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
+            Notification notif = new Notification.Builder(getApplicationContext())
+                    .setContentTitle("5 New mails from " )
+                    .setContentText("lorem ipsum dolor sit amet")
+                    .setSmallIcon(R.drawable.media_audio)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
+                    .setStyle(new Notification.InboxStyle()
+                            .addLine("line1")
+                            .addLine("line2")
+                            .setBigContentTitle("New Assignment")
+                            .setSummaryText("+3 more"))
+                    .setPriority(2)
+                    .addAction(R.mipmap.ic_camera_white, "", imageIntent)
+                    .addAction(R.mipmap.ic_video_white, "", videoIntent)
+                    .addAction(R.mipmap.ic_audio_white, "", audioIntent)
+                    .build();
+            NotificationManager notificationManager = (NotificationManager)
+                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(55, notif);
+    }
+
     private void generateNotification(Context context, String message) {
         int icon = R.drawable.noticon_clock;
         long when = System.currentTimeMillis();

@@ -1041,4 +1041,8 @@
 
     <string name="admin_messages">Support Channel</string>
     <string name="chat_title">@string/admin_messages</string>
+
+
+    <string name="image">Camera</string>
+    <string name="audio">Audio</string>
 </resources>
