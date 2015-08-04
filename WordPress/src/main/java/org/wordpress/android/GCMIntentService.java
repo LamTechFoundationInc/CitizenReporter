@@ -16,6 +16,7 @@ import org.wordpress.android.ui.chat.Message;
 import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.StoryBoard;
+import org.wordpress.android.util.DeviceUtils;
 
 public class GCMIntentService extends GCMBaseIntentService {
 
@@ -128,21 +129,50 @@ public class GCMIntentService extends GCMBaseIntentService {
         return super.onRecoverableError(context, errorId);
     }
 
-    private void assignmentNotification(Context context, String message){
-            Intent intent = new Intent(this, StoryBoard.class);
-            PendingIntent imageIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            PendingIntent videoIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            PendingIntent audioIntent = PendingIntent.getActivity(this, 0, intent, 0);
+    public Intent imageIntent(String assignmentID){
+        Intent intent = new Intent(this, StoryBoard.class);
+        intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                ? Constants.QUICK_POST_PHOTO_CAMERA
+                : Constants.QUICK_POST_PHOTO_LIBRARY);
+        intent.putExtra("isNew", true);
+        intent.putExtra("shouldFinish", false);
+        intent.putExtra("assignment_id", Integer.parseInt(assignmentID));
 
+        return intent;
+    }
+    public Intent videoIntent(String assignmentID){
+        Intent intent = new Intent(this, StoryBoard.class);
+        intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
+                ? Constants.QUICK_POST_VIDEO_CAMERA
+                : Constants.QUICK_POST_PHOTO_LIBRARY);
+        intent.putExtra("isNew", true);
+        intent.putExtra("shouldFinish", false);
+        intent.putExtra("assignment_id", Integer.parseInt(assignmentID));
 
-            Notification notif = new Notification.Builder(getApplicationContext())
-                    .setContentTitle("5 New mails from " )
-                    .setContentText("lorem ipsum dolor sit amet")
-                    .setSmallIcon(R.drawable.media_audio)
+        return intent;
+    }
+    public Intent audioIntent(String assignmentID){
+        Intent intent = new Intent(this, StoryBoard.class);
+        intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
+        intent.putExtra("isNew", true);
+        intent.putExtra("shouldFinish", false);
+        intent.putExtra("assignment_id", Integer.parseInt(assignmentID));
+
+        return intent;
+    }
+
+    private void assignmentNotification(Context context, String message, String assignmentID){
+            PendingIntent imageIntent = PendingIntent.getActivity(this, 0, imageIntent(assignmentID), 0);
+            PendingIntent videoIntent = PendingIntent.getActivity(this, 0, videoIntent(assignmentID), 0);
+            PendingIntent audioIntent = PendingIntent.getActivity(this, 0, audioIntent(assignmentID), 0);
+
+            Notification notif = new Notification.Builder(context)
+                    .setContentTitle("New Assignment" )
+                    .setContentText(getResources().getString(R.string.expand_to_view))
+                    //.setSmallIcon(R.drawable.modifymedia_audio)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
                     .setStyle(new Notification.InboxStyle()
-                            .addLine("line1")
-                            .addLine("line2")
+                            .addLine(message)
                             .setBigContentTitle("New Assignment")
                             .setSummaryText("+3 more"))
                     .setPriority(2)
@@ -150,8 +180,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                     .addAction(R.mipmap.ic_video_white, "", videoIntent)
                     .addAction(R.mipmap.ic_audio_white, "", audioIntent)
                     .build();
-            NotificationManager notificationManager = (NotificationManager)
-                    getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(55, notif);
     }
 
