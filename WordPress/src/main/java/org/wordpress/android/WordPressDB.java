@@ -89,7 +89,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 37;
+    private static final int DATABASE_VERSION = 36;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -226,7 +226,7 @@ public class WordPressDB {
     private static final String ADD_POST_WHERE = "alter table posts add qwhere text default '';";
 
     //permenent id
-    private static final String ADD_POST_PERMID = "alter table posts add perm_id text default '';";
+    //private static final String ADD_POST_PERMID = "alter table posts add perm_id text default '';";
 
     // add hidden flag to blog settings (accounts)
     private static final String ADD_BLOGS_HIDDEN_FLAG = "alter table accounts add isHidden boolean default 0;";
@@ -378,9 +378,9 @@ public class WordPressDB {
             case 36:
                 db.execSQL(CREATE_MESSAGES_TABLE);
                 currentVersion++;
-            case 37:
-                db.execSQL(ADD_POST_PERMID);
-                currentVersion++;
+            //case 37:
+              //  db.execSQL(ADD_POST_PERMID);
+                //currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
