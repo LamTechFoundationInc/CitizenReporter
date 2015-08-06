@@ -26,6 +26,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     private int messageType;
     private String message;
+    private String assignmentID;
 
     public GCMIntentService() {
         // Call extended class Constructor GCMBaseIntentService
@@ -74,6 +75,9 @@ public class GCMIntentService extends GCMBaseIntentService {
         if(intent.hasExtra("assignment")){
             messageType = 0;
             message = intent.getExtras().getString("assignment");
+            //should have assignmentID
+            assignmentID = intent.getExtras().getString("assignmentID");
+
         }else if(intent.hasExtra("feedback")){
             messageType = 1;
             message = intent.getExtras().getString("feedback");
@@ -84,7 +88,14 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         aController.displayMessageOnScreen(context, message);
         // notifies user
-        generateNotification(context, message);
+        if(messageType == 0){
+            //if assignment use the advanced notifi
+            generateAdvancedAssignmentNotification(message, assignmentID);
+        }else{
+            generateNotification(context, message);
+        }
+
+
     }
 
     /**
@@ -161,26 +172,26 @@ public class GCMIntentService extends GCMBaseIntentService {
         return intent;
     }
 
-    private void assignmentNotification(Context context, String message, String assignmentID){
+    private void generateAdvancedAssignmentNotification(String message, String assignmentID){
             PendingIntent imageIntent = PendingIntent.getActivity(this, 0, imageIntent(assignmentID), 0);
             PendingIntent videoIntent = PendingIntent.getActivity(this, 0, videoIntent(assignmentID), 0);
             PendingIntent audioIntent = PendingIntent.getActivity(this, 0, audioIntent(assignmentID), 0);
 
-            Notification notif = new Notification.Builder(context)
+            Notification notif = new Notification.Builder(getApplicationContext())
                     .setContentTitle("New Assignment" )
                     .setContentText(getResources().getString(R.string.expand_to_view))
                     //.setSmallIcon(R.drawable.modifymedia_audio)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
                     .setStyle(new Notification.InboxStyle()
                             .addLine(message)
-                            .setBigContentTitle("New Assignment")
-                            .setSummaryText("+3 more"))
+                            .setBigContentTitle("New Assignment"))
+                            //.setSummaryText("+3 more"))
                     .setPriority(2)
                     .addAction(R.mipmap.ic_camera_white, "", imageIntent)
                     .addAction(R.mipmap.ic_video_white, "", videoIntent)
                     .addAction(R.mipmap.ic_audio_white, "", audioIntent)
                     .build();
-            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(55, notif);
     }
 
