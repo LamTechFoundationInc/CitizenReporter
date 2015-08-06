@@ -27,6 +27,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     private int messageType;
     private String message;
     private String assignmentID;
+    private String assignmentDeadline;
 
     public GCMIntentService() {
         // Call extended class Constructor GCMBaseIntentService
@@ -77,6 +78,12 @@ public class GCMIntentService extends GCMBaseIntentService {
             message = intent.getExtras().getString("assignment");
             //should have assignmentID
             assignmentID = intent.getExtras().getString("assignmentID");
+            assignmentDeadline = "" + intent.getExtras().getString("assignmentDeadline");
+            if(assignmentDeadline.equals("") || assignmentDeadline.equals("null")){
+                assignmentDeadline = "Open ended";
+            }else{
+                assignmentDeadline = "Due: " + assignmentDeadline;
+            }
 
         }else if(intent.hasExtra("feedback")){
             messageType = 1;
@@ -90,7 +97,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         // notifies user
         if(messageType == 0){
             //if assignment use the advanced notifi
-            generateAdvancedAssignmentNotification(message, assignmentID);
+            generateAdvancedAssignmentNotification(message, assignmentID, assignmentDeadline);
         }else{
             generateNotification(context, message);
         }
@@ -172,7 +179,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         return intent;
     }
 
-    private void generateAdvancedAssignmentNotification(String message, String assignmentID){
+    private void generateAdvancedAssignmentNotification(String message, String assignmentID, String assignmentDeadline){
             PendingIntent imageIntent = PendingIntent.getActivity(this, 0, imageIntent(assignmentID), 0);
             PendingIntent videoIntent = PendingIntent.getActivity(this, 0, videoIntent(assignmentID), 0);
             PendingIntent audioIntent = PendingIntent.getActivity(this, 0, audioIntent(assignmentID), 0);
@@ -180,12 +187,12 @@ public class GCMIntentService extends GCMBaseIntentService {
             Notification notif = new Notification.Builder(getApplicationContext())
                     .setContentTitle("New Assignment" )
                     .setContentText(getResources().getString(R.string.expand_to_view))
-                    //.setSmallIcon(R.drawable.modifymedia_audio)
+                    //.setSmallIcon(R.drawable)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
                     .setStyle(new Notification.InboxStyle()
                             .addLine(message)
-                            .setBigContentTitle("New Assignment"))
-                            //.setSummaryText("+3 more"))
+                            .setBigContentTitle("New Assignment")
+                            .setSummaryText(assignmentDeadline))
                     .setPriority(2)
                     .addAction(R.mipmap.ic_camera_white, "", imageIntent)
                     .addAction(R.mipmap.ic_video_white, "", videoIntent)
