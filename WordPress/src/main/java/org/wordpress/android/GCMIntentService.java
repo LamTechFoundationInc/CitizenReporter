@@ -221,7 +221,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setContentTitle(user)
                 .setContentText(getResources().getString(R.string.expand_to_view))
                         //.setSmallIcon(R.drawable)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.me_icon_support))
                 .setStyle(new Notification.InboxStyle()
                         .addLine(message)
                         .setBigContentTitle(user)/*
@@ -241,7 +241,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         Notification notif = new Notification.Builder(getApplicationContext())
                 .setContentTitle(user)
                 .setContentText(getResources().getString(R.string.expand_to_view))
-                        //.setSmallIcon(R.drawable)
+                        .setSmallIcon(R.drawable.my_site_icon_comments)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
                 .setStyle(new Notification.InboxStyle()
                         .addLine(message)
