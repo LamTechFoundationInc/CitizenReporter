@@ -28,6 +28,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     private String message;
     private String assignmentID;
     private String assignmentDeadline;
+    private String user;
 
     public GCMIntentService() {
         // Call extended class Constructor GCMBaseIntentService
@@ -82,26 +83,28 @@ public class GCMIntentService extends GCMBaseIntentService {
             if(assignmentDeadline.equals("") || assignmentDeadline.equals("null")){
                 assignmentDeadline = "Open ended";
             }else{
-                assignmentDeadline = "Due: " + assignmentDeadline;
+                assignmentDeadline = "Due on " + assignmentDeadline;
             }
 
         }else if(intent.hasExtra("feedback")){
             messageType = 1;
             message = intent.getExtras().getString("feedback");
+            user = intent.getExtras().getString("user");
         }else if(intent.hasExtra("chat")){
             messageType = 2;
             message = intent.getExtras().getString("chat");
+            user = intent.getExtras().getString("user");
         }
 
         aController.displayMessageOnScreen(context, message);
         // notifies user
         if(messageType == 0){
-            //if assignment use the advanced notifi
-            generateAdvancedAssignmentNotification(message, assignmentID, assignmentDeadline);
-        }else{
-            generateNotification(context, message);
+            generateAdvancedAssignmentNotification();
+        }else if(messageType == 1){
+            generateFeedbackNotification();
+        }else if(messageType == 2){
+            generateChatNotification();
         }
-
 
     }
 
@@ -118,7 +121,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         String message = getString(R.string.gcm_deleted, total);
         aController.displayMessageOnScreen(context, message);
         // notifies user
-        generateNotification(context, message);
+        //generateNotification(context, message);
     }
 
     /**
@@ -147,7 +150,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         return super.onRecoverableError(context, errorId);
     }
 
-    public Intent imageIntent(String assignmentID){
+    public Intent imageIntent(){
         Intent intent = new Intent(this, StoryBoard.class);
         intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                 ? Constants.QUICK_POST_PHOTO_CAMERA
@@ -158,7 +161,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         return intent;
     }
-    public Intent videoIntent(String assignmentID){
+    public Intent videoIntent(){
         Intent intent = new Intent(this, StoryBoard.class);
         intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                 ? Constants.QUICK_POST_VIDEO_CAMERA
@@ -169,7 +172,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
         return intent;
     }
-    public Intent audioIntent(String assignmentID){
+    public Intent audioIntent(){
         Intent intent = new Intent(this, StoryBoard.class);
         intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
         intent.putExtra("isNew", true);
@@ -179,10 +182,10 @@ public class GCMIntentService extends GCMBaseIntentService {
         return intent;
     }
 
-    private void generateAdvancedAssignmentNotification(String message, String assignmentID, String assignmentDeadline){
-            PendingIntent imageIntent = PendingIntent.getActivity(this, 0, imageIntent(assignmentID), 0);
-            PendingIntent videoIntent = PendingIntent.getActivity(this, 0, videoIntent(assignmentID), 0);
-            PendingIntent audioIntent = PendingIntent.getActivity(this, 0, audioIntent(assignmentID), 0);
+    private void generateAdvancedAssignmentNotification(){
+            PendingIntent imageIntent = PendingIntent.getActivity(this, 0, imageIntent(), 0);
+            PendingIntent videoIntent = PendingIntent.getActivity(this, 0, videoIntent(), 0);
+            PendingIntent audioIntent = PendingIntent.getActivity(this, 0, audioIntent(), 0);
 
             Notification notif = new Notification.Builder(getApplicationContext())
                     .setContentTitle("New Assignment" )
@@ -202,7 +205,54 @@ public class GCMIntentService extends GCMBaseIntentService {
             notificationManager.notify(55, notif);
     }
 
-    private void generateNotification(Context context, String message) {
+    private void generateChatNotification() {
+        //insert to db
+        Message chat = new Message();
+        chat.setMessage(message.trim());
+        chat.setIsMine("2");
+        WordPress.wpDB.addMessage(chat);
+
+        //create intent
+        Intent chatIntent1 = new Intent(getApplicationContext(), ChatActivity.class);
+        PendingIntent chatIntent = PendingIntent.getActivity(this, 0, chatIntent1, 0);
+
+        //build notification
+        Notification notif = new Notification.Builder(getApplicationContext())
+                .setContentTitle(user)
+                .setContentText(getResources().getString(R.string.expand_to_view))
+                        //.setSmallIcon(R.drawable)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
+                .setStyle(new Notification.InboxStyle()
+                        .addLine(message)
+                        .setBigContentTitle(user)/*
+                        .setSummaryText(assignmentDeadline)*/)
+                .setPriority(2)
+                .addAction(R.mipmap.ic_reply, "Reply", chatIntent)
+                .build();
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(56, notif);
+    }
+    private void generateFeedbackNotification() {
+        //create intent
+        Intent feedbackIntent1 = new Intent(getApplicationContext(), CommentsActivity.class);
+        PendingIntent feedbackIntent = PendingIntent.getActivity(this, 0, feedbackIntent1, 0);
+
+        //build notification
+        Notification notif = new Notification.Builder(getApplicationContext())
+                .setContentTitle(user)
+                .setContentText(getResources().getString(R.string.expand_to_view))
+                        //.setSmallIcon(R.drawable)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
+                .setStyle(new Notification.InboxStyle()
+                        .addLine(message)
+                        .setBigContentTitle(user))
+                .setPriority(2)
+                .build();
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(57, notif);
+    }
+
+    private void generateNotification(Context context) {
         int icon = R.drawable.noticon_clock;
         long when = System.currentTimeMillis();
         NotificationManager notificationManager = (NotificationManager)
