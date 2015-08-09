@@ -3,6 +3,7 @@ package org.wordpress.android.overlaycamera;
 import java.io.IOException;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Picture;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -70,7 +71,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         super.onCreate(savedInstanceState);
 
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+       // requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -86,16 +87,16 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         ActivitySwipeDetector swipe = new ActivitySwipeDetector(this);
         mOverlayView.setOnTouchListener(swipe);
 
-       /* mOverlayView.setOnClickListener(new OnClickListener ()
-        {
+        mOverlayView.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
-		*/
-        closeOverlay();
-		/*	}
+
+                closeOverlay();
+
+			}
 
         });
-        */
+
         mSurfaceView = new SurfaceView(this);
         addContentView(mSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
         mSurfaceHolder = mSurfaceView.getHolder();
@@ -167,7 +168,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
 
     }
 
-    /*
+
     private Bitmap changeColor(Bitmap src,int pixelRed, int pixelGreen, int pixelBlue){
 
     	int width = src.getWidth();
@@ -189,7 +190,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         }
         return dest;
        }
-    */
+
 
     private void takePicture() {
         // TODO Auto-generated method stub

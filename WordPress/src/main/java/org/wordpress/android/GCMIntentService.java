@@ -32,7 +32,7 @@ public class GCMIntentService extends GCMBaseIntentService {
 
     public GCMIntentService() {
         // Call extended class Constructor GCMBaseIntentService
-        super(GCMConfigORG.GOOGLE_SENDER_ID);
+        super(BuildConfig.GCM_ID);
     }
 
     /**

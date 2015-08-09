@@ -35,6 +35,7 @@ import com.google.android.gcm.GCMRegistrar;
 import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.GCMConfigORG;
 import org.wordpress.android.R;
@@ -454,12 +455,6 @@ public class RipotiMainActivity extends ActionBarActivity
 
         checkIfRegistered();
         //attemptToSelectPost();
-
-        if(getIntent().getExtras()!=null){
-            if(getIntent().hasExtra("assignment_refresh")){
-                requestAssignments();
-            }
-        }
     }
 
     @Override
@@ -945,7 +940,7 @@ public class RipotiMainActivity extends ActionBarActivity
         if (regId.equals("")) {
             Log.d("simple1", "2");
             // Register with GCM
-            GCMRegistrar.register(getApplicationContext(), GCMConfigORG.GOOGLE_SENDER_ID);
+            GCMRegistrar.register(getApplicationContext(), BuildConfig.GCM_ID);
 
         } else {
             Log.d("simple1", "3");
