@@ -85,27 +85,20 @@ public class GCMIntentService extends GCMBaseIntentService {
             }else{
                 assignmentDeadline = "Due on " + assignmentDeadline;
             }
-
+            generateAdvancedAssignmentNotification();
         }else if(intent.hasExtra("feedback")){
             messageType = 1;
             message = intent.getExtras().getString("feedback");
-            user = intent.getExtras().getString("user");
+            user = intent.getExtras().getString("author");
+            generateFeedbackNotification();
         }else if(intent.hasExtra("chat")){
             messageType = 2;
             message = intent.getExtras().getString("chat");
             user = intent.getExtras().getString("user");
-        }
-
-        aController.displayMessageOnScreen(context, message);
-        // notifies user
-        if(messageType == 0){
-            generateAdvancedAssignmentNotification();
-        }else if(messageType == 1){
-            generateFeedbackNotification();
-        }else if(messageType == 2){
             generateChatNotification();
         }
 
+        aController.displayMessageOnScreen(context, message);
     }
 
     /**
@@ -190,7 +183,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             Notification notif = new Notification.Builder(getApplicationContext())
                     .setContentTitle("New Assignment" )
                     .setContentText(getResources().getString(R.string.expand_to_view))
-                    //.setSmallIcon(R.drawable)
+                    .setSmallIcon(R.drawable.noticon_alert_big)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
                     .setStyle(new Notification.InboxStyle()
                             .addLine(message)
@@ -219,8 +212,8 @@ public class GCMIntentService extends GCMBaseIntentService {
         //build notification
         Notification notif = new Notification.Builder(getApplicationContext())
                 .setContentTitle(user)
-                .setContentText(getResources().getString(R.string.expand_to_view))
-                        //.setSmallIcon(R.drawable)
+                .setContentText(message)
+                .setSmallIcon(R.drawable.me_icon_support)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.me_icon_support))
                 .setStyle(new Notification.InboxStyle()
                         .addLine(message)
@@ -240,13 +233,14 @@ public class GCMIntentService extends GCMBaseIntentService {
         //build notification
         Notification notif = new Notification.Builder(getApplicationContext())
                 .setContentTitle(user)
-                .setContentText(getResources().getString(R.string.expand_to_view))
+                .setContentText(message)
                         .setSmallIcon(R.drawable.my_site_icon_comments)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ab_icon_edit))
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.my_site_icon_comments))
                 .setStyle(new Notification.InboxStyle()
                         .addLine(message)
                         .setBigContentTitle(user))
                 .setPriority(2)
+                .addAction(R.mipmap.ic_reply, "Reply", feedbackIntent)
                 .build();
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(57, notif);

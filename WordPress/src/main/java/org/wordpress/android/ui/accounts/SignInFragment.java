@@ -217,8 +217,8 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
         mUrlEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_URL);
         //autofill sign in details if app is in debug mode
         if (BuildConfig.DEBUG) {
-            //mUsernameEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_USERNAME);
-            //mPasswordEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_PASSWORD);
+            mUsernameEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_USERNAME);
+            mPasswordEditText.setText(org.wordpress.android.BuildConfig.DEFAULT_PASSWORD);
         }
 
         return rootView;
