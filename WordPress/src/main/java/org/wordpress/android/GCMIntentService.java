@@ -5,6 +5,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,11 @@ import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.util.DeviceUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class GCMIntentService extends GCMBaseIntentService {
 
     private static final String TAG = "GCMIntentService";
@@ -30,6 +36,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     private String assignmentDeadline;
     private String user;
 
+    private Bitmap iconFromUrl;
     public GCMIntentService() {
         // Call extended class Constructor GCMBaseIntentService
         super(BuildConfig.GCM_ID);
@@ -90,11 +97,17 @@ public class GCMIntentService extends GCMBaseIntentService {
             messageType = 1;
             message = intent.getExtras().getString("feedback");
             user = intent.getExtras().getString("author");
+
+            iconFromUrl = iconFromUrl(intent.getExtras().getString("icon_url"));
+
             generateFeedbackNotification();
         }else if(intent.hasExtra("chat")){
             messageType = 2;
             message = intent.getExtras().getString("chat");
             user = intent.getExtras().getString("user");
+
+            iconFromUrl = null;//iconFromUrl(intent.getExtras().getString("icon_url"));
+
             generateChatNotification();
         }
 
@@ -175,6 +188,22 @@ public class GCMIntentService extends GCMBaseIntentService {
         return intent;
     }
 
+    private Bitmap iconFromUrl(String strURL){
+            try {
+                URL url = new URL(strURL);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+
     private void generateAdvancedAssignmentNotification(){
             PendingIntent imageIntent = PendingIntent.getActivity(this, 0, imageIntent(), 0);
             PendingIntent videoIntent = PendingIntent.getActivity(this, 0, videoIntent(), 0);
@@ -199,6 +228,9 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     private void generateChatNotification() {
+        if(iconFromUrl==null){
+            iconFromUrl = BitmapFactory.decodeResource(getResources(), R.drawable.me_icon_support);
+        }
         //insert to db
         Message chat = new Message();
         chat.setMessage(message.trim());
@@ -214,7 +246,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setContentTitle(user)
                 .setContentText(message)
                 .setSmallIcon(R.drawable.me_icon_support)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.me_icon_support))
+                .setLargeIcon(iconFromUrl)
                 .setStyle(new Notification.InboxStyle()
                         .addLine(message)
                         .setBigContentTitle(user)/*
@@ -226,6 +258,10 @@ public class GCMIntentService extends GCMBaseIntentService {
         notificationManager.notify(56, notif);
     }
     private void generateFeedbackNotification() {
+        if(iconFromUrl==null){
+            iconFromUrl = BitmapFactory.decodeResource(getResources(), R.drawable.my_site_icon_comments);
+        }
+
         //create intent
         Intent feedbackIntent1 = new Intent(getApplicationContext(), CommentsActivity.class);
         PendingIntent feedbackIntent = PendingIntent.getActivity(this, 0, feedbackIntent1, 0);
@@ -235,7 +271,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .setContentTitle(user)
                 .setContentText(message)
                         .setSmallIcon(R.drawable.my_site_icon_comments)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.my_site_icon_comments))
+                .setLargeIcon(iconFromUrl)
                 .setStyle(new Notification.InboxStyle()
                         .addLine(message)
                         .setBigContentTitle(user))
@@ -244,60 +280,6 @@ public class GCMIntentService extends GCMBaseIntentService {
                 .build();
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(57, notif);
-    }
-
-    private void generateNotification(Context context) {
-        int icon = R.drawable.noticon_clock;
-        long when = System.currentTimeMillis();
-        NotificationManager notificationManager = (NotificationManager)
-                context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notification = new Notification(icon, message, when);
-
-        String title = context.getString(R.string.app_name) + " | New ";
-
-        Intent notificationIntent = null;
-
-        if(messageType==0){
-            title += "Assignment";
-            notificationIntent = new Intent(context, RipotiMainActivity.class);
-
-        }else if (messageType == 1){
-
-            title += "Feedback";
-            notificationIntent = new Intent(context, CommentsActivity.class);
-
-        }else{
-            //insert to db
-            Message chat = new Message();
-            chat.setMessage(message.trim());
-            chat.setIsMine("2");
-            WordPress.wpDB.addMessage(chat);
-
-            title += "Chat";
-            notificationIntent = new Intent(context, ChatActivity.class);
-        }
-
-        // set intent so it does not start a new activity
-        Bundle bundle = new Bundle();
-        bundle.putString("assignment_refresh", "1");
-        notificationIntent.putExtras(bundle);
-
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent intent =
-                PendingIntent.getActivity(context, 0, notificationIntent, 0);
-        notification.setLatestEventInfo(context, title, message, intent);
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-
-        // Play default notification sound
-        notification.defaults |= Notification.DEFAULT_SOUND;
-
-        //notification.sound = Uri.parse("android.resource://" + context.getPackageName() + "your_sound_file_name.mp3");
-
-        // Vibrate if vibrate is enabled
-        notification.defaults |= Notification.DEFAULT_VIBRATE;
-        notificationManager.notify(messageType, notification);
-
     }
 
     public static void clearNotificationsMap() {

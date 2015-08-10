@@ -1,6 +1,11 @@
 package org.wordpress.android.overlaycamera;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,26 +18,32 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
 
 import org.wordpress.android.BuildConfig;
+import org.wordpress.android.R;
 
 
 public class OverlayCameraActivity extends ActionBarActivity implements Callback, SwipeInterface
 {
-
 
     private Camera camera;
     private SurfaceView mSurfaceView;
@@ -67,20 +78,14 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
-
-       // requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         overlayGroup = getIntent().getIntExtra("group", 0);
         overlayIdx = getIntent().getIntExtra("overlay", 0);
         mStoryMode = getIntent().getIntExtra("mode",-1);
-
 
         mOverlayView = new ImageView(this);
 
@@ -104,6 +109,96 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         addContentView(mOverlayView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
 
+        ScenePickerDialog(this);
+    }
+
+    private static void ScenePickerDialog(Context context){
+
+        Dialog mDialog = new Dialog(context);
+        mDialog.setContentView(R.layout.list_pick_scene);
+        mDialog.setTitle(context.getResources().getString(R.string.pick_scene));
+
+        ListView scenesList = (ListView)mDialog.findViewById(R.id.listView);
+
+        int[] sceneTitles = context.getResources().getIntArray(R.array.scenes);
+        int[] sceneDescriptions = context.getResources().getIntArray(R.array.scenes_descriptions);
+        int[] sceneImages = context.getResources().getIntArray(R.array.scenes_images);
+
+        ScenesAdapter scenesAdapter = new ScenesAdapter(context, sceneTitles, sceneDescriptions, sceneImages, R.layout.row_pick_scene);
+        scenesList.setAdapter(scenesAdapter);
+
+        mDialog.show();
+    }
+
+    public static class ScenesAdapter extends BaseAdapter {
+
+        int[] sceneTitles;
+        int[] sceneDescriptions;
+        int[] sceneImages;
+        int rowResource;
+        Context context;
+
+        public ScenesAdapter(Context _context, int[] _sceneTitles, int[] _sceneDescriptions, int[] _sceneImages, int _rowResource) {
+
+            this.sceneTitles = _sceneTitles;
+            this.sceneDescriptions = _sceneDescriptions;
+            this.sceneImages = _sceneImages;
+            this.rowResource = _rowResource;
+            this.context = _context;
+        }
+        public class Holder
+        {
+            TextView heading;
+            TextView subheading;
+            ImageView img;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+
+            Holder holder=new Holder();
+            View rowView = convertView;
+
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            if(convertView==null) {
+                rowView = inflater.inflate(rowResource, null);
+                holder.heading = (TextView) rowView.findViewById(R.id.scene_head);
+                holder.subheading = (TextView) rowView.findViewById(R.id.scene_sub);
+                holder.img = (ImageView) rowView.findViewById(R.id.scene_image);
+
+
+            }else{
+                rowView.setTag( holder );
+                holder=(Holder)rowView.getTag();
+            }
+
+            //holder.heading.setText(sceneTitles[position]);
+            //holder.subheading.setText(sceneDescriptions[position]);
+            //holder.img.setImageDrawable(sceneImages[position]);
+            rowView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            return rowView;
+        }
+
+        @Override
+        public int getCount() {
+            return sceneTitles.length;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
     }
 
 
@@ -122,8 +217,6 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         }
 
         setResult(RESULT_OK);
-
-
 
         finish();
     }

@@ -46,6 +46,7 @@ import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.overlaycamera.OverlayCameraActivity;
 import org.wordpress.android.ripoti.ui.main.UserMenuActivity;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -400,6 +401,7 @@ public class RipotiMainActivity extends ActionBarActivity
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 boolean mShouldFinish = false;
                 Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
                 intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
@@ -408,6 +410,7 @@ public class RipotiMainActivity extends ActionBarActivity
                 intent.putExtra("isNew", true);
                 intent.putExtra("shouldFinish", mShouldFinish);
                 startActivity(intent);
+
             }
         });
 
