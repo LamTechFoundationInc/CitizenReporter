@@ -41,8 +41,8 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
-import org.wordpress.passcodelock.AppLockManager;
-import org.wordpress.passcodelock.PasscodePreferencesActivity;
+import org.wordpress.android.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.PasscodePreferencesActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;

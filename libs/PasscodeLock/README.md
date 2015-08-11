@@ -16,18 +16,18 @@ Once enabled a four-digit passcode needs to be entered any time your mobile app 
 - Open the file `android.manifest` and declare the following activities:
 
         <activity
-            android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
+            android:name="org.wordpress.android.passcodelock.PasscodeUnlockActivity"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
+            android:name="org.wordpress.android.passcodelock.PasscodePreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Sherlock.Light"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
+            android:name="org.wordpress.android.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>

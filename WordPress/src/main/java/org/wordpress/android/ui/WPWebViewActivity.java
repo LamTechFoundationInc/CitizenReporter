@@ -25,7 +25,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
 import org.wordpress.android.util.WPWebViewClient;
-import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.AppLockManager;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;

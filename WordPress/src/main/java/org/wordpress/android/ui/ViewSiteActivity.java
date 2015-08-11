@@ -24,7 +24,7 @@ import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.WPWebViewClient;
 import org.wordpress.android.util.helpers.WPWebChromeClient;
-import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.AppLockManager;
 
 import java.lang.reflect.Type;
 import java.util.Map;

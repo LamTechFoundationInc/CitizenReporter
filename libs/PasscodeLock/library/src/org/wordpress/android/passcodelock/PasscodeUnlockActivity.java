@@ -1,4 +1,4 @@
-package org.wordpress.passcodelock;
+package org.wordpress.android.passcodelock;
 
 import android.content.Intent;
 import android.view.animation.Animation;

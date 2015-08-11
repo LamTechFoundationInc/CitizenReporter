@@ -34,7 +34,7 @@ import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPMeShortlinks;
 import org.wordpress.android.widgets.WPAlertDialogFragment;
-import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.AppLockManager;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlrpc.android.ApiHelper;
 import org.xmlrpc.android.XMLRPCClientInterface;

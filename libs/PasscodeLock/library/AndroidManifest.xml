@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.wordpress.passcodelock"
+    package="org.wordpress.android.passcodelock"
     android:versionCode="1"
     android:versionName="0.0.5" >
 
@@ -10,20 +10,20 @@
 
 <!-- Define the following activities in your project 
     <activity
-        android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
+        android:name="org.wordpress.android.passcodelock.PasscodeUnlockActivity"
         android:screenOrientation="portrait"
         android:theme="@style/Theme.Sherlock.Light.NoActionBar"
         android:windowSoftInputMode="stateHidden" >
     </activity>
     <activity
-        android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
+        android:name="org.wordpress.android.passcodelock.PasscodePreferencesActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
         android:screenOrientation="portrait"
         android:theme="@style/Theme.Sherlock.Light"
         android:windowSoftInputMode="stateHidden" >
     </activity>
     <activity
-        android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
+        android:name="org.wordpress.android.passcodelock.PasscodeManagePasswordActivity"
         android:screenOrientation="portrait"
         android:theme="@style/Theme.Sherlock.Light.NoActionBar"
         android:windowSoftInputMode="stateHidden" >

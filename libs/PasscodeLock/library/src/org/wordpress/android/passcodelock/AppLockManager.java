@@ -1,4 +1,4 @@
-package org.wordpress.passcodelock;
+package org.wordpress.android.passcodelock;
 
 import android.app.Application;
 

@@ -1,4 +1,4 @@
-package org.wordpress.passcodelock;
+package org.wordpress.android.passcodelock;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -16,7 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 
-import org.wordpress.passcodelock.BuildConfig;
+import org.wordpress.android.passcodelock.BuildConfig;
 
 public class DefaultAppLock extends AbstractAppLock {
 

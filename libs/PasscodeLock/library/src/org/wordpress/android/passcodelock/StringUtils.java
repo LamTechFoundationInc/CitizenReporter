@@ -1,4 +1,4 @@
-package org.wordpress.passcodelock;
+package org.wordpress.android.passcodelock;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

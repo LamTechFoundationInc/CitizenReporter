@@ -1,7 +1,6 @@
-package org.wordpress.passcodelock;
+package org.wordpress.android.passcodelock;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.InputFilter;

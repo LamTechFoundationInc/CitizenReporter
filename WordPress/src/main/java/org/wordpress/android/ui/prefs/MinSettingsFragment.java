@@ -1,53 +1,27 @@
 package org.wordpress.android.ui.prefs;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
-import com.android.volley.VolleyError;
-import com.wordpress.rest.RestRequest;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
-import org.wordpress.android.models.AccountHelper;
-import org.wordpress.android.ui.ShareIntentReceiverActivity;
-import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.util.ActivityUtils;
-import org.wordpress.android.util.AnalyticsUtils;
-import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.AppLog.T;
-import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPEditTextPreference;
-import org.wordpress.passcodelock.AppLockManager;
-import org.wordpress.passcodelock.PasscodePreferencesActivity;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import org.wordpress.android.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.PasscodePreferencesActivity;
 
 @SuppressWarnings("deprecation")
 public class MinSettingsFragment extends PreferenceFragment {

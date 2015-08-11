@@ -26,7 +26,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,7 +83,7 @@ import org.wordpress.mediapicker.MediaItem;
 import org.wordpress.mediapicker.source.MediaSource;
 import org.wordpress.mediapicker.source.MediaSourceDeviceImages;
 import org.wordpress.mediapicker.source.MediaSourceDeviceVideos;
-import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.AppLockManager;
 import org.xmlrpc.android.ApiHelper;
 
 import java.io.File;

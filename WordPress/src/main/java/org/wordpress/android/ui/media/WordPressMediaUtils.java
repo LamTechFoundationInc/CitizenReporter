@@ -2,7 +2,6 @@ package org.wordpress.android.ui.media;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.ImageView;
 
 import net.micode.soundrecorder.SoundRecorder;
@@ -26,7 +24,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.helpers.Version;
-import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.AppLockManager;
 
 import java.io.File;
 import java.io.IOException;

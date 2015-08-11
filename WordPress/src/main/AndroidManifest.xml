@@ -322,18 +322,18 @@
 
         <!--  Passcode lock activities -->
         <activity
-            android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
+            android:name=".passcodelock.PasscodeUnlockActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
+            android:name=".passcodelock.PasscodePreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Holo.Light"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
+            android:name=".passcodelock.PasscodeManagePasswordActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>

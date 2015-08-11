@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.widgets.WPTextView;
-import org.wordpress.passcodelock.AppLockManager;
+import org.wordpress.android.passcodelock.AppLockManager;
 
 import java.util.Calendar;
 
