@@ -1,8 +1,10 @@
 package org.wordpress.android.passcodelock;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.Gravity;
@@ -78,25 +80,35 @@ public abstract class AbstractPasscodeKeyboardActivity extends Activity {
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                quickCapture("1");
             }
         });
 
         button_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                quickCapture("2");
             }
         });
 
         button_mic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
-
-            }
+                quickCapture("3");            }
         });
+    }
+
+    public void quickCapture(String type){
+        AppLockManager.getInstance().setExtendedTimeout();
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putBoolean("quickCapture", true);
+        editor.putString("mediaType", type);
+        editor.commit();
+
+        finish();
     }
     
     private OnClickListener defaultButtonListener = new OnClickListener() {
