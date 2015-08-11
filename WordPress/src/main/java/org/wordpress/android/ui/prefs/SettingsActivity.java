@@ -22,7 +22,7 @@ public class SettingsActivity extends ActionBarActivity {
         setContentView(R.layout.settings_activity);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new SettingsFragment())
+                    .add(R.id.fragment_container, new MinSettingsFragment())
                     .commit();
         }
     }
