@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
+import org.wordpress.android.passcodelock.AppLockManager;
 import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.util.DeviceUtils;
 
@@ -39,6 +40,7 @@ public class QuickCaptureWidget  extends AppWidgetProvider {
     }
 
     public Intent capturePic(Context context){
+        AppLockManager.getInstance().setExtendedTimeout();
         boolean mShouldFinish = false;
         Intent intent = new Intent(context, StoryBoard.class);
         intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(context)
@@ -51,6 +53,7 @@ public class QuickCaptureWidget  extends AppWidgetProvider {
     }
 
     public Intent captureVid(Context context){
+        AppLockManager.getInstance().setExtendedTimeout();
         boolean mShouldFinish = false;
         Intent intent = new Intent(context, StoryBoard.class);
         intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(context)
@@ -63,7 +66,7 @@ public class QuickCaptureWidget  extends AppWidgetProvider {
     }
 
     public Intent captureAudio(Context context){
-
+        AppLockManager.getInstance().setExtendedTimeout();
         boolean mShouldFinish = false;
         Intent intent = new Intent(context, StoryBoard.class);
         intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
