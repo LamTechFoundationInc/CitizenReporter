@@ -64,6 +64,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
     private int mColorBlue = 0;
 
     private int mStoryMode = -1;
+    Dialog mDialog;
 
     private Handler mMediaHandler = new Handler ()
     {
@@ -80,21 +81,24 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ScenePickerDialog(this);
-    }
-
-    public void showOverlayCam(){
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         overlayGroup = getIntent().getIntExtra("group", 0);
         overlayIdx = getIntent().getIntExtra("overlay", 0);
+
+        showOverlayCam();
+
+        ScenePickerDialog(this);
+    }
+
+    public void showOverlayCam(){
+
         mStoryMode = getIntent().getIntExtra("mode",-1);
 
-        mOverlayView = new ImageView(this);
+        mOverlayView = new ImageView(OverlayCameraActivity.this);
 
-        ActivitySwipeDetector swipe = new ActivitySwipeDetector(this);
+        ActivitySwipeDetector swipe = new ActivitySwipeDetector(OverlayCameraActivity.this);
         mOverlayView.setOnTouchListener(swipe);
 
         mOverlayView.setOnClickListener(new OnClickListener (){
@@ -107,17 +111,17 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
 
         });
 
-        mSurfaceView = new SurfaceView(this);
+        mSurfaceView = new SurfaceView(OverlayCameraActivity.this);
         addContentView(mSurfaceView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
         mSurfaceHolder = mSurfaceView.getHolder();
-        mSurfaceHolder.addCallback(this);
+        mSurfaceHolder.addCallback(OverlayCameraActivity.this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         addContentView(mOverlayView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
     }
 
     private void ScenePickerDialog(Context context){
 
-        Dialog mDialog = new Dialog(context);
+        mDialog = new Dialog(context);
         mDialog.setContentView(R.layout.list_pick_scene);
         mDialog.setTitle(context.getResources().getString(R.string.pick_scene));
 
@@ -156,7 +160,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
             ImageView img;
         }
         @Override
-        public View getView(int position, View convertView, ViewGroup viewGroup) {
+        public View getView(final int position, View convertView, ViewGroup viewGroup) {
 
             Holder holder=new Holder();
             View rowView = convertView;
@@ -181,7 +185,9 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
             rowView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    mDialog.cancel();
+                    overlayGroup = position;
+                    overlayIdx = position;
                     showOverlayCam();
                 }
             });
@@ -206,23 +212,25 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
     }
 
 
-    private void closeOverlay ()
-    {
+    private void closeOverlay () {
 
-        if (cameraOn)
-        {
-            cameraOn = false;
+        if (!mDialog.isShowing()){
 
-            if (camera != null)
+            if (cameraOn)
             {
-                camera.stopPreview();
-                camera.release();
+                cameraOn = false;
+
+                if (camera != null)
+                {
+                    camera.stopPreview();
+                    camera.release();
+                }
             }
+
+            setResult(RESULT_OK);
+
+            finish();
         }
-
-        setResult(RESULT_OK);
-
-        finish();
     }
 
     @Override
@@ -240,7 +248,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         {
             String groupPath = "images/overlays/svg/" + overlayGroup;
 
-            if (overlays == null)
+            //if (overlays == null)
                 overlays = getAssets().list(groupPath);
 
             bitmap = Bitmap.createBitmap(mOverlayView.getWidth(),mOverlayView.getHeight(), Bitmap.Config.ARGB_8888);

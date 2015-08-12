@@ -404,7 +404,8 @@ public class RipotiMainActivity extends ActionBarActivity
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean mShouldFinish = false;
+
+              boolean mShouldFinish = false;
                 Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
                 intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
                         ? Constants.QUICK_POST_PHOTO_CAMERA
