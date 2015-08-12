@@ -216,6 +216,7 @@ public class WordPress extends Application {
 
         Dialog mDialog = new Dialog(activity);
         mDialog.setContentView(R.layout.list_pick_scene);
+        mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mDialog.setTitle(context.getResources().getString(R.string.pick_scene));
         mDialog.show();
 
