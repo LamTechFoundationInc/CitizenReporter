@@ -21,4 +21,5 @@ public class RequestCodes {
     public static final int VIDEO_LIBRARY = 2200;
     public static final int TAKE_VIDEO = 2300;
     public static final int TAKE_AUDIO = 2400;
+    public static final int OVERLAY_CAMERA = 2500;
 }

@@ -405,41 +405,21 @@ public class RipotiMainActivity extends ActionBarActivity
             @Override
             public void onClick(View view) {
 
-              boolean mShouldFinish = false;
-                Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
-                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                        ? Constants.QUICK_POST_PHOTO_CAMERA
-                        : Constants.QUICK_POST_PHOTO_LIBRARY);
-                intent.putExtra("isNew", true);
-                intent.putExtra("shouldFinish", mShouldFinish);
-                startActivity(intent);
+                startOverlayCamera(1);
             }
         });
 
         button_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean mShouldFinish = false;
-                Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
-                intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
-                        ? Constants.QUICK_POST_VIDEO_CAMERA
-                        : Constants.QUICK_POST_PHOTO_LIBRARY);
-                intent.putExtra("isNew", true);
-                intent.putExtra("shouldFinish", mShouldFinish);
-                startActivity(intent);
+                startOverlayCamera(2);
             }
         });
 
         button_mic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                boolean mShouldFinish = false;
-                Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
-                intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
-                intent.putExtra("isNew", true);
-                intent.putExtra("shouldFinish", mShouldFinish);
-                startActivity(intent);
+                (new WordPress()).captureAudio(RipotiMainActivity.this, getApplicationContext());
 
             }
         });
@@ -460,6 +440,14 @@ public class RipotiMainActivity extends ActionBarActivity
 
         checkIfRegistered();
         //attemptToSelectPost();
+    }
+
+    public void startOverlayCamera(int type){
+
+        Intent i = new Intent(RipotiMainActivity.this, OverlayCameraActivity.class);
+        i.putExtra("mode", type);
+        startActivityForResult(i, RequestCodes.OVERLAY_CAMERA);
+
     }
 
     @Override
@@ -516,7 +504,7 @@ public class RipotiMainActivity extends ActionBarActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        AppLog.i(T.MAIN, "main activity > new intent");
+        //AppLog.i(T.MAIN, "main activity > new intent");
         if (intent.hasExtra(NotificationsListFragment.NOTE_ID_EXTRA)) {
             launchWithNoteId();
         }
@@ -546,7 +534,7 @@ public class RipotiMainActivity extends ActionBarActivity
             if (expires > 0 && now > expires) {
                 // Show a toast if the user took too long to open the notification
                 ToastUtils.showToast(this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
-                AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
+                //AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
             } else {
                 NotificationsUtils.showPushAuthAlert(this, token, title, message);
             }
@@ -646,7 +634,7 @@ public class RipotiMainActivity extends ActionBarActivity
      * user signs in/out so the fragments reflect the active account
      */
     private void resetFragments() {
-        AppLog.i(T.MAIN, "main activity > reset fragments");
+        //AppLog.i(T.MAIN, "main activity > reset fragments");
 
         // remove the event that determines when followed tags/blogs are updated so they're
         // updated when the fragment is recreated (necessary after signin/disconnect)
@@ -681,6 +669,13 @@ public class RipotiMainActivity extends ActionBarActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case RequestCodes.OVERLAY_CAMERA:
+                if(resultCode == 1){
+                    (new WordPress()).capturePic(this, getApplicationContext());
+                }else if(resultCode == 2) {
+                    (new WordPress()).captureVid(this, getApplicationContext());
+                }
+                break;
             case RequestCodes.EDIT_POST:
                 if (resultCode == RESULT_OK) {
                     MySiteFragment mySiteFragment = getMySiteFragment();
@@ -783,7 +778,7 @@ public class RipotiMainActivity extends ActionBarActivity
     private boolean mIsCheckingNoteBadge;
     private void checkNoteBadge() {
         if (mIsCheckingNoteBadge) {
-            AppLog.v(T.MAIN, "main activity > already checking note badge");
+            //AppLog.v(T.MAIN, "main activity > already checking note badge");
             return;
         } /*else if (isViewingNotificationsTab()) {
             // Don't show the badge if the notifications tab is active

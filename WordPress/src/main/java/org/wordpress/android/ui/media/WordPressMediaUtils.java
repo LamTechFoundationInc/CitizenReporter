@@ -19,6 +19,7 @@ import net.micode.soundrecorder.SoundRecorder;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.overlaycamera.OverlayCameraActivity;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -188,11 +189,17 @@ public class WordPressMediaUtils {
         }
     }
     public static void launchCamera(Activity activity, LaunchCameraCallback callback) {
+        //showOverlayCamera(activity, 1);
         Intent intent = preparelaunchCamera(activity, callback);
         if (intent != null) {
             AppLockManager.getInstance().setExtendedTimeout();
             activity.startActivityForResult(intent, RequestCodes.TAKE_PHOTO);
         }
+    }
+
+    public static void showOverlayCamera(Activity activity, int type){
+        Intent i = new Intent(activity, OverlayCameraActivity.class);
+        activity.startActivity(i);
     }
 
     public static void launchCamera(Fragment fragment, LaunchCameraCallback callback) {

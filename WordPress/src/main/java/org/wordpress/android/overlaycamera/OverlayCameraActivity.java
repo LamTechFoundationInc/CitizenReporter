@@ -2,10 +2,12 @@ package org.wordpress.android.overlaycamera;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -41,6 +43,7 @@ import com.larvalabs.svgandroid.SVGParser;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.models.SceneItem;
 
 
 public class OverlayCameraActivity extends ActionBarActivity implements Callback, SwipeInterface
@@ -88,8 +91,6 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         overlayIdx = getIntent().getIntExtra("overlay", 0);
 
         showOverlayCam();
-
-        ScenePickerDialog(this);
     }
 
     public void showOverlayCam(){
@@ -127,25 +128,72 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
 
         ListView scenesList = (ListView)mDialog.findViewById(R.id.listView);
 
-        int[] sceneTitles = context.getResources().getIntArray(R.array.scenes);
-        int[] sceneDescriptions = context.getResources().getIntArray(R.array.scenes_descriptions);
-        int[] sceneImages = context.getResources().getIntArray(R.array.scenes_images);
+        List<String> sceneTitles = Arrays.asList(context.getResources().getStringArray(R.array.scenes));
+        List<String> sceneDescriptions = Arrays.asList(context.getResources().getStringArray(R.array.scenes_descriptions));
+        List<String> sceneImages = Arrays.asList(context.getResources().getStringArray(R.array.scenes_images));
 
-        ScenesAdapter scenesAdapter = new ScenesAdapter(context, sceneTitles, sceneDescriptions, sceneImages, R.layout.row_pick_scene);
+        ListAdapter scenesAdapter = new ListAdapter(context, sceneTitles, sceneDescriptions, sceneImages, R.layout.row_pick_scene);
         scenesList.setAdapter(scenesAdapter);
 
         mDialog.show();
     }
 
+    public class ListAdapter extends ArrayAdapter<SceneItem> {
+
+        private List<String> sceneTitles;
+        private List<String> sceneDescriptions;
+        private List<String> sceneImages;
+        private Context context;
+
+        public ListAdapter(Context _context, List<String> _sceneTitles, List<String> _sceneDescriptions, List<String> _sceneImages, int row_pick_scene) {
+            super(_context, row_pick_scene);
+            this.sceneTitles = _sceneTitles;
+            this.sceneDescriptions = _sceneDescriptions;
+            this.sceneImages = _sceneImages;
+            this.context = _context;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            View v = convertView;
+
+            if (v == null) {
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+                v = vi.inflate(R.layout.row_pick_scene, null);
+            }
+
+                TextView tt1 = (TextView) v.findViewById(R.id.scene_head);
+                TextView tt2 = (TextView) v.findViewById(R.id.scene_sub);
+                ImageView tt3 = (ImageView) v.findViewById(R.id.scene_image);
+
+                if (tt1 != null) {
+                    tt1.setText(sceneTitles.get(position));
+                }
+
+                if (tt2 != null) {
+                    tt2.setText(sceneDescriptions.get(position));
+                }
+
+                if (tt3 != null) {
+                    //tt3.setImageDrawable(p.getSceneImage());
+                }
+
+            return v;
+        }
+
+    }
+
     public class ScenesAdapter extends BaseAdapter {
 
-        int[] sceneTitles;
-        int[] sceneDescriptions;
-        int[] sceneImages;
+        String[] sceneTitles;
+        String[] sceneDescriptions;
+        String[] sceneImages;
         int rowResource;
         Context context;
 
-        public ScenesAdapter(Context _context, int[] _sceneTitles, int[] _sceneDescriptions, int[] _sceneImages, int _rowResource) {
+        public ScenesAdapter(Context _context, String[] _sceneTitles, String[] _sceneDescriptions, String[] _sceneImages, int _rowResource) {
 
             this.sceneTitles = _sceneTitles;
             this.sceneDescriptions = _sceneDescriptions;
@@ -153,36 +201,29 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
             this.rowResource = _rowResource;
             this.context = _context;
         }
-        public class Holder
-        {
-            TextView heading;
-            TextView subheading;
-            ImageView img;
-        }
         @Override
         public View getView(final int position, View convertView, ViewGroup viewGroup) {
 
-            Holder holder=new Holder();
-            View rowView = convertView;
-
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            if(convertView==null) {
-                rowView = inflater.inflate(rowResource, null);
-                holder.heading = (TextView) rowView.findViewById(R.id.scene_head);
-                holder.subheading = (TextView) rowView.findViewById(R.id.scene_sub);
-                holder.img = (ImageView) rowView.findViewById(R.id.scene_image);
 
 
-            }else{
-                rowView.setTag( holder );
-                holder=(Holder)rowView.getTag();
-            }
+            //if(convertView!=null) {
+                TextView heading;
+                TextView subheading;
+                ImageView img;
 
-            //holder.heading.setText(sceneTitles[position]);
+                convertView = inflater.inflate(R.layout.row_pick_scene, null);
+                heading = (TextView) convertView.findViewById(R.id.scene_head);
+                subheading = (TextView) convertView.findViewById(R.id.scene_sub);
+                img = (ImageView) convertView.findViewById(R.id.scene_image);
+
+            //}
+
+            heading.setText("sdfs");
             //holder.subheading.setText(sceneDescriptions[position]);
             //holder.img.setImageDrawable(sceneImages[position]);
-            rowView.setOnClickListener(new OnClickListener() {
+            convertView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mDialog.cancel();
@@ -192,7 +233,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
                 }
             });
 
-            return rowView;
+            return convertView;
         }
 
         @Override
@@ -214,8 +255,6 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
 
     private void closeOverlay () {
 
-        if (!mDialog.isShowing()){
-
             if (cameraOn)
             {
                 cameraOn = false;
@@ -227,10 +266,12 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
                 }
             }
 
-            setResult(RESULT_OK);
+            Intent intent=new Intent();
+            intent.putExtra("MESSAGE", "Overlay selected");
+            setResult(mStoryMode, intent);
 
             finish();
-        }
+
     }
 
     @Override
