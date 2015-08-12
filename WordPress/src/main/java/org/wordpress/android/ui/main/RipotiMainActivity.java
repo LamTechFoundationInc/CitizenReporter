@@ -637,14 +637,7 @@ public class RipotiMainActivity extends ActionBarActivity
         checkNoteBadge();
 
         //check if taking picture
-        checkForPendingQuickCapture();
-    }
-
-    public void checkForPendingQuickCapture(){
-
-        WordPress wp = new WordPress();
-
-        wp.checkQuickCapture(RipotiMainActivity.this, getApplicationContext());
+        (new WordPress()).checkQuickCapture(this, getApplicationContext());
     }
 
     /*
