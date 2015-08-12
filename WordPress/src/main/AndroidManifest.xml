@@ -183,7 +183,6 @@
         <activity
             android:name=".overlaycamera.OverlayCameraActivity"
             android:theme="@style/Calypso.NoActionBar"
-            android:screenOrientation="landscape"
             >
         </activity>
         <activity

@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -80,6 +81,10 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ScenePickerDialog(this);
+    }
+
+    public void showOverlayCam(){
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -93,12 +98,12 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         mOverlayView.setOnTouchListener(swipe);
 
         mOverlayView.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
                 closeOverlay();
 
-			}
+            }
 
         });
 
@@ -108,11 +113,9 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         mSurfaceHolder.addCallback(this);
         mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
         addContentView(mOverlayView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
-
-        ScenePickerDialog(this);
     }
 
-    private static void ScenePickerDialog(Context context){
+    private void ScenePickerDialog(Context context){
 
         Dialog mDialog = new Dialog(context);
         mDialog.setContentView(R.layout.list_pick_scene);
@@ -130,7 +133,7 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
         mDialog.show();
     }
 
-    public static class ScenesAdapter extends BaseAdapter {
+    public class ScenesAdapter extends BaseAdapter {
 
         int[] sceneTitles;
         int[] sceneDescriptions;
@@ -178,7 +181,8 @@ public class OverlayCameraActivity extends ActionBarActivity implements Callback
             rowView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    showOverlayCam();
                 }
             });
 
