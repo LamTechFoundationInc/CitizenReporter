@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ComponentCallbacks2;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -23,7 +25,14 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -47,13 +56,16 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.SceneItem;
 import org.wordpress.android.networking.OAuthAuthenticator;
 import org.wordpress.android.networking.OAuthAuthenticatorFactory;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
+import org.wordpress.android.overlaycamera.OverlayCameraActivity;
 import org.wordpress.android.passcodelock.AbstractAppLock;
 import org.wordpress.android.passcodelock.AppLockManager;
 import org.wordpress.android.ui.ActivityId;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
@@ -198,6 +210,85 @@ public class WordPress extends Application {
             editor.putString("mediaType", "0");
             editor.commit();
         }
+    }
+
+    public void startOverlayCamera(final Activity activity, Context context, final int mode){
+
+        Dialog mDialog = new Dialog(activity);
+        mDialog.setContentView(R.layout.list_pick_scene);
+        mDialog.setTitle(context.getResources().getString(R.string.pick_scene));
+        mDialog.show();
+
+        String[] sceneTitles = context.getResources().getStringArray(R.array.scenes);
+        String[] sceneDescriptions = context.getResources().getStringArray(R.array.scenes_descriptions);
+        TypedArray sceneImages = context.getResources().obtainTypedArray(R.array.scenes_images);
+        ListView sceneslist = (ListView)mDialog.findViewById(R.id.listView);
+
+        ScenesAdapter scenesAdapter = new ScenesAdapter(activity, sceneTitles, sceneDescriptions, sceneImages, R.layout.row_pick_scene);
+        sceneslist.setAdapter(scenesAdapter);
+
+        sceneslist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int j, long l) {
+
+                Intent i = new Intent(activity, OverlayCameraActivity.class);
+                i.putExtra("mode", mode);
+                i.putExtra("group", j);
+                activity.startActivityForResult(i, RequestCodes.OVERLAY_CAMERA);
+            }
+        });
+    }
+
+    public class ScenesAdapter extends ArrayAdapter<String> {
+
+        private String[] sceneTitles;
+        private String[] sceneDescriptions;
+        private TypedArray sceneImages;
+        private Context context;
+
+        public ScenesAdapter(Context _context, String[] _sceneTitles, String[] _sceneDescriptions, TypedArray _sceneImages, int row_pick_scene) {
+            super(_context, row_pick_scene);
+            this.sceneTitles = _sceneTitles;
+            this.sceneDescriptions = _sceneDescriptions;
+            this.sceneImages = _sceneImages;
+            this.context = _context;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            View v = convertView;
+
+            if (v == null) {
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+                v = vi.inflate(R.layout.row_pick_scene, null);
+            }
+
+            TextView tt1 = (TextView) v.findViewById(R.id.scene_head);
+            TextView tt2 = (TextView) v.findViewById(R.id.scene_sub);
+            ImageView tt3 = (ImageView) v.findViewById(R.id.scene_image);
+
+            if (tt1 != null) {
+                tt1.setText(sceneTitles[position]);
+            }
+
+            if (tt2 != null) {
+                tt2.setText(sceneDescriptions[position]);
+            }
+
+            if (tt3 != null) {
+                tt3.setImageResource(sceneImages.getResourceId(position, -1));
+            }
+
+            return v;
+        }
+        @Override
+        public int getCount() {
+            // TODO Auto-generated method stub
+            return sceneTitles.length;
+        }
+
     }
 
     public void capturePic(Activity activity, Context context){

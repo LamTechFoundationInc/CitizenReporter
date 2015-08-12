@@ -19,18 +19,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="this is a heading"
-        android:id="@+id/scene_head"
+        android:id="@+id/scene_sub"
         android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/scene_sub"
-        android:layout_alignStart="@+id/scene_sub"
-        android:textSize="17dp"/>
+        android:layout_alignLeft="@+id/scene_head"
+        android:layout_alignStart="@+id/scene_head"
+        android:textSize="30dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="subheading"
-        android:id="@+id/scene_sub"
-        android:layout_below="@+id/scene_head"
+        android:id="@+id/scene_head"
+        android:layout_below="@+id/scene_sub"
         android:layout_toRightOf="@+id/scene_image"
         android:layout_toEndOf="@+id/scene_image" />
 

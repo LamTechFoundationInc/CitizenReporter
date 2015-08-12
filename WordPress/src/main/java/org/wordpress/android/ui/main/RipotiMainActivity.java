@@ -444,9 +444,7 @@ public class RipotiMainActivity extends ActionBarActivity
 
     public void startOverlayCamera(int type){
 
-        Intent i = new Intent(RipotiMainActivity.this, OverlayCameraActivity.class);
-        i.putExtra("mode", type);
-        startActivityForResult(i, RequestCodes.OVERLAY_CAMERA);
+        (new WordPress()).startOverlayCamera(RipotiMainActivity.this, getApplicationContext(), type);
 
     }
 
