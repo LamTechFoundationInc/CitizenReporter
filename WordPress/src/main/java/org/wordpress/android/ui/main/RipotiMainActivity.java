@@ -404,7 +404,6 @@ public class RipotiMainActivity extends ActionBarActivity
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            
                 boolean mShouldFinish = false;
                 Intent intent = new Intent(RipotiMainActivity.this, StoryBoard.class);
                 intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(getApplicationContext())
@@ -413,7 +412,6 @@ public class RipotiMainActivity extends ActionBarActivity
                 intent.putExtra("isNew", true);
                 intent.putExtra("shouldFinish", mShouldFinish);
                 startActivity(intent);
-
             }
         });
 
@@ -637,6 +635,16 @@ public class RipotiMainActivity extends ActionBarActivity
             SimperiumUtils.getNotesBucket().addListener(this);
         }
         checkNoteBadge();
+
+        //check if taking picture
+        checkForPendingQuickCapture();
+    }
+
+    public void checkForPendingQuickCapture(){
+
+        WordPress wp = new WordPress();
+
+        wp.checkQuickCapture(RipotiMainActivity.this, getApplicationContext());
     }
 
     /*

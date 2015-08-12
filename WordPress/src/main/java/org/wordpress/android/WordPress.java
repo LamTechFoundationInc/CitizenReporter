@@ -23,6 +23,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
@@ -57,6 +58,7 @@ import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 import org.wordpress.android.ui.accounts.helpers.UpdateBlogListTask.GenericUpdateBlogListTask;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
+import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.stats.datasets.StatsDatabaseHelper;
 import org.wordpress.android.ui.stats.datasets.StatsTable;
@@ -71,6 +73,7 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
 import org.wordpress.android.util.DateTimeUtils;
+import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
@@ -171,6 +174,66 @@ public class WordPress extends Application {
             mBitmapCache = new BitmapLruCache(cacheSize);
         }
         return mBitmapCache;
+    }
+
+    public void checkQuickCapture(Activity activity, Context mContext){
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean quickCapture = pref.getBoolean("quickCapture", false);
+        String mediaType = pref.getString("mediaType", "0");
+
+        if(quickCapture){
+            //has pending quick capture
+            if(mediaType.equals("1")){
+                capturePic(activity, mContext);
+            }else if(mediaType.equals("2")){
+                captureVid(activity, mContext);
+            }else if(mediaType.equals("3")){
+                captureAudio(activity, mContext);
+            }
+
+            SharedPreferences.Editor editor = pref.edit();
+
+            editor.putBoolean("quickCapture", false);
+            editor.putString("mediaType", "0");
+            editor.commit();
+        }
+    }
+
+    public void capturePic(Activity activity, Context context){
+            boolean mShouldFinish = false;
+            Intent intent = new Intent(activity, StoryBoard.class);
+            intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(context)
+                    ? Constants.QUICK_POST_PHOTO_CAMERA
+                    : Constants.QUICK_POST_PHOTO_LIBRARY);
+            intent.putExtra("isNew", true);
+            intent.putExtra("shouldFinish", mShouldFinish);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(intent);
+    }
+
+    public void captureVid(Activity activity, Context context){
+            boolean mShouldFinish = false;
+            Intent intent = new Intent(activity, StoryBoard.class);
+            intent.putExtra("quick-media", DeviceUtils.getInstance().hasCamera(context)
+                    ? Constants.QUICK_POST_VIDEO_CAMERA
+                    : Constants.QUICK_POST_PHOTO_LIBRARY);
+            intent.putExtra("isNew", true);
+            intent.putExtra("shouldFinish", mShouldFinish);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+    }
+
+    public void captureAudio(Activity activity, Context context){
+
+            boolean mShouldFinish = false;
+            Intent intent = new Intent(activity, StoryBoard.class);
+            intent.putExtra("quick-media", Constants.QUICK_POST_AUDIO_MIC);
+            intent.putExtra("isNew", true);
+            intent.putExtra("shouldFinish", mShouldFinish);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
+
     }
 
     @Override

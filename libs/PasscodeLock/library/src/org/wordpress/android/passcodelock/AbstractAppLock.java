@@ -4,6 +4,7 @@ import android.app.Application;
 
 public abstract class AbstractAppLock implements Application.ActivityLifecycleCallbacks {
     public static final int DEFAULT_TIMEOUT = 2; //2 seconds
+    public static final int SHORT_TIMEOUT = 0; //2 seconds
     public static final int EXTENDED_TIMEOUT = 60; //60 seconds
     
     protected int lockTimeOut = DEFAULT_TIMEOUT;

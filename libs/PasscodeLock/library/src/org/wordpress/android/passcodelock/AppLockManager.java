@@ -56,4 +56,9 @@ public class AppLockManager {
             return;
         currentAppLocker.setOneTimeTimeout(AbstractAppLock.EXTENDED_TIMEOUT);
     }
+    public void setShortTimeout(){
+        if ( currentAppLocker == null )
+            return;
+        currentAppLocker.setOneTimeTimeout(AbstractAppLock.SHORT_TIMEOUT);
+    }
 }
