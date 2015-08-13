@@ -404,15 +404,14 @@ public class RipotiMainActivity extends ActionBarActivity
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startOverlayCamera(1);
+                (new WordPress()).capturePic(RipotiMainActivity.this, getApplicationContext());
             }
         });
 
         button_video.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startOverlayCamera(2);
+                (new WordPress()).captureVid(RipotiMainActivity.this, getApplicationContext());
             }
         });
 
@@ -420,7 +419,6 @@ public class RipotiMainActivity extends ActionBarActivity
             @Override
             public void onClick(View view) {
                 (new WordPress()).captureAudio(RipotiMainActivity.this, getApplicationContext());
-
             }
         });
 
@@ -440,12 +438,6 @@ public class RipotiMainActivity extends ActionBarActivity
 
         checkIfRegistered();
         //attemptToSelectPost();
-    }
-
-    public void startOverlayCamera(int type){
-
-        (new WordPress()).startOverlayCamera(RipotiMainActivity.this, getApplicationContext(), type);
-
     }
 
     @Override
@@ -667,13 +659,6 @@ public class RipotiMainActivity extends ActionBarActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case RequestCodes.OVERLAY_CAMERA:
-                if(resultCode == 1){
-                    (new WordPress()).capturePic(this, getApplicationContext());
-                }else if(resultCode == 2) {
-                    (new WordPress()).captureVid(this, getApplicationContext());
-                }
-                break;
             case RequestCodes.EDIT_POST:
                 if (resultCode == RESULT_OK) {
                     MySiteFragment mySiteFragment = getMySiteFragment();

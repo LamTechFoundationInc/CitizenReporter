@@ -325,22 +325,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         });
     }
     private void launchCamera() {
-        WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-        });
+        startOverlayCamera(1);
     }
     private void launchVideoCamera() {
-        WordPressMediaUtils.launchVideoCamera_SD(this, new WordPressMediaUtils.LaunchVideoCameraCallback() {
-            @Override
-            public void onMediaCapturePathReady(String mediaCapturePath) {
-                mMediaCapturePath = mediaCapturePath;
-                AppLockManager.getInstance().setExtendedTimeout();
-            }
-        });
+        startOverlayCamera(2);
+    }
+    public void startOverlayCamera(int type){
+
+        (new WordPress()).startOverlayCamera(StoryBoard.this, getApplicationContext(), type);
+
     }
     /*
     private void launchVideoCamera() {
@@ -354,8 +347,28 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         super.onActivityResult(requestCode, resultCode, data);
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
-                requestCode == RequestCodes.TAKE_VIDEO))) {
+                requestCode == RequestCodes.TAKE_VIDEO || requestCode == RequestCodes.OVERLAY_CAMERA))) {
             switch (requestCode) {
+                case RequestCodes.OVERLAY_CAMERA:
+                    if(resultCode == 1){
+                        WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
+                            @Override
+                            public void onMediaCapturePathReady(String mediaCapturePath) {
+                                mMediaCapturePath = mediaCapturePath;
+                                AppLockManager.getInstance().setExtendedTimeout();
+                            }
+                        });
+                    }else if(resultCode == 2) {
+                        WordPressMediaUtils.launchVideoCamera_SD(this, new WordPressMediaUtils.LaunchVideoCameraCallback() {
+                            @Override
+                            public void onMediaCapturePathReady(String mediaCapturePath) {
+                                mMediaCapturePath = mediaCapturePath;
+                                AppLockManager.getInstance().setExtendedTimeout();
+                            }
+                        });
+                    }
+                    break;
+
                 case RequestCodes.TAKE_PHOTO:
                     if (resultCode == Activity.RESULT_OK) {
                         try {
