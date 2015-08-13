@@ -292,6 +292,10 @@ public class Post implements Serializable {
     public String getStringLocation() {
         return location;
     }
+
+    public void setStringLocation(String _location) {
+        this.location = _location;
+    }
     public String getBounty() {
         return bounty;
     }

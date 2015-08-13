@@ -108,9 +108,9 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             public void onClick(View view) {
                 listView.smoothScrollToPosition(position);
 
-                if(position == 3){
-                    showLocationDialog();
-                }else{
+                if (position == 3) {
+                    showLocationDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
+                } else {
                     showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
                 }
             }
@@ -119,7 +119,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
         return row;
     }
 
-    public void showLocationDialog() {
+    public void showLocationDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question, final int selectedItem){
         summaryDialog = new Dialog(mActivity);
         summaryDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -139,6 +139,17 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String summary = mLocationEditText.getText().toString();
+
+                if (summary.trim().length() > 0) {
+                    question.setAnswer(summary);
+                    holder.answer = summary;
+
+                    displaySummary.setText(summary);
+                    filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+
+                    post.setStringLocation(summary);
+                }
 
                 summaryDialog.dismiss();
             }
@@ -229,7 +240,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                             post.setKeywords(summary);
                             break;
                         case 3:
-                            post.setQwhen(summary);
+                            //Handled on showLocation dialog :post.setQwhere(summary);
                             break;
                         case 4:
                             post.setQwhen(summary);
