@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.posts;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -592,6 +594,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         finish();
     }
 
+    public void saveDialog(){
+        AlertDialog.Builder saveDialog = new AlertDialog.Builder(StoryBoard.this);
+        saveDialog.setPositiveButton(getApplicationContext().getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+    }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home || item.getItemId()== R.id.save) {
@@ -602,7 +614,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     private boolean hasEmptyContentFields() {
-        return TextUtils.isEmpty(displaySummary.getText().toString());
+        return TextUtils.isEmpty(mPost.getTitle());
     }
     private void saveAndFinish() {
         //savePost(true);
