@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.andexert.expandablelayout.library.ExpandableLayoutListView;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
@@ -32,9 +34,9 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
     int layoutResourceId;
     Question data[] = null;
     Post post;
-    ExpandableListView listView;
+    ExpandableLayoutListView listView;
 
-    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data, Post _post, ExpandableListView _listView) {
+    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data, Post _post, ExpandableLayoutListView _listView) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
