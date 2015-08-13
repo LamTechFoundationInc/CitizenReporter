@@ -89,7 +89,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 36;
+    private static final int DATABASE_VERSION = 37;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -104,7 +104,7 @@ public class WordPressDB {
             + "description text default '', link text default '', mt_allow_comments boolean, mt_allow_pings boolean, "
             + "mt_excerpt text default '', mt_keywords text default '', mt_text_more text default '', permaLink text default '', post_status text default '', userid integer default 0, "
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
-            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text);";
+            + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, string_location text);";
 
     private static final String CREATE_TABLE_LESSONS = "create table if not exists lessons (id integer primary key autoincrement, blogID text, "
             + "postid text, title text default '', dateCreated date, date_created_gmt date, categories text default '', custom_fields text default '', "
@@ -193,6 +193,9 @@ public class WordPressDB {
 
     //Add integer to store assignment id
     private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer default 0 not null";
+
+    //Add string location
+    private static final String ADD_STRING_LOCATION = "alter table posts add string_location text default '';";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
@@ -378,9 +381,9 @@ public class WordPressDB {
             case 36:
                 db.execSQL(CREATE_MESSAGES_TABLE);
                 currentVersion++;
-            //case 37:
-              //  db.execSQL(ADD_POST_PERMID);
-                //currentVersion++;
+            case 37:
+                db.execSQL(ADD_STRING_LOCATION);
+                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -1431,6 +1434,7 @@ public class WordPressDB {
             values.put("qwhy", post.getQwhy());
             values.put("qwhen", post.getQwhen());
             values.put("qhow", post.getQhow());
+            values.put("string_location", post.getStringLocation());
 
             values.put("localDraft", post.isLocalDraft());
             values.put("mediaPaths", post.getMediaPaths());
@@ -1597,6 +1601,7 @@ public class WordPressDB {
                     post.setQwhy(c.getString(c.getColumnIndex("qwhy")));
                     post.setQwhen(c.getString(c.getColumnIndex("qwhen")));
                     post.setQhow(c.getString(c.getColumnIndex("qhow")));
+                    post.setStringLocation(c.getString(c.getColumnIndex("string_location")));
                 }
 
                 if(isAssignment){

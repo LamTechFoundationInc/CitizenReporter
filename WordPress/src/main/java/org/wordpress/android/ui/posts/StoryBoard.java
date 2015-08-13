@@ -237,6 +237,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         text_summary = (TextView)findViewById(R.id.text_summary);
         text_template= (TextView)findViewById(R.id.text_template);
 
+        /*
         text_summary.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
@@ -251,7 +252,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 togglePanes(showTemplate);
             }
         });
-
+        */
 
 
         //quick capture icons
