@@ -353,7 +353,6 @@ public class WordPressDB {
             case 28:
                 // Remove WordPress.com credentials
                 removeDotComCredentials();
-                currentVersion++;
             case 29:
                 // Migrate WordPress.com token and infos to the DB
                 AccountTable.createTables(db);
@@ -369,7 +368,6 @@ public class WordPressDB {
                 currentVersion++;
             case 33:
                 db.execSQL(CREATE_TABLE_LESSONS);
-                currentVersion++;
             case 34:
                 db.execSQL(ADD_POST_HOW);
                 db.execSQL(ADD_POST_WHEN);
@@ -383,7 +381,6 @@ public class WordPressDB {
                 currentVersion++;
             case 37:
                 db.execSQL(ADD_STRING_LOCATION);
-                currentVersion++;
         }
         db.setVersion(DATABASE_VERSION);
     }

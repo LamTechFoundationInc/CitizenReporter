@@ -389,6 +389,12 @@ public class PostUploadService extends Service {
 
             qhow.put("value", mPost.getQhow()+"");
 
+            Map<Object, Object> string_location = new HashMap<Object, Object>();
+
+            string_location.put("key", "string_location");
+
+            string_location.put("value", mPost.getStringLocation()+"");
+
             ArrayList<Map<Object, Object>> a = new ArrayList<Map<Object, Object>>();
 
             if(!qhow.isEmpty())
@@ -404,6 +410,8 @@ public class PostUploadService extends Service {
                 a.add(hLongitude);
                 a.add(hPublic);
             }
+            if(!string_location.isEmpty())
+                a.add(string_location);
 
             Object[] custom_fields = a.toArray();
 
