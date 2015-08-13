@@ -725,12 +725,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         new Question(myResArrayList.get(4), mPost.getQwhen()),
                         new Question(myResArrayList.get(5), mPost.getQhow())
                 };
+        ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
 
         GuideArrayAdapter arrayAdapter = new GuideArrayAdapter(this,
-                R.layout.view_row, questions, mPost);
+                R.layout.view_row, questions, mPost, expandableLayoutListView);
 
-        ExpandableLayoutListView expandableLayoutListView = (ExpandableLayoutListView) findViewById(R.id.guideListview);
         expandableLayoutListView.setAdapter(arrayAdapter);
+
     }
 
     public void togglePanes(boolean showTemplate){

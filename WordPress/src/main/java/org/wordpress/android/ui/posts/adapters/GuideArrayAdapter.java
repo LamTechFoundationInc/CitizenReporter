@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,13 +32,15 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
     int layoutResourceId;
     Question data[] = null;
     Post post;
+    ExpandableListView listView;
 
-    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data, Post _post) {
+    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data, Post _post, ExpandableListView _listView) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
         this.post = _post;
+        this.listView = _listView;
     }
 
     @Override
@@ -76,6 +79,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                listView.smoothScrollToPosition(position);
                 showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
             }
         });
