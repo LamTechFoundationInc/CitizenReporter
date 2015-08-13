@@ -933,6 +933,7 @@
     <string name="summary_prompt">Write your story summary here and/or use the guide.</string>
     <string name="no_media_added">No media added yet!</string>
     <string name="enable_location">Enable Location</string>
+    <string name="empty_answer">Tap to fill</string>
 
     <string-array name="fivew_and_h">
         <item>What is the incident?</item>
@@ -1049,6 +1050,7 @@
 
     <!--Pick Scene-->
     <string name="pick_scene">Pick Scene</string>
+    <string name="pick_scene_description">What kind of scene are you trying to capture?</string>
     <array name="scenes">
         <item>Signature</item>
         <item>Portrait</item>

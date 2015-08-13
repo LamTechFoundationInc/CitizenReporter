@@ -149,6 +149,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                     filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
 
                     post.setStringLocation(summary);
+                    WordPress.wpDB.updatePost(post);
                 }
 
                 summaryDialog.dismiss();
