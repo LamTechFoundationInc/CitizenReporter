@@ -2,6 +2,7 @@ package org.wordpress.android.ui.posts.adapters;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -89,6 +90,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         return row;
     }
 
+
     public void showCreateSummaryDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question, final int selectedItem){
         final Dialog dialog = new Dialog(context);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -129,6 +131,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+
 
         dialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
             @Override

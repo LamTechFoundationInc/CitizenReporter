@@ -900,6 +900,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         summaryDialog.show();
     }
 
+
     public void attachObjectToPost(String mimeType, File file){
         String attachURL = "";
 

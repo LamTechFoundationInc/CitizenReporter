@@ -93,8 +93,7 @@
                 android:layout_width="match_parent"
                 android:id="@+id/paneSwitch"
                 android:orientation="horizontal"
-                android:layout_alignParentTop="true"
-                android:visibility="gone">
+                android:layout_alignParentTop="true">
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_summary"
                     style="@style/ReaderTextView.TogglePane_Active"
@@ -104,11 +103,12 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:drawableLeft="@drawable/ic_summary"
-                    android:padding="3dp"/>
+                    android:padding="3dp"
+                    android:visibility="gone"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_template"
-                    style="@style/ReaderTextView.TogglePane_InActive"
+                    style="@style/ReaderTextView.TogglePane_Active"
                     tools:text="text_template"
                     android:text="@string/template"
                     android:layout_width="0dp"
