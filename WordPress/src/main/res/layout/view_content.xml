@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    android:padding="5dp"
+    android:background="@color/light_gray">
 
     <TextView
         android:id="@+id/content_text"
@@ -11,11 +12,12 @@
         android:layout_height="48dp"
         android:textColor="@color/grey_darken_30"
         android:layout_toLeftOf="@+id/editButton"
-        android:layout_toStartOf="@+id/editButton" />
+        android:layout_toStartOf="@+id/editButton"
+        android:textSize="20sp"/>
 
     <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/editButton"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"

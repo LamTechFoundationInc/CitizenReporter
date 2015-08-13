@@ -721,7 +721,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         new Question(myResArrayList.get(0), mPost.getTitle()),
                         new Question(myResArrayList.get(1), mPost.getQwhy()),
                         new Question(myResArrayList.get(2), mPost.getKeywords()),
-                        //new Question(myResArrayList.get(3), mPost.getWhere()),
+                        new Question(myResArrayList.get(3), mPost.getStringLocation()),
                         new Question(myResArrayList.get(4), mPost.getQwhen()),
                         new Question(myResArrayList.get(5), mPost.getQhow())
                 };

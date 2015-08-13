@@ -144,20 +144,22 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
                     filledButton.setColorFilter(context.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
                     switch(selectedItem){
                         case 0:
-                            post.setQwhy(summary);
-                            Log.d("get tags setwhy", summary+"");
+                            post.setTitle(summary);
                             break;
                         case 1:
-                            post.setKeywords(summary);
-                            Log.d("get tags setkeywords", summary+"");
+                            post.setQwhy(summary);
                             break;
                         case 2:
-                            post.setQwhen(summary);
-                            Log.d("get tags setwhen", summary+"");
+                            post.setKeywords(summary);
                             break;
                         case 3:
+                            post.setQwhen(summary);
+                            break;
+                        case 4:
+                            post.setQwhen(summary);
+                            break;
+                        case 5:
                             post.setQhow(summary);
-                            Log.d("get tags sethow", summary+"");
                             break;
                     }
                     WordPress.wpDB.updatePost(post);
@@ -166,11 +168,6 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
                     filledButton.setColorFilter(context.getResources().getColor(R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
 
                 }
-
-
-
-
-
                 dialog.dismiss();
             }
         });
