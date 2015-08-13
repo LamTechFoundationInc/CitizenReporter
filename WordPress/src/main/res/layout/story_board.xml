@@ -125,7 +125,8 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/paneSwitch"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
+                android:layout_alignParentStart="true"
+                android:background="@color/grey_dark">
                 <LinearLayout
                     android:id="@+id/summaryPane"
                     android:orientation="vertical"
@@ -150,6 +151,7 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:visibility="gone"
                     android:clickable="true">
 
                     <com.andexert.expandablelayout.library.ExpandableLayoutListView

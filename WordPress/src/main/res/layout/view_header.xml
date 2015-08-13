@@ -9,13 +9,15 @@
         android:id="@+id/header_text"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:padding="10dp"
+        android:padding="5dp"
         android:textColor="@android:color/white"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="item"
+        android:textSize="20sp"/>
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/filledButton"
         android:src="@drawable/ic_check_white_24dp"
         android:layout_centerVertical="true"
