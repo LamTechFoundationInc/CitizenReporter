@@ -215,7 +215,7 @@ public class WordPress extends Application {
 
     public void startOverlayCamera(final Activity activity, Context context, final int mode){
 
-        Dialog mDialog = new Dialog(activity);
+        final Dialog mDialog = new Dialog(activity);
         mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.list_pick_scene);
         mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -238,6 +238,8 @@ public class WordPress extends Application {
                 i.putExtra("mode", mode);
                 i.putExtra("group", j);
                 activity.startActivityForResult(i, RequestCodes.OVERLAY_CAMERA);
+
+                mDialog.dismiss();
             }
         });
     }
