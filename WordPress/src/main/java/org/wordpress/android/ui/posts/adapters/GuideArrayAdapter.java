@@ -83,7 +83,6 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             holder.txtTitle = (TextView)row.findViewById(R.id.header_text);
             holder.txtContent = (TextView)row.findViewById(R.id.content_text);
 
-            holder.editButton = (ImageView)row.findViewById(R.id.editButton);
             holder.filledButton = (ImageView)row.findViewById(R.id.filledButton);
 
             row.setTag(holder);
@@ -103,7 +102,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             }
         }
         final QuestionHolder finalHolder = holder;
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
+        holder.txtContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 listView.smoothScrollToPosition(position);
@@ -187,7 +186,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
         //find current value of summary
         summary = "" + displaySummary.getText().toString();
         //if it's not default & not empty edit editTextSummary
-        if((!summary.equals(""))){
+        if((!summary.equals("")) && (!summary.equals(mContext.getResources().getString(R.string.empty_answer)))){
             editTextSummary.setText(summary);
             submitButton.setEnabled(true);
         }else{
@@ -266,7 +265,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
     {
         TextView txtTitle;
         TextView txtContent;
-        ImageView editButton;
+
         ImageView filledButton;
         String answer;
     }
