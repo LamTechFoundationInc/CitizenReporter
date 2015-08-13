@@ -93,7 +93,8 @@
                 android:layout_width="match_parent"
                 android:id="@+id/paneSwitch"
                 android:orientation="horizontal"
-                android:layout_alignParentTop="true">
+                android:layout_alignParentTop="true"
+                android:visibility="gone">
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_summary"
                     style="@style/ReaderTextView.TogglePane_Active"
@@ -130,7 +131,8 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clickable="true">
+                    android:clickable="true"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -148,7 +150,6 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
                     android:clickable="true">
 
                     <com.andexert.expandablelayout.library.ExpandableLayoutListView
