@@ -56,6 +56,9 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
     Question data[] = null;
     Post post;
     ExpandableLayoutListView listView;
+    Dialog summaryDialog;
+    FButton enableLocation;
+    FButton submitButton;
 
     public GuideArrayAdapter(Context mContext, Activity mActivity, int layoutResourceId, Question[] data, Post _post, ExpandableLayoutListView _listView) {
         super(mActivity, layoutResourceId, data);
@@ -116,16 +119,14 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
         return row;
     }
 
-
     public void showLocationDialog() {
-
-        final Dialog summaryDialog = new Dialog(mActivity);
+        summaryDialog = new Dialog(mActivity);
         summaryDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         summaryDialog.setContentView(R.layout.location_fragment);
         summaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        final FButton submitButton = (FButton)summaryDialog.findViewById(R.id.submitButton);
+        submitButton = (FButton)summaryDialog.findViewById(R.id.submitButton);
         submitButton.setEnabled(false);
 
         summaryDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
@@ -143,7 +144,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             }
         });
 
-        FButton enableLocation = (FButton)summaryDialog.findViewById(R.id.enableLocation);
+        enableLocation = (FButton)summaryDialog.findViewById(R.id.enableLocation);
         enableLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,7 +153,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             }
         });
 
-        initLocation(summaryDialog,enableLocation);
+        initLocation();
 
         summaryDialog.show();
     }
@@ -160,7 +161,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
     public void showCreateSummaryDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question, final int selectedItem){
         final Dialog dialog = new Dialog(mActivity);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         dialog.setContentView(R.layout.fivew_fragment);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
@@ -389,8 +390,10 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
         public void afterTextChanged(Editable s) {
             String buttonText;
             if (s.length() > 0) {
+                submitButton.setEnabled(true);
                 buttonText = mContext.getResources().getString(R.string.search_location);
             } else {
+                submitButton.setEnabled(false);
                 buttonText = mContext.getResources().getString(R.string.search_current_location);
             }
             mButtonSearchLocation.setText(buttonText);
@@ -402,7 +405,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
      * called when activity is created to initialize the location provider, show views related
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
-    private void initLocation(Dialog summaryDialog, FButton enableLocation) {
+    private void initLocation() {
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         if (hasLocationProvider() && post.supportsLocation()) {
             enableLocation.setVisibility(View.GONE);
@@ -437,6 +440,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
                 PostLocation location = post.getLocation();
                 setLocation(location.getLatitude(), location.getLongitude());
+
+                submitButton.setEnabled(true);
             } else {
                 showLocationAdd();
             }

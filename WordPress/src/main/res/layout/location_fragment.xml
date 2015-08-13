@@ -34,13 +34,14 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:minHeight="50dp"
         android:padding="5dp"
         android:id="@+id/locationGroup"
-        android:layout_centerVertical="true"
+
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_below="@+id/submitButton">
 
         <ViewStub
             android:id="@+id/stub_post_location_settings"
@@ -58,7 +59,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_alignParentBottom="true"
             android:id="@+id/enableLocation"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/enable_location"
             android:textSize="@dimen/text_sz_large"
