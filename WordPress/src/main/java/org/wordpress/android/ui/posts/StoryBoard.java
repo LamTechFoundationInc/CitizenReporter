@@ -616,6 +616,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private boolean hasEmptyContentFields() {
         return TextUtils.isEmpty(mPost.getTitle());
     }
+
     private void saveAndFinish() {
         //savePost(true);
         if (hasEmptyContentFields()) {
