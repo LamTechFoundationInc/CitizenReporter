@@ -1,49 +1,70 @@
 package org.wordpress.android.ui.posts.adapters;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andexert.expandablelayout.library.ExpandableLayoutListView;
 
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.models.Post;
+import org.wordpress.android.models.PostLocation;
 import org.wordpress.android.ui.posts.Question;
+import org.wordpress.android.util.EditTextUtils;
+import org.wordpress.android.util.GeocoderUtils;
+import org.wordpress.android.util.helpers.LocationHelper;
+
+import java.util.List;
 
 import info.hoang8f.widget.FButton;
 
-public class GuideArrayAdapter extends ArrayAdapter<Question> {
+public class GuideArrayAdapter extends ArrayAdapter<Question> implements 
+        View.OnClickListener, TextView.OnEditorActionListener {
 
-    Context context;
+    Activity mActivity;
+    Context mContext;
     int layoutResourceId;
     Question data[] = null;
     Post post;
     ExpandableLayoutListView listView;
 
-    public GuideArrayAdapter(Context context, int layoutResourceId, Question[] data, Post _post, ExpandableLayoutListView _listView) {
-        super(context, layoutResourceId, data);
+    public GuideArrayAdapter(Context mContext, Activity mActivity, int layoutResourceId, Question[] data, Post _post, ExpandableLayoutListView _listView) {
+        super(mActivity, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
-        this.context = context;
+        this.mActivity = mActivity;
         this.data = data;
         this.post = _post;
         this.listView = _listView;
+        this.mContext = mContext;
     }
 
     @Override
@@ -52,7 +73,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         QuestionHolder holder = null;
         if(row == null)
         {
-            LayoutInflater inflater = ((ActionBarActivity)context).getLayoutInflater();
+            LayoutInflater inflater = ((ActionBarActivity)mActivity).getLayoutInflater();
             row = inflater.inflate(R.layout.view_row, parent, false);
 
             holder = new QuestionHolder();
@@ -75,7 +96,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         if(question.answer!=null){
             if(!question.answer.equals("")){
                 holder.txtContent.setText(question.answer);
-                holder.filledButton.setColorFilter(context.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                holder.filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
             }
         }
         final QuestionHolder finalHolder = holder;
@@ -83,7 +104,12 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
             @Override
             public void onClick(View view) {
                 listView.smoothScrollToPosition(position);
-                showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
+
+                if(position == 3){
+                    showLocationDialog();
+                }else{
+                    showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
+                }
             }
         });
 
@@ -91,8 +117,48 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
     }
 
 
+    public void showLocationDialog() {
+
+        final Dialog summaryDialog = new Dialog(mActivity);
+        summaryDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        summaryDialog.setContentView(R.layout.location_fragment);
+        summaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        final FButton submitButton = (FButton)summaryDialog.findViewById(R.id.submitButton);
+        submitButton.setEnabled(false);
+
+        summaryDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                summaryDialog.dismiss();
+            }
+        });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                summaryDialog.dismiss();
+            }
+        });
+
+        FButton enableLocation = (FButton)summaryDialog.findViewById(R.id.enableLocation);
+        enableLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mActivity.startActivity(callGPSSettingIntent);
+            }
+        });
+
+        initLocation(summaryDialog,enableLocation);
+
+        summaryDialog.show();
+    }
+
     public void showCreateSummaryDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question, final int selectedItem){
-        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(mActivity);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         dialog.setContentView(R.layout.fivew_fragment);
@@ -150,7 +216,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
                     holder.answer = summary;
 
                     displaySummary.setText(summary);
-                    filledButton.setColorFilter(context.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
                     switch(selectedItem){
                         case 0:
                             post.setTitle(summary);
@@ -174,7 +240,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
                     WordPress.wpDB.updatePost(post);
                 } else {
                     displaySummary.setText("");
-                    filledButton.setColorFilter(context.getResources().getColor(R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    filledButton.setColorFilter(mActivity.getResources().getColor(R.color.grey), android.graphics.PorterDuff.Mode.MULTIPLY);
 
                 }
                 dialog.dismiss();
@@ -190,5 +256,342 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> {
         ImageView editButton;
         ImageView filledButton;
         String answer;
+    }
+
+
+
+
+    /**
+     * Location methods
+     */
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.locationText) {
+            viewLocation();
+        } else if (id == R.id.updateLocation) {
+            showLocationSearch();
+        } else if (id == R.id.removeLocation) {
+            removeLocation();
+            showLocationAdd();
+        } else if (id == R.id.addLocation) {
+            showLocationSearch();
+        } else if (id == R.id.searchLocation) {
+            searchLocation();
+        }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        return false;
+    }
+
+    private static enum LocationStatus {NONE, FOUND, NOT_FOUND, SEARCHING}
+    /*
+     * retrieves and displays the friendly address for a lat/long location
+     */
+    private class GetAddressTask extends AsyncTask<Double, Void, Address> {
+        double latitude;
+        double longitude;
+
+        @Override
+        protected void onPreExecute() {
+            setLocationStatus(LocationStatus.SEARCHING);
+            showLocationView();
+        }
+
+        @Override
+        protected Address doInBackground(Double... args) {
+            // args will be the latitude, longitude to look up
+            latitude = args[0];
+            longitude = args[1];
+
+            return GeocoderUtils.getAddressFromCoords(mActivity, latitude, longitude);
+        }
+
+        protected void onPostExecute(Address address) {
+            setLocationStatus(LocationStatus.FOUND);
+            if (address == null) {
+                // show lat/long when Geocoder fails (ugly, but better than not showing anything
+                // or showing an error since the location has been assigned to the post already)
+                updateLocationText(Double.toString(latitude) + ", " + Double.toString(longitude));
+            } else {
+                String locationName = GeocoderUtils.getLocationNameFromAddress(address);
+                updateLocationText(locationName);
+            }
+        }
+    }
+
+    private class GetCoordsTask extends AsyncTask<String, Void, Address> {
+        @Override
+        protected void onPreExecute() {
+            setLocationStatus(LocationStatus.SEARCHING);
+            showLocationView();
+        }
+
+        @Override
+        protected Address doInBackground(String... args) {
+            String locationName = args[0];
+
+            return GeocoderUtils.getAddressFromLocationName(mActivity, locationName);
+        }
+
+        @Override
+        protected void onPostExecute(Address address) {
+            setLocationStatus(LocationStatus.FOUND);
+            showLocationView();
+
+            if (address != null) {
+                double[] coordinates = GeocoderUtils.getCoordsFromAddress(address);
+                setLocation(coordinates[0], coordinates[1]);
+
+                String locationName = GeocoderUtils.getLocationNameFromAddress(address);
+                updateLocationText(locationName);
+            } else {
+                showLocationNotAvailableError();
+                showLocationSearch();
+            }
+        }
+    }
+
+    private LocationHelper.LocationResult locationResult = new LocationHelper.LocationResult() {
+        @Override
+        public void gotLocation(final Location location) {
+            if (mActivity == null)
+                return;
+            // note that location will be null when requesting location fails
+            mActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    setLocation(location);
+                }
+            });
+        }
+    };
+
+    private View mLocationAddSection;
+    private View mLocationSearchSection;
+    private View mLocationViewSection;
+    private TextView mLocationText;
+    private EditText mLocationEditText;
+    private FButton mButtonSearchLocation;
+    private PostLocation mPostLocation;
+    private LocationHelper mLocationHelper;
+    
+    private TextWatcher mLocationEditTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) { }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            String buttonText;
+            if (s.length() > 0) {
+                buttonText = mContext.getResources().getString(R.string.search_location);
+            } else {
+                buttonText = mContext.getResources().getString(R.string.search_current_location);
+            }
+            mButtonSearchLocation.setText(buttonText);
+        }
+    };
+
+
+    /*
+     * called when activity is created to initialize the location provider, show views related
+     * to location if enabled for this blog, and retrieve the current location if necessary
+     */
+    private void initLocation(Dialog summaryDialog, FButton enableLocation) {
+        // show the location views if a provider was found and this is a post on a blog that has location enabled
+        if (hasLocationProvider() && post.supportsLocation()) {
+            enableLocation.setVisibility(View.GONE);
+
+            View locationRootView = ((ViewStub) summaryDialog.findViewById(R.id.stub_post_location_settings)).inflate();
+
+            mLocationText = (TextView) locationRootView.findViewById(R.id.locationText);
+            mLocationText.setOnClickListener(this);
+
+            mLocationAddSection = locationRootView.findViewById(R.id.sectionLocationAdd);
+            mLocationSearchSection = locationRootView.findViewById(R.id.sectionLocationSearch);
+            mLocationViewSection = locationRootView.findViewById(R.id.sectionLocationView);
+
+            FButton addLocation = (FButton) locationRootView.findViewById(R.id.addLocation);
+            addLocation.setOnClickListener(this);
+
+            mButtonSearchLocation = (FButton) locationRootView.findViewById(R.id.searchLocation);
+            mButtonSearchLocation.setOnClickListener(this);
+
+            mLocationEditText = (EditText) locationRootView.findViewById(R.id.searchLocationText);
+            mLocationEditText.setOnEditorActionListener(this);
+            mLocationEditText.addTextChangedListener(mLocationEditTextWatcher);
+
+            Button updateLocation = (FButton) locationRootView.findViewById(R.id.updateLocation);
+            Button removeLocation = (FButton) locationRootView.findViewById(R.id.removeLocation);
+            updateLocation.setOnClickListener(this);
+            removeLocation.setOnClickListener(this);
+
+            // if this post has location attached to it, look up the location address
+            if (post.hasLocation()) {
+                showLocationView();
+
+                PostLocation location = post.getLocation();
+                setLocation(location.getLatitude(), location.getLongitude());
+            } else {
+                showLocationAdd();
+            }
+        }else{
+            enableLocation.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean hasLocationProvider() {
+        boolean hasLocationProvider = false;
+        LocationManager locationManager = (LocationManager) mActivity.getSystemService(Activity.LOCATION_SERVICE);
+        List<String> providers = locationManager.getProviders(true);
+        if (providers != null) {
+            for (String providerName : providers) {
+                if (providerName.equals(LocationManager.GPS_PROVIDER)
+                        || providerName.equals(LocationManager.NETWORK_PROVIDER)) {
+                    hasLocationProvider = true;
+                }
+            }
+        }
+        return hasLocationProvider;
+    }
+
+    private void showLocationSearch() {
+        mLocationAddSection.setVisibility(View.GONE);
+        mLocationSearchSection.setVisibility(View.VISIBLE);
+        mLocationViewSection.setVisibility(View.GONE);
+
+        EditTextUtils.showSoftInput(mLocationEditText);
+    }
+
+    private void showLocationAdd() {
+        mLocationAddSection.setVisibility(View.VISIBLE);
+        mLocationSearchSection.setVisibility(View.GONE);
+        mLocationViewSection.setVisibility(View.GONE);
+    }
+
+    private void showLocationView() {
+        mLocationAddSection.setVisibility(View.GONE);
+        mLocationSearchSection.setVisibility(View.GONE);
+        mLocationViewSection.setVisibility(View.VISIBLE);
+    }
+
+    private void searchLocation() {
+        EditTextUtils.hideSoftInput(mLocationEditText);
+        String location = EditTextUtils.getText(mLocationEditText);
+
+        removeLocation();
+
+        if (location.isEmpty()) {
+            fetchCurrentLocation();
+        } else {
+            new GetCoordsTask().execute(location);
+        }
+    }
+
+    /*
+     * get the current location
+     */
+    private void fetchCurrentLocation() {
+        if (mLocationHelper == null) {
+            mLocationHelper = new LocationHelper();
+        }
+        boolean canGetLocation = mLocationHelper.getLocation(mActivity, locationResult);
+
+        if (canGetLocation) {
+            setLocationStatus(LocationStatus.SEARCHING);
+            showLocationView();
+        } else {
+            setLocation(null);
+            showLocationNotAvailableError();
+            showLocationAdd();
+        }
+    }
+
+    /*
+     * called when location is retrieved/updated for this post - looks up the address to
+     * display for the lat/long
+     */
+    private void setLocation(Location location) {
+        if (location != null) {
+            setLocation(location.getLatitude(), location.getLongitude());
+        } else {
+            updateLocationText(mContext.getString(R.string.location_not_found));
+            setLocationStatus(LocationStatus.NOT_FOUND);
+        }
+    }
+
+    private void setLocation(double latitude, double longitude) {
+        mPostLocation = new PostLocation(latitude, longitude);
+        new GetAddressTask().execute(mPostLocation.getLatitude(), mPostLocation.getLongitude());
+    }
+
+    private void removeLocation() {
+        mPostLocation = null;
+        post.unsetLocation();
+
+        updateLocationText("");
+        setLocationStatus(LocationStatus.NONE);
+    }
+
+    private void viewLocation() {
+        if (mPostLocation != null && mPostLocation.isValid()) {
+            String uri = "geo:" + mPostLocation.getLatitude() + "," + mPostLocation.getLongitude();
+            mActivity.startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+        } else {
+            showLocationNotAvailableError();
+            showLocationAdd();
+        }
+    }
+
+    private void showLocationNotAvailableError() {
+        Toast.makeText(mContext, mContext.getResources().getText(R.string.location_not_found), Toast.LENGTH_SHORT).show();
+    }
+
+    private void updateLocationText(String locationName) {
+        mLocationText.setText(locationName);
+    }
+
+    /*
+     * changes the left drawable on the location text to match the passed status
+     */
+    private void setLocationStatus(LocationStatus status) {
+
+
+        // animate location text when searching
+        if (status == LocationStatus.SEARCHING) {
+            updateLocationText(mContext.getString(R.string.loading));
+
+            Animation aniBlink = AnimationUtils.loadAnimation(mActivity, R.anim.blink);
+            if (aniBlink != null) {
+                mLocationText.startAnimation(aniBlink);
+            }
+        } else {
+            mLocationText.clearAnimation();
+        }
+
+        final int drawableId;
+        switch (status) {
+            case FOUND:
+                drawableId = R.drawable.ic_action_location_found;
+                break;
+            case NOT_FOUND:
+                drawableId = R.drawable.ic_action_location_off;
+                break;
+            case SEARCHING:
+                drawableId = R.drawable.ic_action_location_searching;
+                break;
+            case NONE:
+                drawableId = 0;
+                break;
+            default:
+                return;
+        }
+
+        mLocationText.setCompoundDrawablesWithIntrinsicBounds(drawableId, 0, 0, 0);
     }
 }

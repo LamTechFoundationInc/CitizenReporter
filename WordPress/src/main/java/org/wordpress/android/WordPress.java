@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -215,6 +216,7 @@ public class WordPress extends Application {
     public void startOverlayCamera(final Activity activity, Context context, final int mode){
 
         Dialog mDialog = new Dialog(activity);
+        mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.list_pick_scene);
         mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mDialog.setTitle(context.getResources().getString(R.string.pick_scene));
