@@ -260,10 +260,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //quick capture icons
         button_camera = (LinearLayout)findViewById(R.id.button_camera);
-        View target = findViewById(R.id.camView);
-        View target2 = findViewById(R.id.camView01);
-        View target3 = findViewById(R.id.camView1);
-        
+        View target = findViewById(R.id.camView2);
+        View target2 = findViewById(R.id.camView02);
+        View target3 = findViewById(R.id.camView002);
+
         BadgeView badge = new BadgeView(this, target);
         BadgeView badge2 = new BadgeView(this, target2);
         BadgeView badge3 = new BadgeView(this, target3);
@@ -661,14 +661,22 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
         return hasEmpty;
     }
+    private boolean allEmptyContentFields() {
+        boolean allEmpty;
+        if ((TextUtils.isEmpty(mPost.getTitle())) && (TextUtils.isEmpty(mPost.getStringLocation())) && (TextUtils.isEmpty(mPost.getQhow())) && (TextUtils.isEmpty(mPost.getQwhy())) && (TextUtils.isEmpty(mPost.getQwhen())) && (TextUtils.isEmpty(mPost.getKeywords()))) {
+            allEmpty = true;
+        }else{
+            allEmpty = false;
+        }
+        return allEmpty;
+    }
 
     private void saveAndFinish() {
         //savePost(true);
-        if (hasEmptyContentFields()) {
+        if (allEmptyContentFields()) {
             // new and empty post? delete it
             if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);
-
             }
 
         } /*else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
@@ -702,7 +710,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }else if (!NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
 
+            savePost(true);
+            WordPress.currentPost = mPost;
+
         }else{
+            savePost(true);
+            WordPress.currentPost = mPost;
 
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
