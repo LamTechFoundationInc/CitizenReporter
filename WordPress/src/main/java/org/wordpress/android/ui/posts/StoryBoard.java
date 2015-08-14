@@ -46,6 +46,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
@@ -123,9 +124,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private Post mOriginalPost;
     private boolean mIsNewPost;
     private boolean mIsPage;
-    private ImageView button_camera;
-    private ImageView button_video;
-    private ImageView button_mic;
+    private LinearLayout button_camera;
+    private LinearLayout button_video;
+    private LinearLayout button_mic;
     private String mMediaCapturePath = "";
 
     private HashMap<String,File> media_map;
@@ -258,9 +259,30 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
 
         //quick capture icons
-        button_camera = (ImageView)findViewById(R.id.button_camera);
-        button_video = (ImageView)findViewById(R.id.button_video);
-        button_mic = (ImageView)findViewById(R.id.button_mic);
+        button_camera = (LinearLayout)findViewById(R.id.button_camera);
+        View target = findViewById(R.id.camView);
+        View target2 = findViewById(R.id.camView01);
+        View target3 = findViewById(R.id.camView1);
+        
+        BadgeView badge = new BadgeView(this, target);
+        BadgeView badge2 = new BadgeView(this, target2);
+        BadgeView badge3 = new BadgeView(this, target3);
+
+        badge.setText("+");
+        badge.setBackgroundColor(getResources().getColor(R.color.alert_yellow));
+
+        badge2.setText("+");
+        badge2.setBackgroundColor(getResources().getColor(R.color.orange_fire));
+
+        badge3.setText("+");
+        badge3.setBadgeBackgroundColor(getResources().getColor(R.color.alert_green));
+
+        badge.show();
+        badge2.show();
+        badge3.show();
+
+        button_video = (LinearLayout)findViewById(R.id.button_video);
+        button_mic = (LinearLayout)findViewById(R.id.button_mic);
         //
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -606,15 +628,38 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home || item.getItemId()== R.id.save) {
+        if (item.getItemId() == android.R.id.home) {
             saveAndFinish();
             return true;
+        }
+
+        if(item.getItemId()== R.id.save){
+            publishAndFinish();
         }
         return super.onOptionsItemSelected(item);
     }
 
     private boolean hasEmptyContentFields() {
-        return TextUtils.isEmpty(mPost.getTitle());
+        boolean hasEmpty = false;
+        if(TextUtils.isEmpty(mPost.getTitle())){
+            hasEmpty = true;
+        }
+        if(TextUtils.isEmpty(mPost.getStringLocation())){
+            hasEmpty = true;
+        }
+        if(TextUtils.isEmpty(mPost.getQhow())){
+            hasEmpty = true;
+        }
+        if(TextUtils.isEmpty(mPost.getQwhy())){
+            hasEmpty = true;
+        }
+        if(TextUtils.isEmpty(mPost.getQwhen())){
+            hasEmpty = true;
+        }
+        if(TextUtils.isEmpty(mPost.getKeywords())) {
+            hasEmpty = true;
+        }
+        return hasEmpty;
     }
 
     private void saveAndFinish() {
@@ -623,12 +668,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             // new and empty post? delete it
             if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);
+
             }
-        } else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+
+        } /*else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
             // if no changes have been made to the post, set it back to the original don't save it
             WordPress.wpDB.updatePost(mOriginalPost);
             WordPress.currentPost = mOriginalPost;
-        } else {
+        } */else {
             // changes have been made, save the post and ask for the post list to refresh.
             // We consider this being "manual save", it will replace some Android "spans" by an html
             // or a shortcode replacement (for instance for images and galleries)
@@ -644,8 +691,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         }
 
+        finish();
+    }
+    public void publishAndFinish(){
+
         //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
-        if (!mPost.isPublishable()) {
+        if (hasEmptyContentFields()) {
             ToastUtils.showToast(this, R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
 
         }else if (!NetworkUtils.isNetworkAvailable(this)) {

@@ -9,6 +9,16 @@ public class Payment {
     private String id;
     private String message;
 
+    public int getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(int confirmed) {
+        this.confirmed = confirmed;
+    }
+
+    private int confirmed;
+
     public String getReceipt() {
         return receipt;
     }

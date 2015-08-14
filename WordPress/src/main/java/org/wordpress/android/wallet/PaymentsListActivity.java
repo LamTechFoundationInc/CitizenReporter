@@ -72,6 +72,7 @@ public class PaymentsListActivity extends ActionBarActivity {
     public class PaymentsArrayAdapter  extends ArrayAdapter<Payment> {
         Context context;
         private List<Payment> TextValue;
+        private Payment payment;
 
         public PaymentsArrayAdapter(Context context, List<Payment> TextValue) {
             super(context, R.layout.payment_row, TextValue);
@@ -85,8 +86,8 @@ public class PaymentsListActivity extends ActionBarActivity {
 
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
+            payment = paymentsList.get(position);
+            Log.d("payment confirmed ]: ", payment.getConfirmed() + "");
             final ViewHolder holder;
             if(convertView == null)
             {
@@ -102,37 +103,42 @@ public class PaymentsListActivity extends ActionBarActivity {
                 holder.disputeIcon = (ImageView) convertView.findViewById(R.id.dispute_icon);
                 holder.disputeText = (TextView) convertView.findViewById(R.id.dispute_text);
 
-                holder.confirmLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //turn button green, text to confirmed, hide dispute, layout, api call,
-                        holder.confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
-                        holder.confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
-                        holder.disputeLayout.setVisibility(View.GONE);
-                    }
-                });
 
-                holder.disputeLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //turn button green, text to confirmed, hide dispute, layout, save to db, api call, handle from notification
-                        holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
-                        holder.disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
-                        holder.confirmLayout.setVisibility(View.GONE);
-                    }
-                });
+
 
                 convertView.setTag(holder);
             }
             else
                 holder = (ViewHolder) convertView.getTag();
 
-            holder.message.setText(paymentsList.get(position).getMessage());
+            holder.message.setText(payment.getMessage());
+
+            if(payment.getConfirmed() == 1){
+                paymentConfirmed(payment, true, holder);
+            }
+            if(payment.getConfirmed() == -1){
+                paymentConfirmed(payment, true, holder);
+            }
+
+            holder.confirmLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    paymentConfirmed(payment, true, holder);
+                }
+            });
+
+            holder.disputeLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    paymentConfirmed(payment, false, holder);
+
+                }
+            });
 
             return convertView;
 
         }
-        private class ViewHolder
+        public class ViewHolder
         {
             TextView message;
             LinearLayout confirmLayout;
@@ -148,6 +154,28 @@ public class PaymentsListActivity extends ActionBarActivity {
             //Unimplemented, because we aren't using Sqlite.
             return position;
         }
+
+    }
+
+    public void paymentConfirmed(Payment payment, boolean isConfirmed, PaymentsArrayAdapter.ViewHolder holder){
+        Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
+        if(isConfirmed){
+            holder.confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+            holder.confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
+            holder.disputeLayout.setVisibility(View.GONE);
+            payment.setConfirmed(1);
+            WordPress.wpDB.updatePayment(payment);
+            Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
+
+        }else{
+            //turn button green, text to confirmed, hide dispute, layout, save to db, api call, handle from notification
+            holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+            holder.disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
+            holder.confirmLayout.setVisibility(View.GONE);
+            payment.setConfirmed(-1);
+            WordPress.wpDB.updatePayment(payment);
+        }
+        Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
 
     }
 

@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.json.JSONArray;
@@ -90,7 +91,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 39;
+    private static final int DATABASE_VERSION = 40;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -120,6 +121,7 @@ public class WordPressDB {
     public static final String COLUMN_PAYMENT_MESSAGE = "message";
     public static final String COLUMN_PAYMENT_RECEIPT = "receipt";
     public static final String COLUMN_PAYMENT_POST = "post";
+    public static final String COLUMN_PAYMENT_CONFIRMED = "confirmed";
 
 
     private static final String CREATE_TABLE_PAYMENTS = "CREATE TABLE IF NOT EXISTS " + TABLE_PAYMENTS + " ("
@@ -252,6 +254,8 @@ public class WordPressDB {
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
+    private static final String ADD_PAYMENT_CONFIRMED = "alter table payments add " + COLUMN_PAYMENT_CONFIRMED + " int default 0 ;";
+
 
     private SQLiteDatabase db;
 
@@ -399,6 +403,9 @@ public class WordPressDB {
                 currentVersion++;
             case 38:
                 db.execSQL(CREATE_TABLE_PAYMENTS);
+                currentVersion++;
+            case 39:
+                db.execSQL(ADD_PAYMENT_CONFIRMED);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -477,6 +484,7 @@ public class WordPressDB {
         values.put(COLUMN_PAYMENT_MESSAGE, payment.getMessage());
         values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
         values.put(COLUMN_PAYMENT_POST, payment.getPost());
+        values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
 
         db.insert(TABLE_PAYMENTS, null, values);
 
@@ -527,7 +535,7 @@ public class WordPressDB {
         if (cursor.moveToFirst()) {
             do {
                 Payment content = new Payment();
-
+                content.setId(String.valueOf(cursor.getInt(0)));
                 content.setMessage((cursor.getString(1)));
                 content.setReceipt((cursor.getString(2)));
                 content.setPost((cursor.getString(3)));
@@ -1460,6 +1468,22 @@ public class WordPressDB {
                 post.setLocalTablePostId(result);
             }
         }
+
+        return (result);
+    }
+
+    public int updatePayment(Payment payment) {
+        int result = 0;
+        if (payment != null) {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
+            values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
+            values.put(COLUMN_PAYMENT_MESSAGE, payment.getMessage());
+            values.put(COLUMN_PAYMENT_POST, payment.getPost());
+
+            result = db.update(TABLE_PAYMENTS, values, COLUMN_PAYMENT_MESSAGE + "=?",
+                    new String[]{ payment.getId() });
+        };
 
         return (result);
     }
