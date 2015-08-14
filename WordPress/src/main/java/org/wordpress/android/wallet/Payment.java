@@ -9,15 +9,15 @@ public class Payment {
     private String id;
     private String message;
 
-    public int getConfirmed() {
+    public String getConfirmed() {
         return confirmed;
     }
 
-    public void setConfirmed(int confirmed) {
+    public void setConfirmed(String confirmed) {
         this.confirmed = confirmed;
     }
 
-    private int confirmed;
+    private String confirmed;
 
     public String getReceipt() {
         return receipt;

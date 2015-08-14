@@ -247,6 +247,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         payment.setMessage(message.trim());
         payment.setReceipt(receipt);
         payment.setPost(post_id);
+        payment.setConfirmed("0");
         WordPress.wpDB.addPayment(payment);
 
         //create intent

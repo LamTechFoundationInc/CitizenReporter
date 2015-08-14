@@ -254,7 +254,7 @@ public class WordPressDB {
     // used for migration
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
-    private static final String ADD_PAYMENT_CONFIRMED = "alter table payments add " + COLUMN_PAYMENT_CONFIRMED + " int default 0 ;";
+    private static final String ADD_PAYMENT_CONFIRMED = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_CONFIRMED + " text default '0';";
 
 
     private SQLiteDatabase db;
@@ -539,6 +539,7 @@ public class WordPressDB {
                 content.setMessage((cursor.getString(1)));
                 content.setReceipt((cursor.getString(2)));
                 content.setPost((cursor.getString(3)));
+                content.setConfirmed((cursor.getString(4)));
 
                 paymentsList.add(content);
             } while (cursor.moveToNext());
@@ -1481,7 +1482,7 @@ public class WordPressDB {
             values.put(COLUMN_PAYMENT_MESSAGE, payment.getMessage());
             values.put(COLUMN_PAYMENT_POST, payment.getPost());
 
-            result = db.update(TABLE_PAYMENTS, values, COLUMN_PAYMENT_MESSAGE + "=?",
+            result = db.update(TABLE_PAYMENTS, values, COLUMN_PAYMENT_ID + "=?",
                     new String[]{ payment.getId() });
         };
 

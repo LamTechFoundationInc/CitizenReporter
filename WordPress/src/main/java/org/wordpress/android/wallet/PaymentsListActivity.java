@@ -113,10 +113,10 @@ public class PaymentsListActivity extends ActionBarActivity {
 
             holder.message.setText(payment.getMessage());
 
-            if(payment.getConfirmed() == 1){
+            if(payment.getConfirmed().equals("1")){
                 paymentConfirmed(payment, true, holder);
             }
-            if(payment.getConfirmed() == -1){
+            if(payment.getConfirmed().equals("-1")){
                 paymentConfirmed(payment, true, holder);
             }
 
@@ -163,7 +163,7 @@ public class PaymentsListActivity extends ActionBarActivity {
             holder.confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
             holder.confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
             holder.disputeLayout.setVisibility(View.GONE);
-            payment.setConfirmed(1);
+            payment.setConfirmed("1");
             WordPress.wpDB.updatePayment(payment);
             Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
 
@@ -172,7 +172,7 @@ public class PaymentsListActivity extends ActionBarActivity {
             holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
             holder.disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
             holder.confirmLayout.setVisibility(View.GONE);
-            payment.setConfirmed(-1);
+            payment.setConfirmed("-1");
             WordPress.wpDB.updatePayment(payment);
         }
         Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");

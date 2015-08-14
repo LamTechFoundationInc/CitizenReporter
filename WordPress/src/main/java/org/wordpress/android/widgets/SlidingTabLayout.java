@@ -69,9 +69,6 @@ import android.widget.Toast;
  */
 public class SlidingTabLayout extends HorizontalScrollView {
 
-    public void setCustomTabView(int tab_text, int text_tab, Integer[] titles, Integer[] icons) {
-    }
-
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
      * {@link #setCustomTabColorizer(TabColorizer)}.
@@ -197,11 +194,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
     /*
      * use this version to display icons rather than text
      */
-    public void setCustomTabView(int layoutResId, int imageViewId, int badgeViewId, Integer[] titles, Integer[] icons) {
+    public void setCustomTabView(int layoutResId, int imageViewId, int badgeViewId, Integer[] icons) {
         mTabViewLayoutId = layoutResId;
         mTabViewIconViewId = imageViewId;
         mTabBadgeViewId = badgeViewId;
-        mTitles = titles;
         mIcons = icons;
     }
 
