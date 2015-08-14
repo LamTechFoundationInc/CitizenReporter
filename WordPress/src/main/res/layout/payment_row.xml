@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/discard_layout"
+        android:id="@+id/dispute_layout"
         android:padding="5dp"
         android:layout_alignTop="@+id/view"
         android:layout_alignRight="@+id/view"
@@ -62,7 +62,7 @@
     <ImageView
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:id="@+id/discard_icon"
+        android:id="@+id/dispute_icon"
         android:src="@drawable/hs__action_cancel" />
     <TextView
         android:layout_width="wrap_content"

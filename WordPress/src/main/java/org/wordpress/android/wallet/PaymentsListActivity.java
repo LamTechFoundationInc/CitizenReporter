@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -86,12 +87,41 @@ public class PaymentsListActivity extends ActionBarActivity {
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
 
-            ViewHolder holder;
+            final ViewHolder holder;
             if(convertView == null)
             {
                 holder = new ViewHolder();
                 convertView = inflater.inflate(R.layout.payment_row, parent, false);
                 holder.message = (TextView) convertView.findViewById(R.id.message_text);
+
+                holder.confirmLayout = (LinearLayout) convertView.findViewById(R.id.confirm_layout);
+                holder.confirmIcon = (ImageView) convertView.findViewById(R.id.confirm_icon);
+                holder.confirmText = (TextView) convertView.findViewById(R.id.confirm_text);
+
+                holder.disputeLayout = (LinearLayout) convertView.findViewById(R.id.dispute_layout);
+                holder.disputeIcon = (ImageView) convertView.findViewById(R.id.dispute_icon);
+                holder.disputeText = (TextView) convertView.findViewById(R.id.dispute_text);
+
+                holder.confirmLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //turn button green, text to confirmed, hide dispute, layout, api call,
+                        holder.confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        holder.confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
+                        holder.disputeLayout.setVisibility(View.GONE);
+                    }
+                });
+
+                holder.disputeLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //turn button green, text to confirmed, hide dispute, layout, save to db, api call, handle from notification
+                        holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        holder.disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
+                        holder.confirmLayout.setVisibility(View.GONE);
+                    }
+                });
+
                 convertView.setTag(holder);
             }
             else
@@ -105,6 +135,12 @@ public class PaymentsListActivity extends ActionBarActivity {
         private class ViewHolder
         {
             TextView message;
+            LinearLayout confirmLayout;
+            LinearLayout disputeLayout;
+            ImageView confirmIcon;
+            ImageView disputeIcon;
+            TextView disputeText;
+            TextView confirmText;
         }
 
         @Override
