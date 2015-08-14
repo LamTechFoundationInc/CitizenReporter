@@ -1053,24 +1053,26 @@
     <string name="pick_scene">Pick Scene</string>
     <string name="pick_scene_description">What kind of scene are you trying to capture?</string>
     <array name="scenes">
-        <item>Signature</item>
         <item>Portrait</item>
-        <item>Candid</item>
+        <item>Signature</item>
         <item>Reaction/Interaction</item>
+        <item>Candid</item>
         <item>Environment</item>
     </array>
+    
     <array name="scenes_descriptions">
-        <item>Summarize the entire issue by illustrating an essential element of the story.</item>
         <item>Introduce the character. Get close.</item>
-        <item>Show the character engaged in her environment.</item>
+        <item>Summarize the entire issue by illustrating an essential element of the story.</item>
         <item>Depict how people are responding to the event or its aftermath.</item>
+        <item>Show the character engaged in her environment.</item>
         <item>Show Where your story takes place.</item>
     </array>
+
     <array name="scenes_images">
-        <item>@drawable/scene_signature</item>
         <item>@drawable/scene_potrait</item>
-        <item>@drawable/scene_candid</item>
+        <item>@drawable/scene_signature</item>
         <item>@drawable/scene_reaction</item>
+        <item>@drawable/scene_candid</item>
         <item>@drawable/scene_environmental</item>
     </array>
 
