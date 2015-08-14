@@ -17,8 +17,11 @@ import android.view.inputmethod.EditorInfo;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.readystatesoftware.viewbadger.BadgeView;
 
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -68,9 +71,9 @@ public class ViewAssignmentFragment extends Fragment {
     private TextView mDeadline;
     private TextView mAuthor;
 
-    private ImageView button_camera;
-    private ImageView button_video;
-    private ImageView button_mic;
+    private LinearLayout button_camera;
+    private LinearLayout button_video;
+    private LinearLayout button_mic;
     private Post assignment;
     @Override
     public void onActivityCreated(Bundle bundle) {
@@ -139,10 +142,30 @@ public class ViewAssignmentFragment extends Fragment {
         mDeadline = (TextView) v.findViewById(R.id.assignment_list_deadline);
 
         //quick capture icons
-        button_camera = (ImageView)v.findViewById(R.id.button_camera);
-        button_video = (ImageView)v.findViewById(R.id.button_video);
-        button_mic = (ImageView)v.findViewById(R.id.button_mic);
-        //
+        button_camera = (LinearLayout)v.findViewById(R.id.button_camera);
+        button_video = (LinearLayout)v.findViewById(R.id.button_video);
+        button_mic = (LinearLayout)v.findViewById(R.id.button_mic);
+
+        View target = v.findViewById(R.id.camView2);
+        View target2 = v.findViewById(R.id.camView02);
+        View target3 = v.findViewById(R.id.camView002);
+
+        BadgeView badge = new BadgeView(mParentActivity, target);
+        BadgeView badge2 = new BadgeView(mParentActivity, target2);
+        BadgeView badge3 = new BadgeView(mParentActivity, target3);
+
+        badge.setText("+");
+        badge.setBackgroundColor(getResources().getColor(R.color.alert_yellow));
+
+        badge2.setText("+");
+        badge2.setBackgroundColor(getResources().getColor(R.color.orange_fire));
+
+        badge3.setText("+");
+        badge3.setBadgeBackgroundColor(getResources().getColor(R.color.alert_green));
+
+        badge.show();
+        badge2.show();
+        badge3.show();
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

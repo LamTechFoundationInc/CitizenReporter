@@ -96,47 +96,90 @@
 
         <LinearLayout
             android:id="@+id/bottom_action_buttons"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@drawable/view_post_toolbar">
-            <ImageView
-                android:id="@+id/button_camera"
+            android:background="@drawable/view_post_toolbar"
+            android:layout_alignWithParentIfMissing="true"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true" >
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_action_camera"
-                android:tint="@color/post_detail_icon_tint"/>
+                android:gravity="center"
+                android:id="@+id/button_camera">
+                <View
+                    android:id="@+id/camView2"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+                <ImageView
+                    android:src="@drawable/ic_action_camera"
+                    android:tint="@color/post_detail_icon_tint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <View
+                    android:id="@+id/camView"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
             <View
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/grey_lighten_10"
-                />
-            <ImageView
-                android:id="@+id/button_video"
+                android:layout_margin="5dp"
+                android:background="@color/grey_darken_10"
+                android:layout_height="match_parent"/>
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_action_video"
-                android:tint="@color/post_detail_icon_tint"/>
+                android:gravity="center"
+                android:id="@+id/button_video">
+                <View
+                    android:id="@+id/camView002"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+                <ImageView
+                    android:src="@drawable/ic_action_video"
+                    android:tint="@color/post_detail_icon_tint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <View
+                    android:id="@+id/camView01"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
             <View
                 android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@color/grey_lighten_10"
-                />
-            <ImageView
-                android:id="@+id/button_mic"
+                android:layout_margin="5dp"
+                android:background="@color/grey_darken_10"
+                android:layout_height="match_parent"/>
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_action_mic"
-                android:tint="@color/post_detail_icon_tint" />
-
+                android:gravity="center"
+                android:id="@+id/button_mic">
+                <View
+                    android:id="@+id/camView02"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+                <ImageView
+                    android:src="@drawable/ic_action_mic"
+                    android:tint="@color/post_detail_icon_tint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"/>
+                <View
+                    android:id="@+id/camView1"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
         </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>
