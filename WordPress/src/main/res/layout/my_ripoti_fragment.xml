@@ -119,32 +119,30 @@
                     android:text="@string/my_account" />
 
             </RelativeLayout>
-            <!--About-->
+
             <RelativeLayout
-                android:id="@+id/row_about_app"
-                style="@style/MySiteListRowLayout"
-                android:layout_marginTop="@dimen/my_site_margin_general">
+                android:id="@+id/row_payments"
+                style="@style/MySiteListRowLayout">
 
                 <ImageView
-                    android:id="@+id/about_icon"
+                    android:id="@+id/my_payments_icon"
                     style="@style/MySiteListRowIcon"
-                    android:contentDescription="@string/my_site_btn_view_site"
-                    android:src="@drawable/my_site_icon_view_site" />
+                    android:contentDescription="@string/my_site_btn_site_settings"
+                    android:src="@drawable/ic_bounty"/>
 
                 <org.wordpress.android.widgets.WPTextView
-                    android:id="@+id/about_text_view"
+                    android:id="@+id/my_payments_text"
                     style="@style/MySiteListRowTextView"
-                    android:layout_toRightOf="@id/about_icon"
-                    android:text="@string/about_title" />
+                    android:layout_toRightOf="@id/my_payments_icon"
+                    android:text="@string/my_payments" />
 
             </RelativeLayout>
-
 
             <!--Lessons-->
             <RelativeLayout
                 android:id="@+id/row_lessons"
                 style="@style/MySiteListRowLayout"
-                android:layout_marginTop="@dimen/my_site_margin_general">
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/lessons_icon"
@@ -165,7 +163,7 @@
                 android:visibility="gone"
                 android:id="@+id/row_view_site"
                 style="@style/MySiteListRowLayout"
-                android:layout_marginTop="@dimen/my_site_margin_general">
+                >
 
                 <ImageView
                     android:id="@+id/my_site_view_site_icon"
@@ -400,7 +398,25 @@
 
             </RelativeLayout>
 
+            <!--About-->
+            <RelativeLayout
+                android:id="@+id/row_about_app"
+                style="@style/MySiteListRowLayout"
+                >
 
+                <ImageView
+                    android:id="@+id/about_icon"
+                    style="@style/MySiteListRowIcon"
+                    android:contentDescription="@string/my_site_btn_view_site"
+                    android:src="@drawable/my_site_icon_view_site" />
+
+                <org.wordpress.android.widgets.WPTextView
+                    android:id="@+id/about_text_view"
+                    style="@style/MySiteListRowTextView"
+                    android:layout_toRightOf="@id/about_icon"
+                    android:text="@string/about_title" />
+
+            </RelativeLayout>
 
             <!--Admin-->
             <LinearLayout

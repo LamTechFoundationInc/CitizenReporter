@@ -17,6 +17,7 @@ import org.wordpress.android.ui.comments.CommentsActivity;
 import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.wallet.Payment;
+import org.wordpress.android.wallet.PaymentsListActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -249,8 +250,15 @@ public class GCMIntentService extends GCMBaseIntentService {
         WordPress.wpDB.addPayment(payment);
 
         //create intent
-        Intent chatIntent1 = new Intent(getApplicationContext(), ChatActivity.class);
-        PendingIntent chatIntent = PendingIntent.getActivity(this, 0, chatIntent1, 0);
+        Intent confirmIntent_ = new Intent(getApplicationContext(), PaymentsListActivity.class);
+        confirmIntent_.putExtra("confirm", 1);
+
+        PendingIntent confirmIntent = PendingIntent.getActivity(this, 0, confirmIntent_, 0);
+
+        Intent disputeIntent_ = new Intent(getApplicationContext(), PaymentsListActivity.class);
+        disputeIntent_.putExtra("confirm", 0);
+
+        PendingIntent disputeIntent = PendingIntent.getActivity(this, 0, disputeIntent_, 0);
 
         //build notification
         Notification notif = new Notification.Builder(getApplicationContext())
@@ -263,8 +271,8 @@ public class GCMIntentService extends GCMBaseIntentService {
                         .setBigContentTitle(getApplicationContext().getResources().getString(R.string.payment_notification))/*
                         .setSummaryText(assignmentDeadline)*/)
                 .setPriority(2)
-                .addAction(R.drawable.ic_check_white_24dp, "Confirm", chatIntent)
-                .addAction(R.drawable.hs__action_cancel, "Dispute", chatIntent)
+                .addAction(R.drawable.ic_check_white_24dp, "Confirm", confirmIntent)
+                .addAction(R.drawable.hs__action_cancel, "Dispute", disputeIntent)
                 .build();
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(57, notif);

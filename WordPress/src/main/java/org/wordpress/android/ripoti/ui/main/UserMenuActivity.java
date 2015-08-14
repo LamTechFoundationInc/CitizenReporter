@@ -38,6 +38,7 @@ import org.wordpress.android.util.HelpshiftHelper;
 import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.wallet.PaymentsListActivity;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -172,6 +173,14 @@ public class UserMenuActivity extends ActionBarActivity{
             public void onClick(View v){
 
                 Intent intent = new Intent(UserMenuActivity.this, EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.row_payments).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+
+                Intent intent = new Intent(UserMenuActivity.this, PaymentsListActivity.class);
                 startActivity(intent);
             }
         });

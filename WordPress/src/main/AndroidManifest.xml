@@ -181,6 +181,10 @@
             android:theme="@style/Calypso.NoActionBar" >
         </activity>
         <activity
+            android:name=".wallet.PaymentsListActivity"
+            android:theme="@style/Calypso.NoActionBar" >
+        </activity>
+        <activity
             android:name=".overlaycamera.OverlayCameraActivity"
             android:theme="@style/Calypso.NoActionBar"
             android:screenOrientation="landscape"

@@ -516,6 +516,29 @@ public class WordPressDB {
         // return messages as a list
         return messagesList;
     }
+    public List<Payment> getPayments() {
+        List<Payment> paymentsList = new ArrayList<Payment>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_PAYMENTS;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Payment content = new Payment();
+
+                content.setMessage((cursor.getString(1)));
+                content.setReceipt((cursor.getString(2)));
+                content.setPost((cursor.getString(3)));
+
+                paymentsList.add(content);
+            } while (cursor.moveToNext());
+        }
+
+        // return messages as a list
+        return paymentsList;
+    }
 
     public List<Integer> getAllBlogsIDs() {
         Cursor c = db.rawQuery("SELECT DISTINCT id FROM " + BLOGS_TABLE, null);
