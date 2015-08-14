@@ -3,8 +3,10 @@ package org.wordpress.android.wallet;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,10 +24,13 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.chat.GifAnimationDrawable;
+import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +92,6 @@ public class PaymentsListActivity extends ActionBarActivity {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             payment = paymentsList.get(position);
-            Log.d("payment confirmed ]: ", payment.getConfirmed() + "");
             final ViewHolder holder;
             if(convertView == null)
             {
@@ -111,23 +115,23 @@ public class PaymentsListActivity extends ActionBarActivity {
             holder.message.setText(payment.getMessage());
 
             if(payment.getConfirmed().equals("1")){
-                paymentConfirmed(payment, true, holder);
+                paymentConfirmed(payment, true, holder, false);
             }
             if(payment.getConfirmed().equals("-1")){
-                paymentConfirmed(payment, true, holder);
+                paymentConfirmed(payment, true, holder, false);
             }
 
             holder.confirmLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    paymentConfirmed(payment, true, holder);
+                    paymentConfirmed(payment, true, holder, true);
                 }
             });
 
             holder.disputeLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    paymentConfirmed(payment, false, holder);
+                    paymentConfirmed(payment, false, holder, true);
 
                 }
             });
@@ -154,26 +158,76 @@ public class PaymentsListActivity extends ActionBarActivity {
 
     }
 
-    public void paymentConfirmed(Payment payment, boolean isConfirmed, PaymentsArrayAdapter.ViewHolder holder){
-        Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
+    public void paymentConfirmed(Payment payment, boolean isConfirmed, PaymentsArrayAdapter.ViewHolder holder, boolean update){
+
         if(isConfirmed){
             holder.confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
             holder.confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
             holder.disputeLayout.setVisibility(View.GONE);
-            payment.setConfirmed("1");
-            WordPress.wpDB.updatePayment(payment);
-            Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
 
         }else{
             //turn button green, text to confirmed, hide dispute, layout, save to db, api call, handle from notification
             holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
             holder.disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
             holder.confirmLayout.setVisibility(View.GONE);
-            payment.setConfirmed("-1");
-            WordPress.wpDB.updatePayment(payment);
         }
-        Log.d("payment confirmed", isConfirmed + "" + payment.getConfirmed() + "");
 
+        if(update){
+
+            String confirm;
+
+            if(isConfirmed){
+                confirm = "1";
+                payment.setConfirmed("1");
+                WordPress.wpDB.updatePayment(payment);
+            }else{
+                confirm = "0";
+                payment.setConfirmed("-1");
+                WordPress.wpDB.updatePayment(payment);
+            }
+
+            //send query
+            new confirmPayment(payment.getPost(), confirm).execute();
+        }
+
+    }
+
+    class confirmPayment extends AsyncTask<String, String, String>{
+
+        private String post_id;
+        private String confirm;
+
+        public confirmPayment(String _post_id, String _confirm){
+            this.post_id = _post_id;
+            this.confirm = _confirm;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            confirmPayment(post_id, confirm);
+            return null;
+        }
+    }
+
+    public void confirmPayment(String post_id, String confirm){
+        APIFunctions userFunction = new APIFunctions();
+        JSONObject json = userFunction.confirmPayment(post_id, confirm);
+
+        String responseMessage = "";
+        try {
+            String res = json.getString("result");
+            if (res.equals("OK")) {
+                responseMessage = json.getString("message");
+
+            } else {
+                responseMessage = json.getString("error");
+            }
+
+            Log.d("Confirm payment", responseMessage + "");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }
