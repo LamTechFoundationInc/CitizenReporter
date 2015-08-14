@@ -705,7 +705,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         if (hasEmptyContentFields()) {
-            ToastUtils.showToast(this, R.string.error_publish_empty_post, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(this, "Missing required fields", ToastUtils.Duration.SHORT);
 
         }else if (!NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, R.string.error_publish_no_network, ToastUtils.Duration.SHORT);

@@ -150,9 +150,9 @@ public class ViewAssignmentFragment extends Fragment {
         View target2 = v.findViewById(R.id.camView02);
         View target3 = v.findViewById(R.id.camView002);
 
-        BadgeView badge = new BadgeView(mParentActivity, target);
-        BadgeView badge2 = new BadgeView(mParentActivity, target2);
-        BadgeView badge3 = new BadgeView(mParentActivity, target3);
+        BadgeView badge = new BadgeView(getActivity(), target);
+        BadgeView badge2 = new BadgeView(getActivity(), target2);
+        BadgeView badge3 = new BadgeView(getActivity(), target3);
 
         badge.setText("+");
         badge.setBackgroundColor(getResources().getColor(R.color.alert_yellow));

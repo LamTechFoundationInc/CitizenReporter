@@ -147,8 +147,6 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                     displaySummary.setText(summary);
                     filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
 
-                    post.setStringLocation(summary);
-                    WordPress.wpDB.updatePost(post);
                 }
 
                 summaryDialog.dismiss();
@@ -570,6 +568,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
     private void updateLocationText(String locationName) {
         mLocationText.setText(locationName);
+        post.setStringLocation(locationName);
+        WordPress.wpDB.updatePost(post);
     }
 
     /*
