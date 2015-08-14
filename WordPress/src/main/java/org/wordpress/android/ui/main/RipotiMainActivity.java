@@ -368,7 +368,7 @@ public class RipotiMainActivity extends ActionBarActivity
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.assignments));
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYPOSTS, getString(R.string.my_posts));
 
-        mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab, titles);
+        mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab, titles, icons);
 
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);

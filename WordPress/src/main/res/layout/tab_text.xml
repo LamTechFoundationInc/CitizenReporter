@@ -9,13 +9,21 @@
     android:paddingRight="@dimen/tabstrip_icon_spacing"
     tools:background="@color/color_primary">
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/icon_tab"
+        android:layout_centerVertical="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_large"
+        android:textSize="@dimen/text_sz_extra_large"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:id="@+id/text_tab"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:text="icon"
+        android:fontFamily="sans-serif-light"/>
 
 </RelativeLayout>
