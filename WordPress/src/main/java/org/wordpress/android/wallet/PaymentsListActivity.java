@@ -52,11 +52,11 @@ public class PaymentsListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.payments_list);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString(R.string.chat_title));
+        toolbar.setTitle(getResources().getString(R.string.my_payments));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        gridView = (ListView) findViewById(R.id.messagesList);
+        gridView = (ListView) findViewById(R.id.paymentsList);
 
         db = WordPress.wpDB;
 
