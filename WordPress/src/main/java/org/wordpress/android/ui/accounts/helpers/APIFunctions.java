@@ -100,12 +100,12 @@ public class APIFunctions {
         return json;
     }
 
-    public JSONObject confirmPayment(String post_id, String confirm, String remoteID) {
+    public JSONObject confirmPayment(String post_id, String remoteID, String confirm) {
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("post_id", post_id));
         params.add(new BasicNameValuePair("confirm", confirm));
-        params.add(new BasicNameValuePair("remote_id", confirm));
+        params.add(new BasicNameValuePair("remote_id", remoteID));
 
         JSONObject json = jsonParser.getJSONFromUrl(confirmPaymentUrl, params);
         // return json
