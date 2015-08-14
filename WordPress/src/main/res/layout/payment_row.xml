@@ -1,12 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/grey_darken_30"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:id="@+id/message_text" />
+        android:id="@+id/message_text"
+        android:layout_margin="5dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey_darken_20"
+        android:layout_below="@+id/message_text"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/view"
+        android:layout_margin="5dp"/>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_alignTop="@+id/view"
+    android:layout_alignLeft="@+id/view"
+    android:layout_alignStart="@+id/view"
+    android:id="@+id/confirm_layout"
+    android:padding="5dp">
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/confirm_icon"
+        android:src="@drawable/ic_check_white_24dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/grey_darken_30"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/confirm"
+        android:id="@+id/confirm_text" />
+
 </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/discard_layout"
+        android:padding="5dp"
+        android:layout_alignTop="@+id/view"
+        android:layout_alignRight="@+id/view"
+        android:layout_alignEnd="@+id/view">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:id="@+id/discard_icon"
+        android:src="@drawable/hs__action_cancel" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/grey_darken_30"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/dispute"
+        android:id="@+id/dispute_text"/>
+    </LinearLayout>
+</RelativeLayout>

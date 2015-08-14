@@ -1077,5 +1077,8 @@
     <!-- Mobile Wallet -->
     <string name="payment_notification">New Payment</string>
     <string name="my_payments">My Payments</string>
+    <string name="confirm">Confirm</string>
+    <string name="dispute">Dispute</string>
+    <string name="confirmed">Confirmed</string>
 
 </resources>

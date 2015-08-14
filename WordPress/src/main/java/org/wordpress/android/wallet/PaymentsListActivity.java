@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,19 +33,10 @@ import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.internal.CardGridArrayAdapter;
 public class PaymentsListActivity extends ActionBarActivity {
     ListView gridView;
-    private ArrayList<Card> cards;
-    CardGridArrayAdapter mCardArrayAdapter;
     List<Payment> paymentsList;
 
-    private GifAnimationDrawable little;
-
-    private SharedPreferences pref;
-    private String user_id;
-    private static final String USER_ID = "user_id";
-    private static final String USER_NAME = "user_name";
-
     private PaymentsArrayAdapter adClass;
-    private String friend_id;
+
     private WordPressDB db;
 
     @Override

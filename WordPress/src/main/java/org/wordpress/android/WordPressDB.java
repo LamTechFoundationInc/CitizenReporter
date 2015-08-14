@@ -90,7 +90,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 36;
+    private static final int DATABASE_VERSION = 0;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -210,7 +210,7 @@ public class WordPressDB {
     private static final String ADD_ASSIGNMENT_ID = "alter table posts add assignment_id integer default 0 not null";
 
     //Add string location
-    private static final String ADD_STRING_LOCATION = "alter table posts add column string_location text default '';";
+    private static final String ADD_STRING_LOCATION = "alter table posts add string_location text default '';";
 
     //add boolean to track if featured image should be included in the post content
     private static final String ADD_FEATURED_IN_POST = "alter table media add isFeaturedInPost boolean default false;";
