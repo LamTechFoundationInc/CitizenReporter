@@ -242,7 +242,8 @@
     <!--My Site Styles-->
     <style name="MySiteListRowLayout">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/my_site_list_row_height</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:paddingLeft">@dimen/my_site_list_row_padding_left</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
@@ -254,6 +255,7 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_marginRight">@dimen/margin_extra_large</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:tint">@color/grey_darken_10</item>
     </style>
 
     <style name="MySiteListRowTextView">
@@ -270,6 +272,7 @@
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingLeft">@dimen/margin_extra_large</item>
         <item name="android:fontFamily">"sans-serif-light"</item>
+        <item name="android:background">@color/translucent_grey_lighten_10</item>
     </style>
 
     <style name="MySiteListHeaderLayout">

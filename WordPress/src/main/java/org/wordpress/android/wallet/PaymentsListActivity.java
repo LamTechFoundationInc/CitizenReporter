@@ -103,9 +103,6 @@ public class PaymentsListActivity extends ActionBarActivity {
                 holder.disputeIcon = (ImageView) convertView.findViewById(R.id.dispute_icon);
                 holder.disputeText = (TextView) convertView.findViewById(R.id.dispute_text);
 
-
-
-
                 convertView.setTag(holder);
             }
             else

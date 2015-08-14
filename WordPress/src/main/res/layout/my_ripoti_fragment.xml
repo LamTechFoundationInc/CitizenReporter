@@ -1,4 +1,4 @@
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -7,25 +7,18 @@
 <LinearLayout
 
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="519dp"
         android:id="@+id/posts"
         android:orientation="vertical">
     <include
         layout="@layout/toolbar"
         android:id="@+id/toolbar" />
-    <ScrollView
+    <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="5dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/content_margin"
-            android:layout_marginRight="@dimen/content_margin"
-            android:orientation="vertical">
-
             <android.support.v7.widget.CardView
                 android:visibility="gone"
                 android:layout_width="match_parent"
@@ -324,8 +317,7 @@
                     android:id="@+id/new_post_icon"
                     style="@style/MySiteListRowIcon"
                     android:contentDescription="@string/my_site_btn_view_site"
-                    android:src="@drawable/ic_create_white_24dp"
-                    android:tint="@color/grey_darken_10"/>
+                    android:src="@drawable/ic_create_white_24dp"/>
 
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/new_post_text_view"
@@ -482,7 +474,7 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>
-</ScrollView>
+layou</LinearLayout>

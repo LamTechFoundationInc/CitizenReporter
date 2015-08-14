@@ -525,7 +525,7 @@ public class WordPressDB {
         return messagesList;
     }
     public List<Payment> getPayments() {
-        List<Payment> paymentsList = new ArrayList<Payment>();
+        List<Payment> paymentsList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_PAYMENTS;
 
@@ -540,7 +540,6 @@ public class WordPressDB {
                 content.setReceipt((cursor.getString(2)));
                 content.setPost((cursor.getString(3)));
                 content.setConfirmed((cursor.getString(4)));
-
                 paymentsList.add(content);
             } while (cursor.moveToNext());
         }
