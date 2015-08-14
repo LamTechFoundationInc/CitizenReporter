@@ -37,6 +37,7 @@ public class GCMIntentService extends GCMBaseIntentService {
     private String user;
     private String post_id;
     private String receipt;
+    private String payment_id;
 
 
     private Bitmap iconFromUrl;
@@ -117,6 +118,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             message = intent.getExtras().getString("payment");
             receipt = intent.getExtras().getString("receipt");
             post_id = intent.getExtras().getString("post_id");
+            payment_id = intent.getExtras().getString("payment_id");
 
             iconFromUrl = null;//iconFromUrl(intent.getExtras().getString("icon_url"));
 
@@ -248,6 +250,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         payment.setReceipt(receipt);
         payment.setPost(post_id);
         payment.setConfirmed("0");
+        payment.setRemoteID(payment_id);
         WordPress.wpDB.addPayment(payment);
 
         //create intent

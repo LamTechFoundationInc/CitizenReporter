@@ -8,6 +8,7 @@ public class Payment {
 
     private String id;
     private String message;
+    private String remoteID;
 
     public String getConfirmed() {
         return confirmed;
@@ -45,4 +46,11 @@ public class Payment {
     public String getId(){return this.id;}
     public String getMessage(){return this.message;}
 
+    public String getRemoteID() {
+        return remoteID;
+    }
+
+    public void setRemoteID(String remoteID) {
+        this.remoteID = remoteID;
+    }
 }

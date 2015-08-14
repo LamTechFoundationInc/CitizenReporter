@@ -91,7 +91,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 40;
+    private static final int DATABASE_VERSION = 41;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -122,6 +122,7 @@ public class WordPressDB {
     public static final String COLUMN_PAYMENT_RECEIPT = "receipt";
     public static final String COLUMN_PAYMENT_POST = "post";
     public static final String COLUMN_PAYMENT_CONFIRMED = "confirmed";
+    public static final String COLUMN_PAYMENT_REMOTE_ID = "remote_id";
 
 
     private static final String CREATE_TABLE_PAYMENTS = "CREATE TABLE IF NOT EXISTS " + TABLE_PAYMENTS + " ("
@@ -255,6 +256,7 @@ public class WordPressDB {
     private static final String DEPRECATED_WPCOM_USERNAME_PREFERENCE = "wp_pref_wpcom_username";
     private static final String DEPRECATED_ACCESS_TOKEN_PREFERENCE = "wp_pref_wpcom_access_token";
     private static final String ADD_PAYMENT_CONFIRMED = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_CONFIRMED + " text default '0';";
+    private static final String ADD_PAYMENT_REMOTEID = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_REMOTE_ID + " text default '0';";
 
 
     private SQLiteDatabase db;
@@ -406,6 +408,9 @@ public class WordPressDB {
                 currentVersion++;
             case 39:
                 db.execSQL(ADD_PAYMENT_CONFIRMED);
+                currentVersion++;
+            case 40:
+                db.execSQL(ADD_PAYMENT_REMOTEID);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -485,6 +490,7 @@ public class WordPressDB {
         values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
         values.put(COLUMN_PAYMENT_POST, payment.getPost());
         values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
+        values.put(COLUMN_PAYMENT_REMOTE_ID, payment.getRemoteID());
 
         db.insert(TABLE_PAYMENTS, null, values);
 
@@ -540,6 +546,7 @@ public class WordPressDB {
                 content.setReceipt((cursor.getString(2)));
                 content.setPost((cursor.getString(3)));
                 content.setConfirmed((cursor.getString(4)));
+                content.setRemoteID((cursor.getString(5)));
                 paymentsList.add(content);
             } while (cursor.moveToNext());
         }
@@ -1480,6 +1487,7 @@ public class WordPressDB {
             values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
             values.put(COLUMN_PAYMENT_MESSAGE, payment.getMessage());
             values.put(COLUMN_PAYMENT_POST, payment.getPost());
+            values.put(COLUMN_PAYMENT_REMOTE_ID, payment.getRemoteID());
 
             result = db.update(TABLE_PAYMENTS, values, COLUMN_PAYMENT_ID + "=?",
                     new String[]{ payment.getId() });

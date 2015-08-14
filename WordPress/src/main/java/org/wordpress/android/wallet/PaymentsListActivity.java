@@ -187,7 +187,7 @@ public class PaymentsListActivity extends ActionBarActivity {
             }
 
             //send query
-            new confirmPayment(payment.getPost(), confirm).execute();
+            new confirmPayment(payment.getPost(), confirm, payment.getRemoteID()).execute();
         }
 
     }
@@ -196,22 +196,24 @@ public class PaymentsListActivity extends ActionBarActivity {
 
         private String post_id;
         private String confirm;
+        private String remote_id;
 
-        public confirmPayment(String _post_id, String _confirm){
+        public confirmPayment(String _post_id, String _confirm, String _remote_id){
             this.post_id = _post_id;
             this.confirm = _confirm;
+            this.remote_id = _remote_id;
         }
 
         @Override
         protected String doInBackground(String... strings) {
-            confirmPayment(post_id, confirm);
+            confirmPayment(post_id, confirm, remote_id);
             return null;
         }
     }
 
-    public void confirmPayment(String post_id, String confirm){
+    public void confirmPayment(String post_id, String confirm, String remote_id){
         APIFunctions userFunction = new APIFunctions();
-        JSONObject json = userFunction.confirmPayment(post_id, confirm);
+        JSONObject json = userFunction.confirmPayment(post_id, confirm, remote_id);
 
         String responseMessage = "";
         try {
