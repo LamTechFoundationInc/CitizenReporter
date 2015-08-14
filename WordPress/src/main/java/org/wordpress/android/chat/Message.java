@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.chat;
+package org.wordpress.android.chat;
 
 /**
  * Created by nick on 1/3/15.

@@ -19,7 +19,7 @@ import org.wordpress.android.datasets.SuggestionTable;
 import org.wordpress.android.models.Account;
 import org.wordpress.android.models.AssignmentsListPost;
 import org.wordpress.android.models.Blog;
-import org.wordpress.android.ui.chat.Message;
+import org.wordpress.android.chat.Message;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
@@ -33,6 +33,7 @@ import org.wordpress.android.util.BlogUtils;
 import org.wordpress.android.util.MapUtils;
 import org.wordpress.android.util.SqlUtils;
 import org.wordpress.android.util.StringUtils;
+import org.wordpress.android.wallet.Payment;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -113,6 +114,20 @@ public class WordPressDB {
             + "wp_author_display_name text default '', wp_author_id text default '', wp_password text default '', wp_post_format text default '', wp_slug text default '', mediaPaths text default '', "
             + "latitude real, longitude real, localDraft boolean default 0, uploaded boolean default 0, isPage boolean default 0, wp_page_parent_id text, wp_page_parent_title text, isUploading boolean default 0, isLocalChange boolean default 0);";
 
+
+    public static final String TABLE_PAYMENTS= "payments";
+    public static final String COLUMN_PAYMENT_ID = "_id";
+    public static final String COLUMN_PAYMENT_MESSAGE = "message";
+    public static final String COLUMN_PAYMENT_RECEIPT = "receipt";
+    public static final String COLUMN_PAYMENT_POST = "post";
+
+
+    private static final String CREATE_TABLE_PAYMENTS = "CREATE TABLE IF NOT EXISTS " + TABLE_PAYMENTS + " ("
+            + COLUMN_PAYMENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+            + COLUMN_PAYMENT_MESSAGE + " TEXT,"
+            + COLUMN_PAYMENT_RECEIPT + " TEXT,"
+            + COLUMN_PAYMENT_POST + " TEXT"
+            + "); ";
 
     private static final String LESSONS_TABLE = "lessons";
 
@@ -381,6 +396,9 @@ public class WordPressDB {
                 currentVersion++;
             case 37:
                 db.execSQL(ADD_STRING_LOCATION);
+                currentVersion++;
+            case 38:
+                db.execSQL(CREATE_TABLE_PAYMENTS);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -451,6 +469,17 @@ public class WordPressDB {
         values.put("isAdmin", blog.isAdmin());
         values.put("isHidden", blog.isHidden());
         return db.insert(BLOGS_TABLE, null, values) > -1;
+    }
+    public void addPayment(Payment payment) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_PAYMENT_MESSAGE, payment.getMessage());
+        values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
+        values.put(COLUMN_PAYMENT_POST, payment.getPost());
+
+        db.insert(TABLE_PAYMENTS, null, values);
+
     }
     public void addMessage(Message message) {
 

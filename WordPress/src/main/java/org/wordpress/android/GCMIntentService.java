@@ -7,17 +7,16 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gcm.GCMBaseIntentService;
 
-import org.wordpress.android.ui.chat.ChatActivity;
-import org.wordpress.android.ui.chat.Message;
+import org.wordpress.android.chat.ChatActivity;
+import org.wordpress.android.chat.Message;
 import org.wordpress.android.ui.comments.CommentsActivity;
-import org.wordpress.android.ui.main.RipotiMainActivity;
 import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.util.DeviceUtils;
+import org.wordpress.android.wallet.Payment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +34,9 @@ public class GCMIntentService extends GCMBaseIntentService {
     private String assignmentID;
     private String assignmentDeadline;
     private String user;
+    private String post_id;
+    private String receipt;
+
 
     private Bitmap iconFromUrl;
     public GCMIntentService() {
@@ -109,6 +111,15 @@ public class GCMIntentService extends GCMBaseIntentService {
             iconFromUrl = null;//iconFromUrl(intent.getExtras().getString("icon_url"));
 
             generateChatNotification();
+        }else if(intent.hasExtra("payment")){
+            messageType = 3;
+            message = intent.getExtras().getString("payment");
+            receipt = intent.getExtras().getString("receipt");
+            post_id = intent.getExtras().getString("post_id");
+
+            iconFromUrl = null;//iconFromUrl(intent.getExtras().getString("icon_url"));
+
+            generatePaymentNotification();
         }
 
         aController.displayMessageOnScreen(context, message);
@@ -226,7 +237,38 @@ public class GCMIntentService extends GCMBaseIntentService {
             NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(55, notif);
     }
+    private void generatePaymentNotification() {
+        if(iconFromUrl==null){
+            iconFromUrl = BitmapFactory.decodeResource(getResources(), R.drawable.ic_bounty);
+        }
+        //insert to db
+        Payment payment = new Payment();
+        payment.setMessage(message.trim());
+        payment.setReceipt(receipt);
+        payment.setPost(post_id);
+        WordPress.wpDB.addPayment(payment);
 
+        //create intent
+        Intent chatIntent1 = new Intent(getApplicationContext(), ChatActivity.class);
+        PendingIntent chatIntent = PendingIntent.getActivity(this, 0, chatIntent1, 0);
+
+        //build notification
+        Notification notif = new Notification.Builder(getApplicationContext())
+                .setContentTitle(getApplicationContext().getResources().getString(R.string.payment_notification))
+                .setContentText(message)
+                .setSmallIcon(R.drawable.ic_bounty)
+                .setLargeIcon(iconFromUrl)
+                .setStyle(new Notification.InboxStyle()
+                        .addLine(message)
+                        .setBigContentTitle(getApplicationContext().getResources().getString(R.string.payment_notification))/*
+                        .setSummaryText(assignmentDeadline)*/)
+                .setPriority(2)
+                .addAction(R.drawable.ic_check_white_24dp, "Confirm", chatIntent)
+                .addAction(R.drawable.hs__action_cancel, "Dispute", chatIntent)
+                .build();
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(57, notif);
+    }
     private void generateChatNotification() {
         if(iconFromUrl==null){
             iconFromUrl = BitmapFactory.decodeResource(getResources(), R.drawable.me_icon_support);

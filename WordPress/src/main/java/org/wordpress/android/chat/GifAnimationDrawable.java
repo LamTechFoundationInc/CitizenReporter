@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.chat;
+package org.wordpress.android.chat;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;

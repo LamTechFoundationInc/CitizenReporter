@@ -1073,4 +1073,8 @@
         <item>@drawable/scene_reaction</item>
         <item>@drawable/scene_environmental</item>
     </array>
+
+    <!-- Mobile Wallet -->
+    <string name="payment_notification">New Payment</string>
+
 </resources>

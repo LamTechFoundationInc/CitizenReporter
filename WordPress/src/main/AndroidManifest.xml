@@ -177,7 +177,7 @@
             android:theme="@style/Calypso.NoActionBar" >
         </activity>
         <activity
-            android:name=".ui.chat.ChatActivity"
+            android:name=".chat.ChatActivity"
             android:theme="@style/Calypso.NoActionBar" >
         </activity>
         <activity

@@ -1,22 +1,13 @@
-package org.wordpress.android.ui.chat;
+package org.wordpress.android.chat;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.BuildConfig;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.accounts.helpers.APIFunctions;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 
 public class SendMessage extends AsyncTask<Void, Void, String> {
