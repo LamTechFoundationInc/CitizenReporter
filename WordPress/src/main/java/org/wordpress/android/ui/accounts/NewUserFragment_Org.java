@@ -325,18 +325,20 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
 
         APIFunctions userFunction = new APIFunctions();
         JSONObject json = userFunction.newUser(username, "", password, email, operatorName, deviceId, serialNumber, location, address, phone, true);
-        try {
-            String res = json.getString("result");
-            if(res.equals("OK")){
-                mHandler.sendEmptyMessage(0);
-            }else{
-                Message msgErr= mHandler.obtainMessage(1);
-                msgErr.getData().putString("err",json.getString("message"));
-                mHandler.sendMessage(msgErr);
-            }
+        if(json !=null) {
+            try {
+                String res = json.getString("result");
+                if (res.equals("OK")) {
+                    mHandler.sendEmptyMessage(0);
+                } else {
+                    Message msgErr = mHandler.obtainMessage(1);
+                    msgErr.getData().putString("err", json.getString("message"));
+                    mHandler.sendMessage(msgErr);
+                }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
     private Handler mHandler = new Handler ()

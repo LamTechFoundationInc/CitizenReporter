@@ -305,18 +305,20 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
         Blog blog = WordPress.getCurrentBlog();
 
         JSONObject json = userFunction.newUser(blog.getUsername(), username, password, email, operatorName, deviceId, serialNumber, location, address, phone, false);
-        try {
-            String res = json.getString("result");
-            if(res.equals("OK")){
-                mHandler.sendEmptyMessage(0);
-            }else{
-                Message msgErr= mHandler.obtainMessage(1);
-                msgErr.getData().putString("err",json.getString("message"));
-                mHandler.sendMessage(msgErr);
-            }
+        if(json != null ) {
+            try {
+                String res = json.getString("result");
+                if (res.equals("OK")) {
+                    mHandler.sendEmptyMessage(0);
+                } else {
+                    Message msgErr = mHandler.obtainMessage(1);
+                    msgErr.getData().putString("err", json.getString("message"));
+                    mHandler.sendMessage(msgErr);
+                }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
     private Handler mHandler = new Handler ()
@@ -479,19 +481,21 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
 
             JSONObject json = userFunction.getUser(username);
             JSONObject user = null;
-            try {
-                String res = json.getString("result");
+            if(json != null) {
+                try {
+                    String res = json.getString("result");
 
-                if(res.equals("OK")){
+                    if (res.equals("OK")) {
 
-                    user = new JSONObject(json.getString("user"));
+                        user = new JSONObject(json.getString("user"));
 
-                }else{
+                    } else {
 
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
             return user;
         }

@@ -30,11 +30,15 @@ public class SendMessage extends AsyncTask<Void, Void, String> {
         String username = WordPress.getCurrentBlog().getUsername();
 
         JSONObject json = userFunction.sendMessage(username, message);
+
         String result="";
-        try {
-            result  = json.getString("result");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(json!=null){
+            try {
+                result  = json.getString("result");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
         return result;
     }

@@ -230,20 +230,22 @@ public class PaymentsListActivity extends ActionBarActivity {
         APIFunctions userFunction = new APIFunctions();
         JSONObject json = userFunction.confirmPayment(post_id, remote_id, confirm);
 
-        String responseMessage = "";
-        try {
-            String res = json.getString("result");
-            if (res.equals("OK")) {
-                responseMessage = json.getString("message");
+        if(json!=null) {
+            String responseMessage = "";
+            try {
+                String res = json.getString("result");
+                if (res.equals("OK")) {
+                    responseMessage = json.getString("message");
 
-            } else {
-                responseMessage = json.getString("error");
+                } else {
+                    responseMessage = json.getString("error");
+                }
+
+                Log.d("Confirm payment", responseMessage + "");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-            Log.d("Confirm payment", responseMessage + "");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
     }
 

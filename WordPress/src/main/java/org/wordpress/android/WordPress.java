@@ -1022,30 +1022,32 @@ public class WordPress extends Application {
                 APIFunctions userFunction = new APIFunctions();
                 JSONObject json = userFunction.updateUserDevice(regId, username);
                 String responseMessage = "";
-                try {
-                    String res = json.getString("result");
-                    if (res.equals("OK")) {
-                        responseMessage = json.getString("message");
+                if(json!=null) {
+                    try {
+                        String res = json.getString("result");
+                        if (res.equals("OK")) {
+                            responseMessage = json.getString("message");
 
-                        //set device registered in preferences
-                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("rD", "1");
-                        editor.commit();
+                            //set device registered in preferences
+                            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString("rD", "1");
+                            editor.commit();
 
-                    } else {
-                        responseMessage = json.getString("error");
+                        } else {
+                            responseMessage = json.getString("error");
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    GCMRegistrar.setRegisteredOnServer(context, true);
+
+                    //Send Broadcast to Show message on screen
+                    String message = context.getString(R.string.server_registered);
+                    //displayMessageOnScreen(context, message);
                 }
-
-                GCMRegistrar.setRegisteredOnServer(context, true);
-
-                //Send Broadcast to Show message on screen
-                String message = context.getString(R.string.server_registered);
-                //displayMessageOnScreen(context, message);
             }
             return;
         }
