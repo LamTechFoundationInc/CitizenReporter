@@ -126,6 +126,7 @@ dependencies {
     compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.0.1'
     compile files('/home/nick/dev/code/CitizenReporter/libs/svg-android-1.1.jar')
     compile files('/home/nick/dev/code/CitizenReporter/libs/android-viewbadger.jar')
+    compile 'com.diogobernardino:williamchart:2.0.1'
 }
 
 configurations.all {
