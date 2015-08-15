@@ -57,7 +57,6 @@ public class ActivityLauncher {
         Intent intent = new Intent(context, ViewSiteActivity.class);
         slideInFromRight(context, intent);
     }
-
     public static void viewBlogStats(Context context, int blogLocalTableId) {
         if (blogLocalTableId == 0) return;
 

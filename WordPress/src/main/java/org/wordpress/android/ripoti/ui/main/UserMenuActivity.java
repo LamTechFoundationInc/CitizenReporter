@@ -173,7 +173,7 @@ public class UserMenuActivity extends ActionBarActivity{
             public void onClick(View v){
 
                 Intent intent = new Intent(UserMenuActivity.this, EditProfileActivity.class);
-                startActivity(intent);
+                ActivityLauncher.slideInFromRight(UserMenuActivity.this, intent);
             }
         });
         findViewById(R.id.row_payments).setOnClickListener(new View.OnClickListener(){
@@ -181,7 +181,7 @@ public class UserMenuActivity extends ActionBarActivity{
             public void onClick(View v){
 
                 Intent intent = new Intent(UserMenuActivity.this, PaymentsListActivity.class);
-                startActivity(intent);
+                ActivityLauncher.slideInFromRight(UserMenuActivity.this, intent);
             }
         });
         findViewById(R.id.row_logout).setOnClickListener(new View.OnClickListener(){
@@ -216,12 +216,19 @@ public class UserMenuActivity extends ActionBarActivity{
                 }
             }
         });
+        findViewById(R.id.row_messages).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Intent intent = new Intent(UserMenuActivity.this, ChatActivity.class);
+                ActivityLauncher.slideInFromRight(UserMenuActivity.this, intent);
+            }
+        });
         findViewById(R.id.row_about_app).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(UserMenuActivity.this, HelpActivity.class);
                 intent.putExtra(HelpshiftHelper.ORIGIN_KEY, "UserMenu");
-                startActivity(intent);
+                ActivityLauncher.slideInFromRight(UserMenuActivity.this, intent);
             }
         });
 
@@ -229,7 +236,7 @@ public class UserMenuActivity extends ActionBarActivity{
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(UserMenuActivity.this, LessonsActivity.class);
-                startActivity(intent);
+                ActivityLauncher.slideInFromRight(UserMenuActivity.this, intent);
             }
         });
         findViewById(R.id.row_new_post).setOnClickListener(new View.OnClickListener(){
@@ -239,13 +246,7 @@ public class UserMenuActivity extends ActionBarActivity{
                 ActivityLauncher.addNewBlogPostOrPageForResult(UserMenuActivity.this, mBlog, isPage);
             }
         });
-        findViewById(R.id.row_messages).setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(UserMenuActivity.this, ChatActivity.class);
-                startActivity(intent);
-            }
-        });
+
         refreshBlogDetails();
     }
 
