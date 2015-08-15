@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.apache.commons.lang.NumberUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
@@ -34,6 +35,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
+import org.wordpress.android.passcodelock.StringUtils;
 import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 import org.wordpress.android.ui.accounts.helpers.CreateUserAndBlog;
 import org.wordpress.android.util.AlertUtils;
@@ -179,6 +181,11 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
 
         if(phone.length() < 10){
             showPhoneError(R.string.enter_valid_phone_number);
+            retValue = false;
+        }
+
+        if(!NumberUtils.isNumber(phone)){
+            showPhoneError(R.string.enter_valid_phone_number_no_symbols);
             retValue = false;
         }
 
