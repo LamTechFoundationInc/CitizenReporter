@@ -44,22 +44,22 @@ public class Stats extends ActionBarActivity {
 
     private LineChartView mChartThree;
     private ImageButton mPlayThree;
+    private ImageButton mPlayTwo;
+    private ImageButton mPlayOne;
     private boolean mUpdateThree;
     private String[] mLabelsThree= {"00", "01", "02", "03", "04", "05"};
-    private final float[][] mValuesThree = {  {4.5f, 5.7f, 4f, 8f, 2.5f, 3f}};
+    private final float[][] mValuesThree = {  {4f, 5f, 4f, 8f, 2f, 3f}};
 
 
     /** First chart */
     private BarChartView mChartOne;
-    private ImageButton mPlayOne;
     private boolean mUpdateOne;
     private String[] mLabelsOne= {"00", "01", "02", "03", "04", "05"};
-    private final float [][] mValuesOne = {{9.5f, 7.5f, 5.5f, 4.5f, 10f, 12f}};
+    private final float [][] mValuesOne = {{9f, 7f, 5f, 4f, 10f, 9f}};
 
 
     /** Second chart */
     private HorizontalBarChartView mChartTwo;
-    private ImageButton mPlayTwo;
     private boolean mUpdateTwo;
     private final String[] mLabelsTwo= {"Audio", "Video", "Images"};
     private final float [] mValuesTwo = {23f, 34f, 55f};

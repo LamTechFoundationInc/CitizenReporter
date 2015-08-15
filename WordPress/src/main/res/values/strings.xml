@@ -1088,6 +1088,6 @@
     <string name="follow_up">Follow up on support channel</string>
 
     <string name="payment_history">Payment History</string>
-    <string name="accepted_rejected">Accepted Content</string>
+    <string name="accepted_rejected">Submitted Content</string>
     <string name="media_types">Media Types</string>
 </resources>
