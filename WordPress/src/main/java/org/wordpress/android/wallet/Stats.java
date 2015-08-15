@@ -4,26 +4,38 @@ import android.animation.PropertyValuesHolder;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.db.chart.Tools;
+import com.db.chart.listener.OnEntryClickListener;
+import com.db.chart.model.Bar;
+import com.db.chart.model.BarSet;
 import com.db.chart.model.LineSet;
 import com.db.chart.view.AxisController;
+import com.db.chart.view.BarChartView;
 import com.db.chart.view.ChartView;
+import com.db.chart.view.HorizontalBarChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.Tooltip;
+import com.db.chart.view.XController;
+import com.db.chart.view.YController;
 import com.db.chart.view.animation.Animation;
 
 import org.wordpress.android.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by nick on 15/08/15.
  */
 public class Stats extends Activity {
+
 
     private LineChartView mChartThree;
     private ImageButton mPlayThree;
@@ -33,6 +45,23 @@ public class Stats extends Activity {
             {1.5f, 2.5f, 1.5f, 5f, 5.5f, 5.5f, 3f},
             {8f, 7.5f, 7.8f, 1.5f, 8f, 8f, .5f}};
 
+
+    /** First chart */
+    private BarChartView mChartOne;
+    private ImageButton mPlayOne;
+    private boolean mUpdateOne;
+    private final String[] mLabelsOne= {"10-15", "15-20", "20-25", "25-30", "30-35"};
+    private final float [][] mValuesOne = {{9.5f, 7.5f, 5.5f, 4.5f, 10f}, {6.5f, 3.5f, 3.5f, 2.5f, 7.5f}};
+
+
+    /** Second chart */
+    private HorizontalBarChartView mChartTwo;
+    private ImageButton mPlayTwo;
+    private boolean mUpdateTwo;
+    private final String[] mLabelsTwo= {"Mon", "Tue", "Wed", "Thu", "Fri"};
+    private final float [] mValuesTwo = {23f, 34f, 55f, 71f, 98f};
+    private TextView mTextViewTwo;
+    private TextView mTextViewMetricTwo;
     @Override
     public void onCreate(Bundle onSavedInstance){
         super.onCreate(onSavedInstance);
@@ -48,14 +77,72 @@ public class Stats extends Activity {
             @Override
             public void onClick(View v) {
                 if (mUpdateThree)
-                    updateChart(2, mChartThree, mPlayThree);
+                    updateLineChart(2, mChartThree, mPlayThree);
                 else
-                    dismissChart(2, mChartThree, mPlayThree);
+                    dismissLineChart(2, mChartThree, mPlayThree);
                 mUpdateThree = !mUpdateThree;
             }
         });
-        showChart(2, mChartThree, mPlayThree);
 
+
+        // Init first chart
+        mUpdateOne = true;
+        mChartOne = (BarChartView) findViewById(R.id.barchart1);
+        mPlayOne = (ImageButton) findViewById(R.id.play1);
+        mPlayOne.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if(mUpdateOne)
+                    updateChart(0, mChartOne, mPlayOne);
+                else {
+                    dismissChart(0, mChartOne, mPlayOne);
+                }
+                mUpdateOne = !mUpdateOne;
+                dismissChart(0, mChartOne, mPlayOne);
+            }
+        });
+
+        // Init second chart
+        mUpdateTwo = true;
+        mChartTwo = (HorizontalBarChartView) findViewById(R.id.barchart2);
+        mPlayTwo = (ImageButton) findViewById(R.id.play2);
+        mPlayTwo.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                if(mUpdateTwo)
+                    updateChart(1, mChartTwo, mPlayTwo);
+                else
+                    dismissChart(1, mChartTwo, mPlayTwo);
+                mUpdateTwo = !mUpdateTwo;
+            }
+        });
+        mTextViewTwo = (TextView) findViewById(R.id.value);
+        mTextViewMetricTwo = (TextView) findViewById(R.id.metric);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            mTextViewTwo.setAlpha(0);
+            mTextViewMetricTwo.setAlpha(0);
+        }else{
+            mTextViewTwo.setVisibility(View.INVISIBLE);
+            mTextViewMetricTwo.setVisibility(View.INVISIBLE);
+        }
+
+        mTextViewTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                    mTextViewTwo.animate().alpha(0).setDuration(100);
+                    mTextViewMetricTwo.animate().alpha(0).setDuration(100);
+                }
+            }
+        });
+
+        showLineChart(2, mChartThree, mPlayThree);
+        showChart(0, mChartOne, mPlayOne);
+        showChart(1, mChartTwo, mPlayTwo);
     }
 
     /**
@@ -64,14 +151,14 @@ public class Stats extends Activity {
      * @param chart   Chart view
      * @param btn    Play button
      */
-    private void showChart(final int tag, final LineChartView chart, final ImageButton btn){
-        dismissPlay(btn);
+    private void showLineChart(final int tag, final LineChartView chart, final ImageButton btn){
+        dismissLinePlay(btn);
         Runnable action =  new Runnable() {
             @Override
             public void run() {
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
-                        showPlay(btn);
+                        showLinePlay(btn);
                     }
                 }, 500);
             }
@@ -81,7 +168,7 @@ public class Stats extends Activity {
             case 0:
             case 1:
             case 2:
-                produceThree(chart, action); break;
+                produceLineThree(chart, action); break;
             default:
         }
     }
@@ -93,15 +180,15 @@ public class Stats extends Activity {
      * @param chart   Chart view
      * @param btn    Play button
      */
-    private void updateChart(final int tag, final LineChartView chart, ImageButton btn){
+    private void updateLineChart(final int tag, final LineChartView chart, ImageButton btn){
 
-        dismissPlay(btn);
+        dismissLinePlay(btn);
 
         switch(tag){
             case 0:
             case 1:
             case 2:
-                updateThree(chart); break;
+                updateLineThree(chart); break;
             default:
         }
     }
@@ -113,17 +200,17 @@ public class Stats extends Activity {
      * @param chart   Chart view
      * @param btn    Play button
      */
-    private void dismissChart(final int tag, final LineChartView chart, final ImageButton btn){
+    private void dismissLineChart(final int tag, final LineChartView chart, final ImageButton btn){
 
-        dismissPlay(btn);
+        dismissLinePlay(btn);
 
         Runnable action =  new Runnable() {
             @Override
             public void run() {
                 new Handler().postDelayed(new Runnable() {
                     public void run() {
-                        showPlay(btn);
-                        showChart(tag, chart, btn);
+                        showLinePlay(btn);
+                        showLineChart(tag, chart, btn);
                     }
                 }, 500);
             }
@@ -133,7 +220,7 @@ public class Stats extends Activity {
             case 0:
             case 1:
             case 2:
-                dismissThree(chart, action); break;
+                dismissLineThree(chart, action); break;
             default:
         }
     }
@@ -143,7 +230,7 @@ public class Stats extends Activity {
      * Show CardView play button
      * @param btn    Play button
      */
-    private void showPlay(ImageButton btn){
+    private void showLinePlay(ImageButton btn){
         btn.setEnabled(true);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             btn.animate().alpha(1).scaleX(1).scaleY(1);
@@ -156,7 +243,7 @@ public class Stats extends Activity {
      * Dismiss CardView play button
      * @param btn    Play button
      */
-    private void dismissPlay(ImageButton btn){
+    private void dismissLinePlay(ImageButton btn){
         btn.setEnabled(false);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             btn.animate().alpha(0).scaleX(0).scaleY(0);
@@ -164,7 +251,7 @@ public class Stats extends Activity {
             btn.setVisibility(View.INVISIBLE);
     }
 
-    public void produceThree(LineChartView chart, Runnable action){
+    public void produceLineThree(LineChartView chart, Runnable action){
 
         Tooltip tip = new Tooltip(Stats.this, R.layout.linechart_three_tooltip, R.id.value);
 
@@ -224,7 +311,7 @@ public class Stats extends Activity {
         chart.show(anim);
     }
 
-    public void updateThree(LineChartView chart){
+    public void updateLineThree(LineChartView chart){
         chart.dismissAllTooltips();
         chart.updateValues(0, mValuesThree[2]);
         chart.updateValues(1, mValuesThree[0]);
@@ -232,9 +319,352 @@ public class Stats extends Activity {
         chart.notifyDataUpdate();
     }
 
-    public static void dismissThree(LineChartView chart, Runnable action){
+    public static void dismissLineThree(LineChartView chart, Runnable action){
         chart.dismissAllTooltips();
         chart.dismiss(new Animation().setEndAction(action));
     }
+
+    /**
+     * Show a CardView chart
+     * @param tag   Tag specifying which chart should be dismissed
+     * @param chart   Chart view
+     * @param btn    Play button
+     */
+    private void showChart(final int tag, final ChartView chart, final ImageButton btn){
+        dismissPlay(btn);
+        Runnable action =  new Runnable() {
+            @Override
+            public void run() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        showPlay(btn);
+                    }
+                }, 500);
+            }
+        };
+
+        switch(tag) {
+            case 0:
+                produceOne(chart, action); break;
+            case 1:
+                produceTwo(chart, action); break;
+            case 2:
+            default:
+        }
+    }
+
+
+    /**
+     * Update the values of a CardView chart
+     * @param tag   Tag specifying which chart should be dismissed
+     * @param chart   Chart view
+     * @param btn    Play button
+     */
+    private void updateChart(final int tag, final ChartView chart, ImageButton btn){
+
+        dismissPlay(btn);
+
+        switch(tag){
+            case 0:
+                updateOne(chart); break;
+            case 1:
+                updateTwo(chart); break;
+            case 2:
+            default:
+        }
+    }
+
+
+    /**
+     * Dismiss a CardView chart
+     * @param tag   Tag specifying which chart should be dismissed
+     * @param chart   Chart view
+     * @param btn    Play button
+     */
+    private void dismissChart(final int tag, final ChartView chart, final ImageButton btn){
+
+        dismissPlay(btn);
+
+        Runnable action =  new Runnable() {
+            @Override
+            public void run() {
+                new Handler().postDelayed(new Runnable() {
+                    public void run() {
+                        showPlay(btn);
+                        showChart(tag, chart, btn);
+                    }
+                }, 500);
+            }
+        };
+
+        switch(tag){
+            case 0:
+                dismissOne(chart, action); break;
+            case 1:
+                dismissTwo(chart, action); break;
+            case 2:
+            default:
+        }
+    }
+
+
+    /**
+     * Show CardView play button
+     * @param btn    Play button
+     */
+    private void showPlay(ImageButton btn){
+        btn.setEnabled(true);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            btn.animate().alpha(1).scaleX(1).scaleY(1);
+        else
+            btn.setVisibility(View.VISIBLE);
+    }
+
+
+    /**
+     * Dismiss CardView play button
+     * @param btn    Play button
+     */
+    private void dismissPlay(ImageButton btn){
+        btn.setEnabled(false);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+            btn.animate().alpha(0).scaleX(0).scaleY(0);
+        else
+            btn.setVisibility(View.INVISIBLE);
+    }
+
+
+
+    /**
+     *
+     * Chart 1
+     *
+     */
+
+    public void produceOne(ChartView chart, Runnable action){
+        BarChartView barChart = (BarChartView) chart;
+
+        barChart.setOnEntryClickListener(new OnEntryClickListener() {
+            @Override
+            public void onClick(int setIndex, int entryIndex, Rect rect) {
+                System.out.println("OnClick "+rect.left);
+            }
+        });
+
+        Tooltip tooltip = new Tooltip(Stats.this, R.layout.barchart_one_tooltip);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            tooltip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1));
+            tooltip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 0));
+        }
+        barChart.setTooltips(tooltip);
+
+        BarSet barSet = new BarSet(mLabelsOne, mValuesOne[0]);
+        barSet.setColor(Color.parseColor("#a8896c"));
+        barChart.addData(barSet);
+
+        barSet = new BarSet(mLabelsOne, mValuesOne[1]);
+        barSet.setColor(Color.parseColor("#c33232"));
+        barChart.addData(barSet);
+
+        barChart.setSetSpacing(Tools.fromDpToPx(-15));
+        barChart.setBarSpacing(Tools.fromDpToPx(35));
+        barChart.setRoundCorners(Tools.fromDpToPx(2));
+
+        Paint gridPaint = new Paint();
+        gridPaint.setColor(Color.parseColor("#8986705C"));
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setAntiAlias(true);
+        gridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
+
+        barChart.setBorderSpacing(5)
+                .setAxisBorderValues(0, 10, 2)
+                .setGrid(BarChartView.GridType.FULL, gridPaint)
+                .setYAxis(false)
+                .setXLabels(XController.LabelPosition.OUTSIDE)
+                .setYLabels(YController.LabelPosition.NONE)
+                .setLabelsColor(Color.parseColor("#86705c"))
+                .setAxisColor(Color.parseColor("#86705c"));
+
+        int[] order = {2, 1, 3, 0, 4};
+        final Runnable auxAction = action;
+        Runnable chartOneAction = new Runnable() {
+            @Override
+            public void run() {
+                showTooltipOne();
+                auxAction.run();
+            }
+        };
+        barChart.show(new Animation()
+                .setOverlap(.5f, order)
+                .setEndAction(chartOneAction))
+        //.show()
+        ;
+    }
+
+    public void updateOne(ChartView chart){
+
+        dismissTooltipOne();
+        float [][]newValues = {{8.5f, 6.5f, 4.5f, 3.5f, 9f}, {5.5f, 3.0f, 3.0f, 2.5f, 7.5f}};
+        chart.updateValues(0, newValues[0]);
+        chart.updateValues(1, newValues[1]);
+        chart.notifyDataUpdate();
+    }
+
+    public void dismissOne(ChartView chart, Runnable action){
+
+        dismissTooltipOne();
+        int[] order = {0, 4, 1, 3, 2};
+        chart.dismiss(new Animation()
+                .setOverlap(.5f, order)
+                .setEndAction(action));
+    }
+
+
+    private void showTooltipOne(){
+
+        ArrayList<ArrayList<Rect>> areas = new ArrayList<>();
+        areas.add(mChartOne.getEntriesArea(0));
+        areas.add(mChartOne.getEntriesArea(1));
+
+        for(int i = 0; i < areas.size(); i++) {
+            for (int j = 0; j < areas.get(i).size(); j++) {
+
+                Tooltip tooltip = new Tooltip(Stats.this, R.layout.barchart_one_tooltip, R.id.value);
+                tooltip.prepare(areas.get(i).get(j), mValuesOne[i][j]);
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                    tooltip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1));
+                    tooltip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 0));
+                }
+                mChartOne.showTooltip(tooltip, true);
+            }
+        }
+
+    }
+
+
+    private void dismissTooltipOne(){
+        mChartOne.dismissAllTooltips();
+    }
+
+
+    /**
+     *
+     * Chart 2
+     *
+     */
+
+    public void produceTwo(ChartView chart, Runnable action){
+        HorizontalBarChartView horChart = (HorizontalBarChartView) chart;
+
+        Tooltip tip = new Tooltip(Stats.this, R.layout.barchart_two_tooltip);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            tip.setEnterAnimation(PropertyValuesHolder.ofFloat(View.ALPHA, 1));
+            tip.setExitAnimation(PropertyValuesHolder.ofFloat(View.ALPHA,0));
+        }
+
+        horChart.setTooltips(tip);
+
+
+        horChart.setOnEntryClickListener(new OnEntryClickListener() {
+            @Override
+            public void onClick(int setIndex, int entryIndex, Rect rect) {
+                mTextViewTwo.setText(Integer.toString((int) mValuesTwo[entryIndex]));
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                    mTextViewTwo.animate().alpha(1).setDuration(200);
+                    mTextViewMetricTwo.animate().alpha(1).setDuration(200);
+                }else{
+                    mTextViewTwo.setVisibility(View.VISIBLE);
+                    mTextViewMetricTwo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        horChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+                    mTextViewTwo.animate().alpha(0).setDuration(100);
+                    mTextViewMetricTwo.animate().alpha(0).setDuration(100);
+                }else{
+                    mTextViewTwo.setVisibility(View.INVISIBLE);
+                    mTextViewMetricTwo.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+
+        BarSet barSet = new BarSet();
+        Bar bar;
+        for(int i = 0; i < mLabelsTwo.length; i++){
+            bar = new Bar(mLabelsTwo[i], mValuesTwo[i]);
+            if(i == mLabelsTwo.length - 1 )
+                bar.setColor(Color.parseColor("#b26657"));
+            else if (i == 0)
+                bar.setColor(Color.parseColor("#998d6e"));
+            else
+                bar.setColor(Color.parseColor("#506a6e"));
+            barSet.addBar(bar);
+        }
+        horChart.addData(barSet);
+        horChart.setBarSpacing(Tools.fromDpToPx(5));
+
+        Paint gridPaint = new Paint();
+        gridPaint.setColor(Color.parseColor("#aab6b2ac"));
+        gridPaint.setStyle(Paint.Style.STROKE);
+        gridPaint.setAntiAlias(true);
+        gridPaint.setStrokeWidth(Tools.fromDpToPx(.75f));
+
+        horChart.setBorderSpacing(0)
+                .setAxisBorderValues(0, 100, 5)
+                .setGrid(HorizontalBarChartView.GridType.FULL, gridPaint)
+                .setXAxis(false)
+                .setYAxis(false)
+                .setLabelsColor(Color.parseColor("#FF8E8A84"))
+                .setXLabels(XController.LabelPosition.NONE);
+
+        int[] order = {4, 3, 2, 1, 0};
+        horChart.show(new Animation()
+                .setOverlap(.5f, order)
+                .setEndAction(action))
+        ;
+    }
+
+    public void updateTwo(ChartView chart){
+
+        chart.dismissAllTooltips();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            mTextViewTwo.animate().alpha(0).setDuration(100);
+            mTextViewMetricTwo.animate().alpha(0).setDuration(100);
+        }else{
+            mTextViewTwo.setVisibility(View.INVISIBLE);
+            mTextViewMetricTwo.setVisibility(View.INVISIBLE);
+        }
+
+        float[] valuesTwoOne = {17f, 26f, 48f, 63f, 94f};
+        chart.updateValues(0, valuesTwoOne);
+        chart.notifyDataUpdate();
+    }
+
+    public void dismissTwo(ChartView chart, Runnable action){
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            mTextViewTwo.animate().alpha(0).setDuration(100);
+            mTextViewMetricTwo.animate().alpha(0).setDuration(100);
+        }else{
+            mTextViewTwo.setVisibility(View.INVISIBLE);
+            mTextViewMetricTwo.setVisibility(View.INVISIBLE);
+        }
+
+        chart.dismissAllTooltips();
+
+        int[] order = {0, 1, 2, 3, 4};
+        chart.dismiss(new Animation()
+                .setOverlap(.5f, order)
+                .setEndAction(action));
+    }
+
+
 
 }

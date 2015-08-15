@@ -476,7 +476,7 @@ public class RipotiMainActivity extends ActionBarActivity
             case R.id.user_menu:
                 //show user menu
                 Intent userMenuIntent = new Intent(RipotiMainActivity.this, UserMenuActivity.class);
-                startActivity(userMenuIntent);
+                ActivityLauncher.slideInFromRight(RipotiMainActivity.this, userMenuIntent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
