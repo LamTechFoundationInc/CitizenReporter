@@ -31,7 +31,10 @@ import com.db.chart.view.animation.Animation;
 
 import org.wordpress.android.R;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 
 /**
  * Created by nick on 15/08/15.
@@ -42,16 +45,16 @@ public class Stats extends ActionBarActivity {
     private LineChartView mChartThree;
     private ImageButton mPlayThree;
     private boolean mUpdateThree;
-    private final String[] mLabelsThree= {"00", "04", "08", "12", "16", "20", "24"};
-    private final float[][] mValuesThree = {  {4.5f, 5.7f, 4f, 8f, 2.5f, 3f, 6.5f}};
+    private String[] mLabelsThree= {"00", "01", "02", "03", "04", "05"};
+    private final float[][] mValuesThree = {  {4.5f, 5.7f, 4f, 8f, 2.5f, 3f}};
 
 
     /** First chart */
     private BarChartView mChartOne;
     private ImageButton mPlayOne;
     private boolean mUpdateOne;
-    private final String[] mLabelsOne= {"10-15", "15-20", "20-25", "25-30", "30-35"};
-    private final float [][] mValuesOne = {{9.5f, 7.5f, 5.5f, 4.5f, 10f}};
+    private String[] mLabelsOne= {"00", "01", "02", "03", "04", "05"};
+    private final float [][] mValuesOne = {{9.5f, 7.5f, 5.5f, 4.5f, 10f, 12f}};
 
 
     /** Second chart */
@@ -62,6 +65,7 @@ public class Stats extends ActionBarActivity {
     private final float [] mValuesTwo = {23f, 34f, 55f};
     private TextView mTextViewTwo;
     private TextView mTextViewMetricTwo;
+    private ArrayList<String> months;
     @Override
     public void onCreate(Bundle onSavedInstance){
         super.onCreate(onSavedInstance);
@@ -74,6 +78,25 @@ public class Stats extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //Get list of last months
+        int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+        months = new ArrayList<>();
+
+        months.add(getMonthForInt(currentMonth));
+        for(int i = 0; i<5; i++){
+            currentMonth--;
+
+            if(currentMonth<0){
+                currentMonth += 12;
+            }
+
+            months.add(getMonthForInt(currentMonth));
+
+        }
+        Collections.reverse(months);
+
+        mLabelsThree = months.toArray(new String[months.size()]);
+        mLabelsOne = months.toArray(new String[months.size()]);
 
         // Init third chart
         mUpdateThree = true;
@@ -472,7 +495,7 @@ public class Stats extends ActionBarActivity {
                 .setLabelsColor(Color.parseColor("#86705c"))
                 .setAxisColor(Color.parseColor("#86705c"));
 
-        int[] order = {2, 1, 3, 0, 4};
+        int[] order = {2, 1, 3, 0, 4, 5};
         final Runnable auxAction = action;
         Runnable chartOneAction = new Runnable() {
             @Override
@@ -491,7 +514,7 @@ public class Stats extends ActionBarActivity {
     public void updateOne(ChartView chart){
 
         dismissTooltipOne();
-        float [][]newValues = {{8.5f, 6.5f, 4.5f, 3.5f, 9f}};
+        float [][]newValues = {{8.5f, 6.5f, 4.5f, 3.5f, 9f, 12f}};
         chart.updateValues(0, newValues[0]);
         chart.updateValues(1, newValues[1]);
         chart.notifyDataUpdate();
@@ -500,7 +523,7 @@ public class Stats extends ActionBarActivity {
     public void dismissOne(ChartView chart, Runnable action){
 
         dismissTooltipOne();
-        int[] order = {0, 4, 1, 3, 2};
+        int[] order = {0, 4, 1, 3, 2, 5};
         chart.dismiss(new Animation()
                 .setOverlap(.5f, order)
                 .setEndAction(action));
@@ -651,6 +674,14 @@ public class Stats extends ActionBarActivity {
                 .setEndAction(action));
     }
 
-
+    String getMonthForInt(int num) {
+        String month = "Jan";
+        DateFormatSymbols dfs = new DateFormatSymbols();
+        String[] months = dfs.getMonths();
+        if (num >= 0 && num <= 11 ) {
+            month = months[num];
+        }
+        return month;
+    }
 
 }
