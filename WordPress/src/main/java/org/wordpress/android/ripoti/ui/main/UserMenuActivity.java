@@ -39,6 +39,7 @@ import org.wordpress.android.util.ServiceUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.wallet.PaymentsListActivity;
+import org.wordpress.android.wallet.Stats;
 import org.wordpress.android.widgets.WPNetworkImageView;
 import org.wordpress.android.widgets.WPTextView;
 
@@ -112,9 +113,8 @@ public class UserMenuActivity extends ActionBarActivity{
         findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBlog != null) {
-                    ActivityLauncher.viewBlogStats(UserMenuActivity.this, mBlog.getLocalTableBlogId());
-                }
+                Intent intent = new Intent(UserMenuActivity.this, Stats.class);
+                ActivityLauncher.slideInFromRight(UserMenuActivity.this, intent);
             }
         });
 
