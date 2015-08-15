@@ -1,6 +1,7 @@
 package org.wordpress.android.wallet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -29,6 +31,7 @@ import org.json.JSONObject;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
+import org.wordpress.android.chat.ChatActivity;
 import org.wordpress.android.chat.GifAnimationDrawable;
 import org.wordpress.android.ui.accounts.helpers.APIFunctions;
 
@@ -106,6 +109,7 @@ public class PaymentsListActivity extends ActionBarActivity {
                 holder.disputeLayout = (LinearLayout) convertView.findViewById(R.id.dispute_layout);
                 holder.disputeIcon = (ImageView) convertView.findViewById(R.id.dispute_icon);
                 holder.disputeText = (TextView) convertView.findViewById(R.id.dispute_text);
+                holder.followUpLayout = (RelativeLayout) convertView.findViewById(R.id.followup_layout);
 
                 convertView.setTag(holder);
             }
@@ -136,6 +140,15 @@ public class PaymentsListActivity extends ActionBarActivity {
                 }
             });
 
+            holder.followUpLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PaymentsListActivity.this, ChatActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
             return convertView;
 
         }
@@ -148,6 +161,7 @@ public class PaymentsListActivity extends ActionBarActivity {
             ImageView disputeIcon;
             TextView disputeText;
             TextView confirmText;
+            RelativeLayout followUpLayout;
         }
 
         @Override
@@ -164,12 +178,13 @@ public class PaymentsListActivity extends ActionBarActivity {
             holder.confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
             holder.confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
             holder.disputeLayout.setVisibility(View.GONE);
-
+            holder.followUpLayout.setVisibility(View.GONE);
         }else{
-            //turn button green, text to confirmed, hide dispute, layout, save to db, api call, handle from notification
-            holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+            holder.disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
             holder.disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
             holder.confirmLayout.setVisibility(View.GONE);
+            //show follow up button: takes user to chatactivity
+            holder.followUpLayout.setVisibility(View.VISIBLE);
         }
 
         if(update){

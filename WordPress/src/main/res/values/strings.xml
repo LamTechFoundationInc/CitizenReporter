@@ -1083,5 +1083,6 @@
     <string name="dispute">Dispute</string>
     <string name="disputed">Disputed!</string>
     <string name="confirmed">Confirmed!</string>
+    <string name="follow_up">Follow up on support channel</string>
 
 </resources>

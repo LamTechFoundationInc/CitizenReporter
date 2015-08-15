@@ -74,4 +74,36 @@
         android:text="@string/dispute"
         android:id="@+id/dispute_text"/>
     </LinearLayout>
+
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:id="@+id/followup_layout"
+        android:layout_margin="0dp"
+        android:layout_below="@+id/confirm_layout"
+        android:layout_alignRight="@+id/dispute_layout"
+        android:layout_alignEnd="@+id/dispute_layout"
+        android:layout_alignLeft="@+id/confirm_layout"
+        android:layout_alignStart="@+id/confirm_layout"
+        android:background="@color/grey_lighten_20"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/messages_icon"
+            style="@style/MySiteListRowIcon"
+            android:contentDescription="@string/my_site_btn_comments"
+            android:src="@drawable/me_icon_support"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/messages_text_view"
+            style="@style/MySiteListRowTextView"
+            android:layout_toRightOf="@id/messages_icon"
+            android:text="@string/follow_up"
+            android:textSize="16dp"
+            android:padding="5dp"/>
+
+    </RelativeLayout>
+
 </RelativeLayout>
