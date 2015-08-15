@@ -184,7 +184,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
             retValue = false;
         }
 
-        if(!NumberUtils.isNumber(phone)){
+        if(!NumberUtils.isNumber(phone.replace("+", ""))){
             showPhoneError(R.string.enter_valid_phone_number_no_symbols);
             retValue = false;
         }

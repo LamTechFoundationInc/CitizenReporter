@@ -1021,6 +1021,8 @@
     <string name="full_name">Full Name</string>
     <string name="update_profile_success">Profile updated successfully!</string>
     <string name="update_profile_fail">Failed</string>
+    <string name="enter_valid_phone_number">Phone number should be at least 10 characters</string>
+    <string name="enter_valid_phone_number_no_symbols">Only numbers allowed</string>
 
     <!--GCM Stuff-->
     <string name="error_config">Please set the %1$s constant and recompile the app.</string>
@@ -1084,5 +1086,6 @@
     <string name="disputed">Disputed!</string>
     <string name="confirmed">Confirmed!</string>
     <string name="follow_up">Follow up on support channel</string>
+
 
 </resources>
