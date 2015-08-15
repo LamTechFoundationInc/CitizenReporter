@@ -129,6 +129,8 @@
 
             </RelativeLayout>
 
+
+
             <!--Lessons-->
             <RelativeLayout
                 android:id="@+id/row_lessons"
@@ -172,7 +174,6 @@
 
             <!--Stats-->
             <RelativeLayout
-                android:visibility="gone"
                 android:id="@+id/row_stats"
                 style="@style/MySiteListRowLayout">
 
