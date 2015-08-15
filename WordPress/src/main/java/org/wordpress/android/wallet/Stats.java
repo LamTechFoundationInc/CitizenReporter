@@ -43,9 +43,7 @@ public class Stats extends ActionBarActivity {
     private ImageButton mPlayThree;
     private boolean mUpdateThree;
     private final String[] mLabelsThree= {"00", "04", "08", "12", "16", "20", "24"};
-    private final float[][] mValuesThree = {  {4.5f, 5.7f, 4f, 8f, 2.5f, 3f, 6.5f},
-            {1.5f, 2.5f, 1.5f, 5f, 5.5f, 5.5f, 3f},
-            {8f, 7.5f, 7.8f, 1.5f, 8f, 8f, .5f}};
+    private final float[][] mValuesThree = {  {4.5f, 5.7f, 4f, 8f, 2.5f, 3f, 6.5f}};
 
 
     /** First chart */
@@ -53,15 +51,15 @@ public class Stats extends ActionBarActivity {
     private ImageButton mPlayOne;
     private boolean mUpdateOne;
     private final String[] mLabelsOne= {"10-15", "15-20", "20-25", "25-30", "30-35"};
-    private final float [][] mValuesOne = {{9.5f, 7.5f, 5.5f, 4.5f, 10f}, {6.5f, 3.5f, 3.5f, 2.5f, 7.5f}};
+    private final float [][] mValuesOne = {{9.5f, 7.5f, 5.5f, 4.5f, 10f}};
 
 
     /** Second chart */
     private HorizontalBarChartView mChartTwo;
     private ImageButton mPlayTwo;
     private boolean mUpdateTwo;
-    private final String[] mLabelsTwo= {"Mon", "Tue", "Wed", "Thu", "Fri"};
-    private final float [] mValuesTwo = {23f, 34f, 55f, 71f, 98f};
+    private final String[] mLabelsTwo= {"Audio", "Video", "Images"};
+    private final float [] mValuesTwo = {23f, 34f, 55f};
     private TextView mTextViewTwo;
     private TextView mTextViewMetricTwo;
     @Override
@@ -284,20 +282,6 @@ public class Stats extends ActionBarActivity {
                 .setDotsColor(Color.parseColor("#eef1f6"));
         chart.addData(dataset);
 
-        dataset = new LineSet(mLabelsThree, mValuesThree[1]);
-        dataset.setColor(Color.parseColor("#FFA03436"))
-                .setDotsStrokeThickness(Tools.fromDpToPx(2))
-                .setDotsStrokeColor(Color.parseColor("#FFA03436"))
-                .setDotsColor(Color.parseColor("#eef1f6"));
-        chart.addData(dataset);
-
-        dataset = new LineSet(mLabelsThree, mValuesThree[2]);
-        dataset.setColor(Color.parseColor("#FF365EAF"))
-                .setDotsStrokeThickness(Tools.fromDpToPx(2))
-                .setDotsStrokeColor(Color.parseColor("#FF365EAF"))
-                .setDotsColor(Color.parseColor("#eef1f6"));
-        chart.addData(dataset);
-
         Paint gridPaint = new Paint();
         gridPaint.setColor(Color.parseColor("#308E9196"));
         gridPaint.setStyle(Paint.Style.STROKE);
@@ -322,9 +306,7 @@ public class Stats extends ActionBarActivity {
 
     public void updateLineThree(LineChartView chart){
         chart.dismissAllTooltips();
-        chart.updateValues(0, mValuesThree[2]);
-        chart.updateValues(1, mValuesThree[0]);
-        chart.updateValues(2, mValuesThree[1]);
+        chart.updateValues(0, mValuesThree[0]);
         chart.notifyDataUpdate();
     }
 
@@ -471,10 +453,6 @@ public class Stats extends ActionBarActivity {
         barSet.setColor(Color.parseColor("#a8896c"));
         barChart.addData(barSet);
 
-        barSet = new BarSet(mLabelsOne, mValuesOne[1]);
-        barSet.setColor(Color.parseColor("#c33232"));
-        barChart.addData(barSet);
-
         barChart.setSetSpacing(Tools.fromDpToPx(-15));
         barChart.setBarSpacing(Tools.fromDpToPx(35));
         barChart.setRoundCorners(Tools.fromDpToPx(2));
@@ -513,7 +491,7 @@ public class Stats extends ActionBarActivity {
     public void updateOne(ChartView chart){
 
         dismissTooltipOne();
-        float [][]newValues = {{8.5f, 6.5f, 4.5f, 3.5f, 9f}, {5.5f, 3.0f, 3.0f, 2.5f, 7.5f}};
+        float [][]newValues = {{8.5f, 6.5f, 4.5f, 3.5f, 9f}};
         chart.updateValues(0, newValues[0]);
         chart.updateValues(1, newValues[1]);
         chart.notifyDataUpdate();
@@ -533,7 +511,6 @@ public class Stats extends ActionBarActivity {
 
         ArrayList<ArrayList<Rect>> areas = new ArrayList<>();
         areas.add(mChartOne.getEntriesArea(0));
-        areas.add(mChartOne.getEntriesArea(1));
 
         for(int i = 0; i < areas.size(); i++) {
             for (int j = 0; j < areas.get(i).size(); j++) {
@@ -633,7 +610,7 @@ public class Stats extends ActionBarActivity {
                 .setLabelsColor(Color.parseColor("#FF8E8A84"))
                 .setXLabels(XController.LabelPosition.NONE);
 
-        int[] order = {4, 3, 2, 1, 0};
+        int[] order = { 2, 1, 0};
         horChart.show(new Animation()
                 .setOverlap(.5f, order)
                 .setEndAction(action))
@@ -651,7 +628,7 @@ public class Stats extends ActionBarActivity {
             mTextViewMetricTwo.setVisibility(View.INVISIBLE);
         }
 
-        float[] valuesTwoOne = {17f, 26f, 48f, 63f, 94f};
+        float[] valuesTwoOne = {48f, 63f, 94f};
         chart.updateValues(0, valuesTwoOne);
         chart.notifyDataUpdate();
     }
@@ -668,7 +645,7 @@ public class Stats extends ActionBarActivity {
 
         chart.dismissAllTooltips();
 
-        int[] order = {0, 1, 2, 3, 4};
+        int[] order = {0, 1, 2};
         chart.dismiss(new Animation()
                 .setOverlap(.5f, order)
                 .setEndAction(action));
