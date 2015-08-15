@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.EditTextPreference;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -130,6 +131,8 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         final String password = EditTextUtils.getText(mPasswordTextField).trim();
         final String username = EditTextUtils.getText(mUsernameTextField).trim();
         final String siteUrl = EditTextUtils.getText(mSiteUrlTextField).trim();
+        final String phone = EditTextUtils.getText(mPhone).trim();
+
         boolean retValue = true;
 
         if (email.equals("")) {
@@ -171,6 +174,11 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
 
         if (password.length() < 4) {
             showPasswordError(R.string.invalid_password_message);
+            retValue = false;
+        }
+
+        if(phone.length() < 10){
+            showPhoneError(R.string.enter_valid_phone_number);
             retValue = false;
         }
 
@@ -238,6 +246,11 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         mPasswordTextField.setError(getString(messageId));
         mPasswordTextField.requestFocus();
     }
+    private void showPhoneError(int messageId) {
+        mPhone.setError(getString(messageId));
+        mPhone.requestFocus();
+    }
+
 
     private void showEmailError(int messageId) {
         mEmailTextField.setError(getString(messageId));
