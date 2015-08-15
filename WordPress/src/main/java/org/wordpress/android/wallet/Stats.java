@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 /**
  * Created by nick on 15/08/15.
  */
-public class Stats extends Activity {
+public class Stats extends ActionBarActivity {
 
 
     private LineChartView mChartThree;
@@ -67,6 +69,13 @@ public class Stats extends Activity {
         super.onCreate(onSavedInstance);
 
         setContentView(R.layout.wallet_stats_activity);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getResources().getString(R.string.stats));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         // Init third chart
         mUpdateThree = true;

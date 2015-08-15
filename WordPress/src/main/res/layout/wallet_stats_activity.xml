@@ -10,11 +10,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar">
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/payment_history_text"
+            android:text="@string/payment_history"
+            style="@style/MySiteListRowTextView"
+            android:layout_margin="5dp"/>
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card"
-        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -43,12 +48,19 @@
                 android:background="@android:color/transparent"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/accepted_rejected_text"
+            android:text="@string/accepted_rejected"
+            style="@style/MySiteListRowTextView"
+            android:layout_margin="5dp"
+            />
+
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_below="@+id/card"
         android:id="@+id/card1"
         card_view:cardCornerRadius="8dp"
         card_view:cardBackgroundColor="#cec1b2">
@@ -63,6 +75,7 @@
                 android:paddingRight="12dp"
                 android:paddingLeft="12dp"
                 android:paddingBottom="8dp"/>
+
             <ImageButton
                 android:id="@+id/play1"
                 android:layout_width="40dp"
@@ -73,13 +86,17 @@
                 android:background="@android:color/transparent"/>
         </RelativeLayout>
     </android.support.v7.widget.CardView>
-
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/media_types_text"
+            android:text="@string/media_types"
+            style="@style/MySiteListRowTextView"
+            android:layout_margin="5dp"
+            />
     <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="8dp"
         card_view:cardCornerRadius="4dp"
         card_view:cardBackgroundColor="#E0E0E0">
         <RelativeLayout
