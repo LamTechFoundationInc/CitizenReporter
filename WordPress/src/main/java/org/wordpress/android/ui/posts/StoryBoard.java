@@ -131,8 +131,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     private HashMap<String,File> media_map;
     private boolean hasMedia = false;
-    
-
 
     private Post mPost;
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
@@ -676,7 +674,22 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     private void saveAndFinish() {
-        justSave();
+        //savePost(true);
+        if (allEmptyContentFields() && !hasMedia) {
+            // new and empty post? delete it
+            //if (mIsNewPost) {
+                WordPress.wpDB.deletePost(mPost);
+            //}
+
+        } /*else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
+            // if no changes have been made to the post, set it back to the original don't save it
+            WordPress.wpDB.updatePost(mOriginalPost);
+            WordPress.currentPost = mOriginalPost;
+        } */else {
+
+            justSave();
+
+        }
         finish();
     }
 
@@ -716,7 +729,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         if (hasEmptyContentFields()) {
-            ToastUtils.showToast(this, "Missing required fields", ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(this, R.string.error_all_fields_required, ToastUtils.Duration.SHORT);
 
         }else if (!NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
