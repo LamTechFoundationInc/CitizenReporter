@@ -95,7 +95,7 @@
         android:layout_alignParentBottom="true" >
 
         <include
-            layout="@layout/capture_buttons"
+            layout="@layout/capture_buttons_add"
             android:id="@+id/bottom_action_buttons"
             android:layout_width="match_parent"
             android:layout_height="50dp"

@@ -68,6 +68,7 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -274,26 +275,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //quick capture icons
         button_camera = (LinearLayout)findViewById(R.id.button_camera);
-        View target = findViewById(R.id.camView2);
-        View target2 = findViewById(R.id.camView02);
-        View target3 = findViewById(R.id.camView002);
-
-        BadgeView badge = new BadgeView(this, target);
-        BadgeView badge2 = new BadgeView(this, target2);
-        BadgeView badge3 = new BadgeView(this, target3);
-
-        badge.setText("+");
-        badge.setBackgroundColor(getResources().getColor(R.color.grey_darken_10));
-
-        badge2.setText("+");
-        badge2.setBackgroundColor(getResources().getColor(R.color.grey_darken_10));
-
-        badge3.setText("+");
-        badge3.setBadgeBackgroundColor(getResources().getColor(R.color.grey_darken_10));
-
-        badge.show();
-        badge2.show();
-        badge3.show();
 
         button_video = (LinearLayout)findViewById(R.id.button_video);
         button_mic = (LinearLayout)findViewById(R.id.button_mic);
@@ -333,15 +314,42 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
              mIsNewPost = true;
          }
 
+        /*TODO: doesn't work, but will come back to it
         ArrayList<MediaFile> postMedia = WordPress.wpDB.getMediaFilesForPost(mPost);
+
 
         if(postMedia.size()>0){
             for(int i = 0; i<postMedia.size(); i++){
                 generateThumbAndAddToSlider(postMedia.get(i));
             }
-        }
+        }*/
+        getAndSetThumbnails();
+
         setUpQuestionnaire();
 
+    }
+
+    public void getAndSetThumbnails(){
+        String mediaPaths = StringUtils.notNullStr(mPost.getMediaPaths());
+        if(mediaPaths!=""){
+
+            String[] mediaPaths_parts = mediaPaths.split(":");
+            for(int i = 0; i<mediaPaths_parts.length; i++){
+                String thisThumb = mediaPaths_parts[i];
+                if(thisThumb.trim()!=""){
+
+                    File thumb = new File(thisThumb);
+
+                    if (thumb.exists()) {
+                        //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+                        Random randomGenerator = new Random();
+                        media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
+                        setUpSlider();
+                    }
+
+                }
+            }
+        }
     }
 
     public void showPaymentDialog(){
@@ -552,7 +560,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
             setUpSlider();
             //add thumb to story mediapaths so as to display before upload
-            mPost.setMediaPaths(mPost.getMediaPaths() +":"+ thumb.getAbsolutePath());
+            mPost.setMediaPaths(mPost.getMediaPaths() + ":" + thumb.getAbsolutePath());
 
         }
     }

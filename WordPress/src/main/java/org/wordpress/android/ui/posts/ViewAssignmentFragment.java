@@ -146,26 +146,7 @@ public class ViewAssignmentFragment extends Fragment {
         button_video = (LinearLayout)v.findViewById(R.id.button_video);
         button_mic = (LinearLayout)v.findViewById(R.id.button_mic);
 
-        View target = v.findViewById(R.id.camView2);
-        View target2 = v.findViewById(R.id.camView02);
-        View target3 = v.findViewById(R.id.camView002);
 
-        BadgeView badge = new BadgeView(getActivity(), target);
-        BadgeView badge2 = new BadgeView(getActivity(), target2);
-        BadgeView badge3 = new BadgeView(getActivity(), target3);
-
-        badge.setText("+");
-        badge.setBackgroundColor(getResources().getColor(R.color.alert_yellow));
-
-        badge2.setText("+");
-        badge2.setBackgroundColor(getResources().getColor(R.color.orange_fire));
-
-        badge3.setText("+");
-        badge3.setBadgeBackgroundColor(getResources().getColor(R.color.alert_green));
-
-        badge.show();
-        badge2.show();
-        badge3.show();
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
