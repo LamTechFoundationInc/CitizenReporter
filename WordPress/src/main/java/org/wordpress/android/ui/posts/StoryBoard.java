@@ -87,6 +87,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSliderClickListener,
         ViewPagerEx.OnPageChangeListener{
@@ -139,6 +140,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private boolean mMediaUploadServiceStarted;
 
     private TextView mPrice;
+    private String static_id;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -339,23 +341,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         }
         setUpQuestionnaire();
-
-        Log.d("remote & local", "remote:" + mPost.getRemotePostId() + ":local:" + genRandID(1000000, 5000000));
-
-        
-    }
-
-    public int genRandID(int min, int max){
-
-            // NOTE: Usually this should be a field rather than a method
-            // variable so that it is not re-seeded every call.
-            Random rand = new Random();
-
-            // nextInt is normally exclusive of the top value,
-            // so add 1 to make it inclusive
-            int randomNum = rand.nextInt((max - min) + 1) + min;
-
-            return randomNum;
 
     }
 
