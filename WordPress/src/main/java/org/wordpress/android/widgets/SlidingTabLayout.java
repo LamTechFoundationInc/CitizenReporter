@@ -200,6 +200,16 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mTabBadgeViewId = badgeViewId;
         mIcons = icons;
     }
+    /*
+     * use this version to display icons and text
+     */
+    public void setCustomTabView(int layoutResId, int textViewId, int imageViewId, Integer[] titles, Integer[] icons) {
+        mTabViewLayoutId = layoutResId;
+        mTabViewIconViewId = imageViewId;
+        mTabViewTextViewId = textViewId;
+        mTitles = titles;
+        mIcons = icons;
+    }
 
     public boolean isBadged(int position) {
         final View badgeView = mTabStrip.findViewWithTag(makeBadgeTag(position));
@@ -301,18 +311,22 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         for (int i = 0; i < adapter.getCount(); i++) {
             View tabView = null;
-            if (showIcons) {
+            //if (showIcons) {
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip, false);
                 ImageView imgIcon = (ImageView) tabView.findViewById(mTabViewIconViewId);
                 imgIcon.setImageDrawable(getContext().getResources().getDrawable(mIcons[i]));
-                // tag the badge for this tab so it can be found by setBadge()
-                if (mTabBadgeViewId != 0) {
-                    View badgeView = tabView.findViewById(mTabBadgeViewId);
-                    if (badgeView != null) {
-                        badgeView.setTag(makeBadgeTag(i));
-                    }
-                }
-            } else {
+                TextView tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
+                tabTitleView.setText(getContext().getResources().getString(mTitles[i]));
+
+            // tag the badge for this tab so it can be found by setBadge()
+                //if (mTabBadgeViewId != 0) {
+                //    View badgeView = tabView.findViewById(mTabBadgeViewId);
+                //    if (badgeView != null) {
+                //        badgeView.setTag(makeBadgeTag(i));
+                //    }
+               // }
+            //}
+            /*else {
                 TextView tabTitleView = null;
 
                 if (mTabViewLayoutId != 0) {
@@ -328,7 +342,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                         tabTitleView.setText(getContext().getResources().getString(mTitles[i]));
                     }
                 }
-            }
+           }*/
 
             if (mDistributeEvenly) {
                 LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabView.getLayoutParams();

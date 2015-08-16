@@ -361,14 +361,14 @@ public class RipotiMainActivity extends ActionBarActivity
         // tabs are left-aligned rather than evenly distributed in landscape
         mTabs.setDistributeEvenly(!DisplayUtils.isLandscape(this));
 
-        Integer icons[] = {R.drawable.main_tab_sites,R.drawable.main_tab_reader};
+        Integer icons[] = {R.drawable.main_tab_notifications,R.drawable.main_tab_reader};
         Integer titles[] = {R.string.assignments, R.string.my_posts};
 
         // content descriptions
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_ASSIGNMENTS, getString(R.string.assignments));
         mTabs.setContentDescription(RipotiMainTabAdapter.TAB_MYPOSTS, getString(R.string.my_posts));
 
-        mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab, titles);
+        mTabs.setCustomTabView(R.layout.tab_text, R.id.text_tab, R.id.icon_tab, titles, icons);
 
         mTabs.setViewPager(mViewPager);
         mTabs.setOnSingleTabClickListener(this);

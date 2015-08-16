@@ -11,19 +11,22 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="25dp"
+        android:layout_margin="3dp"
         android:id="@+id/icon_tab"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_tab_reader_normal"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/text_sz_extra_large"
+        android:textSize="@dimen/text_sz_large"
         android:textColor="@color/white"
         android:id="@+id/text_tab"
-        android:layout_centerInParent="true"
-        android:layout_margin="10dp"
         android:text="icon"
-        android:fontFamily="sans-serif-light"/>
+        android:fontFamily="sans-serif-light"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/icon_tab"
+        android:layout_toEndOf="@+id/icon_tab" />
 
 </RelativeLayout>
