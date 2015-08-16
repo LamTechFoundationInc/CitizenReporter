@@ -25,13 +25,14 @@
         android:id="@+id/postDetailFragmentContainer"
         android:layout_below="@+id/sliding_tabs"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <org.wordpress.android.widgets.WPMainViewPager
         android:id="@+id/viewpager_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_above="@+id/view2">
 
         <fragment
             android:name="org.wordpress.android.ui.main.RipotiPostsListFragment"
@@ -51,7 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_gravity="bottom"
-            android:background="@color/white"/>
+            android:background="@color/white"
+            android:id="@+id/view2" />
     <LinearLayout
         android:id="@+id/bottom_action_buttons"
         android:orientation="horizontal"
@@ -61,7 +63,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/view_post_toolbar">
+        android:background="@color/grey_lighten_20">
         <ImageView
             android:id="@+id/button_camera"
             android:layout_width="0dp"
@@ -74,7 +76,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@color/grey_lighten_10"
+            android:background="@color/grey_lighten_20"
             />
         <ImageView
             android:id="@+id/button_video"
