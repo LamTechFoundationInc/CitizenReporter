@@ -1035,9 +1035,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if(mimeType.startsWith("image")){
             attachURL = "<a href=\""+file_url+"\"><img class=\"alignnone size-medium wp-image-400\" src=\""+file_url+"\" alt=\""+filename+"\" width=\"300\" height=\"225\" /></a>";
         }else if(mimeType.startsWith("video")){
-
+            attachURL = "[video width=\"320\" height=\"240\" mp4=\""+file_url+"\"][/video]";
         }else if(mimeType.startsWith("audio")){
-
+            attachURL = "[audio mp3=\""+file_url+"\"][/audio]";
         }
 
         String old_description = mPost.getDescription() + "";
