@@ -88,11 +88,10 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             >
-            <LinearLayout
+            <RelativeLayout
                 android:layout_height="50dp"
                 android:layout_width="match_parent"
                 android:id="@+id/paneSwitch"
-                android:orientation="horizontal"
                 android:layout_alignParentTop="true">
                 <org.wordpress.android.widgets.WPTextView
                     android:id="@+id/text_summary"
@@ -111,12 +110,30 @@
                     style="@style/ReaderTextView.TogglePane_Active"
                     tools:text="text_template"
                     android:text="@string/template"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:drawableLeft="@drawable/ic_template"
-                    android:padding="3dp"/>
-            </LinearLayout>
+                    android:drawableStart="@drawable/ic_template"
+                    android:padding="3dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@+id/price"
+                    android:layout_toLeftOf="@+id/price" />
+                <org.wordpress.android.widgets.WPTextView
+                    android:textColor="@color/blue_dark"
+                    android:id="@+id/price"
+                    style="@style/ReaderTextView.TogglePane_Active"
+                    tools:text="text_bounty"
+                    android:text="@string/own_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:drawableLeft="@drawable/ic_bounty"
+                    android:drawableStart="@drawable/ic_bounty"
+                    android:padding="3dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/paneContainer"

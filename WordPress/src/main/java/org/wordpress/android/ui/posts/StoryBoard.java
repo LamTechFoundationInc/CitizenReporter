@@ -136,6 +136,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     public static final String NEW_MEDIA_GALLERY = "NEW_MEDIA_GALLERY";
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     private boolean mMediaUploadServiceStarted;
+
+    private TextView mPrice;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,6 +241,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         text_summary = (TextView)findViewById(R.id.text_summary);
         text_template= (TextView)findViewById(R.id.text_template);
 
+        mPrice = (TextView)findViewById(R.id.price);
+        //TODO: if assignment set bounty & disable click
+        //TODO: if already paid show paid + show amount info & disable click
+        //set own price as custom field
+        mPrice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    showPaymentDialog();
+            }
+        });
         /*
         text_summary.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -268,13 +280,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         BadgeView badge3 = new BadgeView(this, target3);
 
         badge.setText("+");
-        badge.setBackgroundColor(getResources().getColor(R.color.alert_yellow));
+        badge.setBackgroundColor(getResources().getColor(R.color.grey_darken_10));
 
         badge2.setText("+");
-        badge2.setBackgroundColor(getResources().getColor(R.color.orange_fire));
+        badge2.setBackgroundColor(getResources().getColor(R.color.grey_darken_10));
 
         badge3.setText("+");
-        badge3.setBadgeBackgroundColor(getResources().getColor(R.color.alert_green));
+        badge3.setBadgeBackgroundColor(getResources().getColor(R.color.grey_darken_10));
 
         badge.show();
         badge2.show();
@@ -322,12 +334,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         if(postMedia.size()>0){
             for(int i = 0; i<postMedia.size(); i++){
-                Log.d("are we here?", postMedia.get(i).getFilePath() + ":" + postMedia.get(i).getPostID());
                 generateThumbAndAddToSlider(postMedia.get(i));
             }
         }
-        Log.d("are we here2?", mPost.getLocalTablePostId() + "");
         setUpQuestionnaire();
+
+        Log.d("remote & local", "remote:" + mPost.getRemotePostId() + ":local:" + mPost.getLocalTablePostId());
+
+    }
+
+    public void showPaymentDialog(){
 
     }
 
@@ -690,7 +706,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             justSave();
 
         }
+        closePost();
+    }
+
+    public void closePost(){
         finish();
+
     }
 
     public void justSave(){
@@ -743,10 +764,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
             PostUploadService.addPostToUpload(mPost);
             startService(new Intent(this, PostUploadService.class));
-            /*Intent i = new Intent();
+            Intent i = new Intent();
             i.putExtra(EXTRA_SHOULD_REFRESH, true);
             setResult(RESULT_OK, i);
-            */
+
             finish();
         }
 

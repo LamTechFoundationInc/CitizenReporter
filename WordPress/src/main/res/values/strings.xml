@@ -937,11 +937,12 @@
     <string name="empty_answer">Tap to fill</string>
     <string name="confirm_save">Discard changes?</string>
     <string name="title_required">You have to write a summary</string>
+    <string name="own_price">Set own price</string>
 
     <string-array name="fivew_and_h">
         <item>Provide your story summary</item>
         <item>Why did this happen?</item>
-        <item>Which people/organisations are involved?</item>
+        <item>Any people/orgs involved?</item>
         <item>Where did this happen?</item>
         <item>When did this happen?</item>
         <item>How did the events unfold?</item>

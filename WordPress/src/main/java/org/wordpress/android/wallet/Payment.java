@@ -10,6 +10,16 @@ public class Payment {
     private String message;
     private String remoteID;
 
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    private String amount;
+
     public String getConfirmed() {
         return confirmed;
     }

@@ -251,6 +251,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         payment.setPost(post_id);
         payment.setConfirmed("0");
         payment.setRemoteID(payment_id);
+
         WordPress.wpDB.addPayment(payment);
 
         //create intent
