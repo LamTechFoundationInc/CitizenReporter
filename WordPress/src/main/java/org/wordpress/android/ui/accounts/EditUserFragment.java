@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -282,7 +283,11 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
     private void handleLogin ()
     {
        // txtStatus.setText("Connecting to server...");
-        new Thread(this).start();
+        if(WordPress.getCurrentBlog().getUsername() == "demouser"){
+            Toast.makeText(getActivity().getApplicationContext(), "You are not allowed to edit as a demouser", Toast.LENGTH_LONG).show();
+        }else{
+            new Thread(this).start();
+        }
     }
     public void run ()
     {
