@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.view.KeyEvent;
@@ -13,6 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -21,7 +23,9 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.BuildConfig;
 import org.wordpress.android.R;
+import org.wordpress.android.WordPress;
 import org.wordpress.android.networking.RestClientUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -94,20 +98,23 @@ public abstract class AbstractFragment extends Fragment {
         if (passwordVisibility == null) {
             return;
         }
+
         passwordVisibility.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPasswordVisible = !mPasswordVisible;
-                if (mPasswordVisible) {
-                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_open);
-                    passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_open));
-                    passwordEditText.setTransformationMethod(null);
-                } else {
-                    passwordVisibility.setImageResource(R.drawable.dashicon_eye_closed);
-                    passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_closed));
-                    passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-                passwordEditText.setSelection(passwordEditText.length());
+
+                    mPasswordVisible = !mPasswordVisible;
+                    if (mPasswordVisible) {
+                        passwordVisibility.setImageResource(R.drawable.dashicon_eye_open);
+                        passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_open));
+                        passwordEditText.setTransformationMethod(null);
+                    } else {
+                        passwordVisibility.setImageResource(R.drawable.dashicon_eye_closed);
+                        passwordVisibility.setColorFilter(v.getContext().getResources().getColor(R.color.nux_eye_icon_color_closed));
+                        passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    }
+                    passwordEditText.setSelection(passwordEditText.length());
+
             }
         });
     }

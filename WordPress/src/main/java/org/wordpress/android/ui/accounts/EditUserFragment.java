@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -283,8 +284,8 @@ public class EditUserFragment extends AbstractFragment implements TextWatcher,  
     private void handleLogin ()
     {
        // txtStatus.setText("Connecting to server...");
-        if(WordPress.getCurrentBlog().getUsername() == "demouser"){
-            Toast.makeText(getActivity().getApplicationContext(), "You are not allowed to edit as a demouser", Toast.LENGTH_LONG).show();
+        if(WordPress.getCurrentBlog().getUsername() == BuildConfig.DEFAULT_USERNAME){
+            Toast.makeText(getActivity().getApplicationContext(), "You are not allowed to edit as demouser", Toast.LENGTH_LONG).show();
         }else{
             new Thread(this).start();
         }

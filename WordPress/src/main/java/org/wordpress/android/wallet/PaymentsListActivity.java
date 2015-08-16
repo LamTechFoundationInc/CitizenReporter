@@ -47,6 +47,7 @@ public class PaymentsListActivity extends ActionBarActivity {
     private PaymentsArrayAdapter adClass;
 
     private WordPressDB db;
+    LinearLayout emptyView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,10 +59,16 @@ public class PaymentsListActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         gridView = (ListView) findViewById(R.id.paymentsList);
+        emptyView = (LinearLayout)findViewById(R.id.empty_view);
 
         db = WordPress.wpDB;
 
         paymentsList = db.getPayments();
+        if(paymentsList.size()>0){
+            emptyView.setVisibility(View.GONE);
+            gridView.setVisibility(View.VISIBLE);
+        }
+
 
         adClass = new PaymentsArrayAdapter(this, paymentsList);
         gridView.setAdapter(adClass);

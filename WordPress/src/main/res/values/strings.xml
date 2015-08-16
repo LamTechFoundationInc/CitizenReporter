@@ -1045,7 +1045,7 @@
 
     <string name="admin_messages">Support Channel</string>
     <string name="chat_title">@string/admin_messages</string>
-
+    <string name="empty_chat_list">Start a conversation with support</string>
 
     <string name="image">Camera</string>
     <string name="audio">Audio</string>
@@ -1090,4 +1090,5 @@
     <string name="payment_history">Payment History</string>
     <string name="accepted_rejected">Submitted Content</string>
     <string name="media_types">Media Types</string>
+    <string name="empty_payments_list">No payments made yet!</string>
 </resources>

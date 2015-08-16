@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class ChatActivity extends ActionBarActivity {
     private ChatArrayAdapter adClass;
     private String friend_id;
     private WordPressDB db;
+    LinearLayout emptyView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class ChatActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         gridView = (ListView) findViewById(R.id.messagesList);
+        emptyView = (LinearLayout)findViewById(R.id.empty_view);
 
         chatText = (EditText)findViewById(R.id.chatText);
         buttonSend = (ImageView)findViewById(R.id.buttonSend);
@@ -68,6 +71,10 @@ public class ChatActivity extends ActionBarActivity {
         db = WordPress.wpDB;
 
         messagesList = db.getMessages();
+        if(messagesList.size()>0){
+            emptyView.setVisibility(View.GONE);
+            gridView.setVisibility(View.VISIBLE);
+        }
 
         adClass = new ChatArrayAdapter(this, messagesList);
         gridView.setAdapter(adClass);
@@ -85,6 +92,9 @@ public class ChatActivity extends ActionBarActivity {
             @Override
             public void onClick(View arg0) {
                 sendChatMessage("" + chatText.getText().toString());
+                emptyView.setVisibility(View.GONE);
+                gridView.setVisibility(View.VISIBLE);
+
             }
         });
     }
