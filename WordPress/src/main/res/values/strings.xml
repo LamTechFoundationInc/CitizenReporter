@@ -929,16 +929,17 @@
     <!--Storyboard-->
     <string name="story_board">Story Board</string>
     <string name="summary">Summary</string>
-    <string name="template">Story Questionnaire</string>
+    <string name="template">Questionnaire</string>
     <string name="summary_prompt">Write your story summary here and/or use the guide.</string>
     <string name="no_media_added">No media added yet!</string>
     <string name="enable_location">Enable Location</string>
     <string name="empty_answer">Tap to fill</string>
     <string name="confirm_save">Discard changes?</string>
+    <string name="title_required">You have to write a summary</string>
 
     <string-array name="fivew_and_h">
-        <item>What is the incident?</item>
-        <item>Why do you think it happened?</item>
+        <item>Provide your story summary</item>
+        <item>Why did this happen?</item>
         <item>Which people/organisations are involved?</item>
         <item>Where did this happen?</item>
         <item>When did this happen?</item>

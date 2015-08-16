@@ -6,6 +6,11 @@
         android:id="@+id/save"
         android:icon="@drawable/ic_save_white_24dp"
         app:showAsAction="always"
+        android:title="@string/save" />
+    <item
+        android:id="@+id/publish"
+        android:icon="@mipmap/ic_upload"
+        app:showAsAction="always"
         android:title="@string/publish_post" />
 
 </menu>

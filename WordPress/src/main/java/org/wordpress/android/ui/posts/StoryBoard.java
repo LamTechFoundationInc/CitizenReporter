@@ -221,6 +221,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -331,6 +332,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         setUpQuestionnaire();
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -632,8 +634,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             saveAndFinish();
             return true;
         }
-
         if(item.getItemId()== R.id.save){
+            justSave();
+        }
+        if(item.getItemId()== R.id.publish){
             publishAndFinish();
         }
         return super.onOptionsItemSelected(item);
@@ -672,12 +676,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     private void saveAndFinish() {
+        justSave();
+        finish();
+    }
+
+    public void justSave(){
         //savePost(true);
         if (allEmptyContentFields()) {
             // new and empty post? delete it
-            if (mIsNewPost) {
+            /*if (mIsNewPost) {
                 WordPress.wpDB.deletePost(mPost);
-            }
+            }*/
+            ToastUtils.showToast(getApplication(), getResources().getString(R.string.title_required), ToastUtils.Duration.SHORT);
 
         } /*else if (mOriginalPost != null && !mPost.hasChanges(mOriginalPost)) {
             // if no changes have been made to the post, set it back to the original don't save it
@@ -695,12 +705,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             i.putExtra(EXTRA_IS_PAGE, mIsPage);
             setResult(RESULT_OK, i);
             */
+            ToastUtils.showToast(getApplication(), getResources().getString(R.string.editor_toast_changes_saved), ToastUtils.Duration.SHORT);
 
 
         }
 
-        finish();
     }
+
     public void publishAndFinish(){
 
         //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
