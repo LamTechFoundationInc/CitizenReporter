@@ -29,6 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gcm.GCMRegistrar;
@@ -135,9 +136,9 @@ public class RipotiMainActivity extends ActionBarActivity
     private Toolbar toolbar;
     private ViewPostFragmentRipoti viewPostFragment;
 
-    private ImageView button_camera;
-    private ImageView button_video;
-    private ImageView button_mic;
+    private LinearLayout button_camera;
+    private LinearLayout button_video;
+    private LinearLayout button_mic;
 
 
     @Override
@@ -397,9 +398,9 @@ public class RipotiMainActivity extends ActionBarActivity
         }
 
         //quick capture icons
-        button_camera = (ImageView)findViewById(R.id.button_camera);
-        button_video = (ImageView)findViewById(R.id.button_video);
-        button_mic = (ImageView)findViewById(R.id.button_mic);
+        button_camera = (LinearLayout)findViewById(R.id.button_camera);
+        button_video = (LinearLayout)findViewById(R.id.button_video);
+        button_mic = (LinearLayout)findViewById(R.id.button_mic);
         //
         button_camera.setOnClickListener(new View.OnClickListener() {
             @Override

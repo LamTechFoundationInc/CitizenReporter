@@ -54,39 +54,14 @@
             android:layout_gravity="bottom"
             android:background="@color/white"
             android:id="@+id/view2" />
-    <LinearLayout
-        android:id="@+id/bottom_action_buttons"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="@color/grey_lighten_20"
-        android:padding="6dp">
-        <ImageView
-            android:id="@+id/button_camera"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:src="@drawable/circle_cam"/>
+        <include
+            layout="@layout/capture_buttons"
+            android:id="@+id/bottom_action_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_alignParentBottom="true" />
 
-        <ImageView
-            android:id="@+id/button_video"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:src="@drawable/circle_vid"/>
-
-        <ImageView
-            android:id="@+id/button_mic"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:src="@drawable/circle_mic" />
-
-    </LinearLayout>
 
     </RelativeLayout>
 </RelativeLayout>
