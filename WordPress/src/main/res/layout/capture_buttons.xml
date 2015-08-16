@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.andexert.library.RippleView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    rv_centered="true"
+    rv_color="@color/grey_darken_30"
+    rv_zoom="true"
+    rv_framerate="30">
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
     android:background="@drawable/view_post_toolbar"
     android:orientation="horizontal">
 <LinearLayout
@@ -68,4 +75,7 @@
         android:layout_weight="1"
         android:layout_height="match_parent"/>
 </LinearLayout>
-</LinearLayout>
+
+
+    </LinearLayout>
+    </com.andexert.library.RippleView>
