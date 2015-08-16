@@ -53,6 +53,7 @@ import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
@@ -140,7 +141,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private boolean mMediaUploadServiceStarted;
 
     private TextView mPrice;
-    private String static_id;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -482,7 +482,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mediaFile.setDateCreatedGMT(currentTime);
             mediaFile.setMediaId(String.valueOf(currentTime));
             mediaFile.setPostID(mPost.getLocalTablePostId());
-
             if (mimeType != null && mimeType.startsWith("image")) {
                 // get width and height
                 BitmapFactory.Options bfo = new BitmapFactory.Options();
@@ -552,6 +551,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             Random randomGenerator = new Random();
             media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
             setUpSlider();
+            //add thumb to story mediapaths so as to display before upload
+            mPost.setMediaPaths(mPost.getMediaPaths() +":"+ thumb.getAbsolutePath());
+
         }
     }
     public String generateThumb(File file, String mimeType, long mediaCreationTime){
@@ -1019,9 +1021,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         String month = String.format("%02d", month_int);
 
         //compose file url
-        String file_url = BuildConfig.DEFAULT_URL + "/wp/wp-content/uploads/" + year + "/" + month + "/wpid-" + filename;
+        String file_url = BuildConfig.DEFAULT_URL + "/wp-content/uploads/" + year + "/" + month + "/wpid-" + filename;
 
-        Log.d("file_url", file_url);
 
         if(mimeType.startsWith("image")){
             attachURL = "<a href=\""+file_url+"\"><img class=\"alignnone size-medium wp-image-400\" src=\""+file_url+"\" alt=\""+filename+"\" width=\"300\" height=\"225\" /></a>";
