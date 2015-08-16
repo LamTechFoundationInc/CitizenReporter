@@ -68,6 +68,15 @@ public class Post implements Serializable {
     private String qwhen;
     private String qhow;
 
+    public String getStatic_id() {
+        return static_id;
+    }
+
+    public void setStatic_id(String static_id) {
+        this.static_id = static_id;
+    }
+
+    private String static_id;
     public Post() {
     }
 

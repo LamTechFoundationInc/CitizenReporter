@@ -48,6 +48,7 @@ import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.readystatesoftware.viewbadger.BadgeView;
 
+import org.json.JSONArray;
 import org.wordpress.android.BuildConfig;
 import org.wordpress.android.Constants;
 import org.wordpress.android.R;
@@ -339,7 +340,22 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
         setUpQuestionnaire();
 
-        Log.d("remote & local", "remote:" + mPost.getRemotePostId() + ":local:" + mPost.getLocalTablePostId());
+        Log.d("remote & local", "remote:" + mPost.getRemotePostId() + ":local:" + genRandID(1000000, 5000000));
+
+        
+    }
+
+    public int genRandID(int min, int max){
+
+            // NOTE: Usually this should be a field rather than a method
+            // variable so that it is not re-seeded every call.
+            Random rand = new Random();
+
+            // nextInt is normally exclusive of the top value,
+            // so add 1 to make it inclusive
+            int randomNum = rand.nextInt((max - min) + 1) + min;
+
+            return randomNum;
 
     }
 

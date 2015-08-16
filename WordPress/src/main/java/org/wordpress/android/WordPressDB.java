@@ -91,7 +91,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 42;
+    private static final int DATABASE_VERSION = 43;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -260,6 +260,8 @@ public class WordPressDB {
     private static final String ADD_PAYMENT_REMOTEID = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_REMOTE_ID + " text default '0';";
     private static final String ADD_PAYMENT_AMOUNT = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_AMOUNT + " text default '0';";
 
+    //TODO: There's probably a better way to do this
+    private static final String ADD_POST_STATIC_ID = "alter table posts add static_id text default '';";
 
     private SQLiteDatabase db;
 
@@ -416,6 +418,8 @@ public class WordPressDB {
                 currentVersion++;
             case 41:
                 db.execSQL(ADD_PAYMENT_AMOUNT);
+            case 42:
+                db.execSQL(ADD_POST_STATIC_ID);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -1151,6 +1155,9 @@ public class WordPressDB {
                                 //assignment id
                                 if (customField.get("key").equals("assignment_id"))
                                     values.put("assignment_id", customField.get("value").toString());
+                                //static id
+                                if (customField.get("key").equals("static_id"))
+                                    values.put("static_id", customField.get("value").toString());
 
                                 //questionnare questions
                                     //watch out for null values
@@ -1524,6 +1531,7 @@ public class WordPressDB {
             values.put("qwhen", post.getQwhen());
             values.put("qhow", post.getQhow());
             values.put("string_location", post.getStringLocation());
+            values.put("static_id", post.getStatic_id());
 
             values.put("localDraft", post.isLocalDraft());
             values.put("mediaPaths", post.getMediaPaths());
@@ -1690,6 +1698,7 @@ public class WordPressDB {
                     post.setQwhy(c.getString(c.getColumnIndex("qwhy")));
                     post.setQwhen(c.getString(c.getColumnIndex("qwhen")));
                     post.setQhow(c.getString(c.getColumnIndex("qhow")));
+                    post.setStatic_id(c.getString(c.getColumnIndex("static_id")));
                     post.setStringLocation(c.getString(c.getColumnIndex("string_location")));
                 }
 
