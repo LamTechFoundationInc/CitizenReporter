@@ -323,10 +323,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 generateThumbAndAddToSlider(postMedia.get(i));
             }
         }*/
+
+        if(!mPost.isLocalDraft()){
+            findViewById(R.id.bottom_action_buttons).setVisibility(View.GONE);
+        }
+
         getAndSetThumbnails();
 
         setUpQuestionnaire();
-
     }
 
     public void getAndSetThumbnails(){
@@ -359,7 +363,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.storyboard_menu, menu);
+        if(mPost.isLocalDraft()) {
+            getMenuInflater().inflate(R.menu.storyboard_menu, menu);
+        }
         return true;
     }
 
@@ -1030,7 +1036,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //compose file url
         String file_url = BuildConfig.DEFAULT_URL + "/wp-content/uploads/" + year + "/" + month + "/wpid-" + filename;
-
 
         if(mimeType.startsWith("image")){
             attachURL = "<a href=\""+file_url+"\"><img class=\"alignnone size-medium wp-image-400\" src=\""+file_url+"\" alt=\""+filename+"\" width=\"300\" height=\"225\" /></a>";

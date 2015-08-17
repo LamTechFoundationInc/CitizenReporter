@@ -105,12 +105,14 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
         holder.txtContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listView.smoothScrollToPosition(position);
+                if(post.isLocalDraft()) {
+                    listView.smoothScrollToPosition(position);
 
-                if (position == 3) {
-                    showLocationDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
-                } else {
-                    showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
+                    if (position == 3) {
+                        showLocationDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
+                    } else {
+                        showCreateSummaryDialog(finalHolder, finalHolder.txtContent, finalHolder.filledButton, question, position);
+                    }
                 }
             }
         });

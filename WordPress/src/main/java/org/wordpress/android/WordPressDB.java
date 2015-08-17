@@ -91,7 +91,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 42;
+    private static final int DATABASE_VERSION = 43;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -260,6 +260,7 @@ public class WordPressDB {
     private static final String ADD_PAYMENT_REMOTEID = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_REMOTE_ID + " text default '0';";
     private static final String ADD_PAYMENT_AMOUNT = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_AMOUNT + " text default '0';";
 
+    //
 
     private SQLiteDatabase db;
 
