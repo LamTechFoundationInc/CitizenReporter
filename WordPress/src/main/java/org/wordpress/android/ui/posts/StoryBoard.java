@@ -662,7 +662,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            saveAndFinish();
+            if(mPost.isLocalDraft()) {
+                saveAndFinish();
+            }else{
+                finish();
+            }
             return true;
         }
         if(item.getItemId()== R.id.save){

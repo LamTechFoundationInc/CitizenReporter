@@ -68,6 +68,16 @@ public class Post implements Serializable {
     private String qwhen;
     private String qhow;
 
+    public String getRemoteMediaPaths() {
+        return remoteMediaPaths;
+    }
+
+    public void setRemoteMediaPaths(String remoteMediaPaths) {
+        this.remoteMediaPaths = remoteMediaPaths;
+    }
+
+    private String remoteMediaPaths;
+
     public Post() {
     }
 

@@ -260,7 +260,8 @@ public class WordPressDB {
     private static final String ADD_PAYMENT_REMOTEID = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_REMOTE_ID + " text default '0';";
     private static final String ADD_PAYMENT_AMOUNT = "alter table "+ TABLE_PAYMENTS +" add " + COLUMN_PAYMENT_AMOUNT + " text default '0';";
 
-    //
+    //Remote attatchment links
+    private static final String ADD_POST_REMOTE_MEDIAPATHS = "alter table posts add remote_mediapaths text default '';";
 
     private SQLiteDatabase db;
 
@@ -417,6 +418,9 @@ public class WordPressDB {
                 currentVersion++;
             case 41:
                 db.execSQL(ADD_PAYMENT_AMOUNT);
+                currentVersion++;
+            case 42:
+                db.execSQL(ADD_POST_REMOTE_MEDIAPATHS);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -1152,7 +1156,7 @@ public class WordPressDB {
                                     values.put("assignment_id", customField.get("value").toString());
 
                                 //questionnare questions
-                                    //watch out for null values
+                                    //watch out for null string values
                                     if(!customField.get("value").toString().equals("null")) {
                                         if (customField.get("key").equals("qwho"))
                                             values.put("qwho", customField.get("value").toString());
@@ -1166,6 +1170,8 @@ public class WordPressDB {
                                             values.put("qwhen", customField.get("value").toString());
                                         if (customField.get("key").equals("qhow"))
                                             values.put("qhow", customField.get("value").toString());
+                                        if (customField.get("key").equals("remote_mediapaths"))
+                                            values.put("remote_mediapaths", customField.get("value").toString());
                                     }
 
                                 //assignments custom fields
@@ -1522,6 +1528,7 @@ public class WordPressDB {
             values.put("qwhen", post.getQwhen());
             values.put("qhow", post.getQhow());
             values.put("string_location", post.getStringLocation());
+            values.put("remote_mediapaths", post.getRemoteMediaPaths());
 
             values.put("localDraft", post.isLocalDraft());
             values.put("mediaPaths", post.getMediaPaths());
@@ -1689,6 +1696,7 @@ public class WordPressDB {
                     post.setQwhen(c.getString(c.getColumnIndex("qwhen")));
                     post.setQhow(c.getString(c.getColumnIndex("qhow")));
                     post.setStringLocation(c.getString(c.getColumnIndex("string_location")));
+                    post.setRemoteMediaPaths(c.getString(c.getColumnIndex("remote_mediapaths")));
                 }
 
                 if(isAssignment){
