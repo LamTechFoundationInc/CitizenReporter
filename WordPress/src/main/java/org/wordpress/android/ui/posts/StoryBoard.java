@@ -134,6 +134,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private String mMediaCapturePath = "";
 
     private HashMap<String,File> media_map;
+    private HashMap<String, String> media_map_remote;
+
     private boolean hasMedia = false;
 
     private Post mPost;
@@ -142,6 +144,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private boolean mMediaUploadServiceStarted;
 
     private TextView mPrice;
+
+    private Menu saveMenu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -323,9 +327,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 generateThumbAndAddToSlider(postMedia.get(i));
             }
         }*/
-
-        if(!mPost.isLocalDraft()){
-            findViewById(R.id.bottom_action_buttons).setVisibility(View.GONE);
+        if(!mPost.isLocalDraft()) {
+            hideEditFeatures();
         }
 
         getAndSetThumbnails();
@@ -333,22 +336,38 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         setUpQuestionnaire();
     }
 
+    public void hideEditFeatures(){
+        findViewById(R.id.bottom_action_buttons).setVisibility(View.GONE);
+        saveMenu.clear();
+    }
+
     public void getAndSetThumbnails(){
-        String mediaPaths = StringUtils.notNullStr(mPost.getMediaPaths());
+        String mediaPaths;
+
+        if(mPost.isLocalDraft()){
+            mediaPaths = StringUtils.notNullStr(mPost.getMediaPaths());
+        }else{
+            mediaPaths = StringUtils.notNullStr(mPost.getRemoteMediaPaths());
+        }
+
         if(mediaPaths!=""){
 
             String[] mediaPaths_parts = mediaPaths.split(":");
             for(int i = 0; i<mediaPaths_parts.length; i++){
                 String thisThumb = mediaPaths_parts[i];
                 if(thisThumb.trim()!=""){
+                    //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+                    Random randomGenerator = new Random();
 
-                    File thumb = new File(thisThumb);
-
-                    if (thumb.exists()) {
-                        //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
-                        Random randomGenerator = new Random();
-                        media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
-                        setUpSlider();
+                    if(mPost.isLocalDraft()){
+                        File thumb = new File(thisThumb);
+                        if (thumb.exists()) {
+                            media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
+                            setUpSlider();
+                        }
+                    }else{
+                            media_map_remote.put(String.valueOf(randomGenerator.nextInt(10000)), thisThumb);
+                            setUpSlider();
                     }
 
                 }
@@ -363,9 +382,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(mPost.isLocalDraft()) {
+
             getMenuInflater().inflate(R.menu.storyboard_menu, menu);
-        }
+            saveMenu = menu;
         return true;
     }
 
@@ -903,22 +922,43 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     public void setUpSlider(){
 
-        for(String name : media_map.keySet()){
-            TextSliderView textSliderView = new TextSliderView(this);
-            // initialize a SliderLayout
-            textSliderView
-                    .description("")
-                    .image(media_map.get(name))
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
+        if(mPost.isLocalDraft()){
+            for(String name : media_map.keySet()){
+                TextSliderView textSliderView = new TextSliderView(this);
+                // initialize a SliderLayout
+                textSliderView
+                        .description("")
+                        .image(media_map.get(name))
+                        .setScaleType(BaseSliderView.ScaleType.Fit)
+                        .setOnSliderClickListener(this);
 
-            //add your extra information
-            textSliderView.bundle(new Bundle());
-            textSliderView.getBundle()
-                    .putString("extra",name);
+                //add your extra information
+                textSliderView.bundle(new Bundle());
+                textSliderView.getBundle()
+                        .putString("extra",name);
 
-            mDemoSlider.addSlider(textSliderView);
+                mDemoSlider.addSlider(textSliderView);
+            }
+        }else{
+            for(String name : media_map_remote.keySet()){
+                TextSliderView textSliderView = new TextSliderView(this);
+                // initialize a SliderLayout
+                textSliderView
+                        .description("")
+                        .image(media_map_remote.get(name))
+                        .setScaleType(BaseSliderView.ScaleType.Fit)
+                        .setOnSliderClickListener(this);
+
+                //add your extra information
+                textSliderView.bundle(new Bundle());
+                textSliderView.getBundle()
+                        .putString("extra",name);
+
+                mDemoSlider.addSlider(textSliderView);
+            }
         }
+
+
         mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Accordion);
         mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mDemoSlider.setCustomAnimation(new DescriptionAnimation());
