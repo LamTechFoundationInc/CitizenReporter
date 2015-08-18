@@ -145,7 +145,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     private TextView mPrice;
 
-    private Menu saveMenu;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -338,7 +337,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     public void hideEditFeatures(){
         findViewById(R.id.bottom_action_buttons).setVisibility(View.GONE);
-        saveMenu.clear();
+
     }
 
     public void getAndSetThumbnails(){
@@ -382,9 +381,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
+        if(!mPost.isLocalDraft()){
             getMenuInflater().inflate(R.menu.storyboard_menu, menu);
-            saveMenu = menu;
+        }
         return true;
     }
 
@@ -628,6 +627,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 FileOutputStream out = new FileOutputStream(filename);
                 bitThumb.compress(Bitmap.CompressFormat.JPEG, 30, out);
                 out.close();
+
+                //upload video thumbnail
+                queueFileForUpload(new File(filename));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1083,13 +1086,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         if(mimeType.startsWith("image")){
             attachURL = "<a href=\""+file_url+"\"><img class=\"alignnone size-medium wp-image-400\" src=\""+file_url+"\" alt=\""+filename+"\" width=\"300\" height=\"225\" /></a>";
+            //For thumbnail
+            mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + ":" + file_url);
+
         } else if(mimeType.startsWith("video")){
             attachURL = "[video width=\"320\" height=\"240\" mp4=\""+file_url+"\"][/video]";
         }else if(mimeType.startsWith("audio")){
             attachURL = "[audio mp3=\""+file_url+"\"][/audio]";
+            //use default audio thumb
+            mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + ":" + BuildConfig.AUDIO_THUMB);
         }
 
-        mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + ":" + file_url);
 
         String old_description = mPost.getDescription() + "";
         mPost.setDescription(old_description + "\n" + attachURL);

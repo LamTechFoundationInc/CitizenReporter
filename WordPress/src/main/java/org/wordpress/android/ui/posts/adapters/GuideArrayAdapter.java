@@ -82,6 +82,10 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             holder = new QuestionHolder();
             holder.txtTitle = (TextView)row.findViewById(R.id.header_text);
             holder.txtContent = (TextView)row.findViewById(R.id.content_text);
+            //if post is local draft change prompt
+            if(!post.isLocalDraft()){
+                holder.txtContent.setText("");
+            }
 
             holder.filledButton = (ImageView)row.findViewById(R.id.filledButton);
 

@@ -395,6 +395,13 @@ public class PostUploadService extends Service {
 
             string_location.put("value", mPost.getStringLocation()+"");
 
+            //Remote media paths
+            Map<Object, Object> remote_mediapaths = new HashMap<Object, Object>();
+
+            remote_mediapaths.put("key", "remote_mediapaths");
+
+            remote_mediapaths.put("value", mPost.getRemoteMediaPaths()+"");
+
             ArrayList<Map<Object, Object>> a = new ArrayList<Map<Object, Object>>();
 
             if(!qhow.isEmpty())
@@ -412,6 +419,9 @@ public class PostUploadService extends Service {
             }
             if(!string_location.isEmpty())
                 a.add(string_location);
+
+            if(!remote_mediapaths.isEmpty())
+                a.add(remote_mediapaths);
 
             Object[] custom_fields = a.toArray();
 
