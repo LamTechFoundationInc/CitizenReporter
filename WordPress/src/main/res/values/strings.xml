@@ -1085,6 +1085,7 @@
     <string name="payment_notification">New Payment</string>
     <string name="my_payments">My Payments</string>
     <string name="confirm">Confirm</string>
+    <string name="not_confirmed">Not Confirmed!</string>
     <string name="dispute">Dispute</string>
     <string name="disputed">Disputed!</string>
     <string name="confirmed">Confirmed!</string>
@@ -1094,4 +1095,5 @@
     <string name="accepted_rejected">Submitted Content</string>
     <string name="media_types">Media Types</string>
     <string name="empty_payments_list">No payments made yet!</string>
+    <string name="no_payment_yet">No payment yet!</string>
 </resources>

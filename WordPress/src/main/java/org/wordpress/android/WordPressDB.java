@@ -500,7 +500,8 @@ public class WordPressDB {
         values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
         values.put(COLUMN_PAYMENT_POST, payment.getPost());
         values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
-        values.put(COLUMN_PAYMENT_REMOTE_ID, payment.getRemoteID());
+        values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
+        values.put(COLUMN_PAYMENT_AMOUNT, payment.getAmount());
 
         db.insert(TABLE_PAYMENTS, null, values);
 
@@ -557,12 +558,37 @@ public class WordPressDB {
                 content.setPost((cursor.getString(3)));
                 content.setConfirmed((cursor.getString(4)));
                 content.setRemoteID((cursor.getString(5)));
+                content.setAmount((cursor.getString(6)));
                 paymentsList.add(content);
             } while (cursor.moveToNext());
         }
 
         // return messages as a list
         return paymentsList;
+    }
+    public Payment getPostPayment(String post_id) {
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_PAYMENTS + " WHERE " + COLUMN_PAYMENT_POST + " ='" + post_id + "' ORDER BY " + COLUMN_PAYMENT_ID +" DESC";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+                Payment content = new Payment();
+                content.setId(String.valueOf(cursor.getInt(0)));
+                content.setMessage((cursor.getString(1)));
+                content.setReceipt((cursor.getString(2)));
+                content.setPost((cursor.getString(3)));
+                content.setConfirmed((cursor.getString(4)));
+                content.setRemoteID((cursor.getString(5)));
+                content.setAmount((cursor.getString(6)));
+
+                return content;
+        }
+
+        // return messages as a list
+        return null;
     }
 
     public List<Integer> getAllBlogsIDs() {
@@ -1500,6 +1526,7 @@ public class WordPressDB {
             values.put(COLUMN_PAYMENT_MESSAGE, payment.getMessage());
             values.put(COLUMN_PAYMENT_POST, payment.getPost());
             values.put(COLUMN_PAYMENT_REMOTE_ID, payment.getRemoteID());
+            values.put(COLUMN_PAYMENT_AMOUNT, payment.getAmount());
 
             result = db.update(TABLE_PAYMENTS, values, COLUMN_PAYMENT_ID + "=?",
                     new String[]{ payment.getId() });

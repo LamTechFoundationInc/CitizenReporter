@@ -73,6 +73,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.passcodelock.AppLockManager;
+import org.wordpress.android.wallet.Payment;
 
 import info.hoang8f.widget.FButton;
 
@@ -143,7 +144,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     public static final String NEW_MEDIA_POST = "NEW_MEDIA_POST";
     private boolean mMediaUploadServiceStarted;
 
-    private TextView mPrice;
+    private TextView mPayment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -249,15 +250,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         text_summary = (TextView)findViewById(R.id.text_summary);
         text_template= (TextView)findViewById(R.id.text_template);
 
-        mPrice = (TextView)findViewById(R.id.price);
+        mPayment = (TextView)findViewById(R.id.payment);
         //TODO: if assignment set bounty & disable click
         //TODO: if already paid show paid + show amount info & disable click
         //set own price as custom field
-        mPrice.setOnClickListener(new View.OnClickListener() {
+        mPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(mPost.isLocalDraft())
-                        showPaymentDialog();
+                       showPaymentDialog();
             }
         });
         /*
@@ -331,11 +331,29 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         */
         if(!mPost.isLocalDraft()) {
             hideEditFeatures();
+            setUpPayment();
         }
 
         getAndSetThumbnails();
 
         setUpQuestionnaire();
+    }
+
+    public void setUpPayment(){
+        Payment payment = WordPress.wpDB.getPostPayment(mPost.getRemotePostId());
+
+        if(payment == null){
+            mPayment.setText(getResources().getString(R.string.no_payment_yet));
+        }else{
+            String confirmed = getApplicationContext().getResources().getString(R.string.not_confirmed); ;
+            if(payment.getConfirmed().equals("1")){
+                confirmed = getApplicationContext().getResources().getString(R.string.confirmed);
+            }else if(payment.getConfirmed().equals("-1")){
+                confirmed = getApplicationContext().getResources().getString(R.string.disputed);
+            }
+            mPayment.setText(payment.getAmount()+" : "+confirmed);
+        }
+
     }
 
     public void hideEditFeatures(){

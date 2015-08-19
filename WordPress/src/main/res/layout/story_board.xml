@@ -117,11 +117,11 @@
                     android:padding="3dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/price"
-                    android:layout_toLeftOf="@+id/price" />
+                    android:layout_toStartOf="@+id/payment"
+                    android:layout_toLeftOf="@+id/payment" />
                 <org.wordpress.android.widgets.WPTextView
                     android:textColor="@color/blue_dark"
-                    android:id="@+id/price"
+                    android:id="@+id/payment"
                     style="@style/ReaderTextView.TogglePane_Active"
                     tools:text="text_bounty"
                     android:text="@string/own_price"
