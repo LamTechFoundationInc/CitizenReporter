@@ -267,6 +267,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mPayment = (TextView)findViewById(R.id.payment);
         //TODO: if assignment set bounty & disable click
         //set own price as custom field
+
         mPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -351,8 +352,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         */
         if(!mPost.isLocalDraft()) {
             hideEditFeatures();
-            setUpPayment();
+
         }
+        setUpPayment();
 
         getAndSetThumbnails();
 
@@ -425,18 +427,24 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void setUpPayment(){
-
-        if(payment == null){
-            mPayment.setText(getResources().getString(R.string.no_payment_yet));
-        }else{
-            String confirmed = getApplicationContext().getResources().getString(R.string.not_confirmed); ;
-            if(payment.getConfirmed().equals("1")){
-                confirmed = getApplicationContext().getResources().getString(R.string.confirmed);
-            }else if(payment.getConfirmed().equals("-1")){
-                confirmed = getApplicationContext().getResources().getString(R.string.disputed);
+        if(!mPost.isLocalDraft()){
+            if(payment == null){
+                mPayment.setText(getResources().getString(R.string.no_payment_yet));
+            }else{
+                String confirmed = getApplicationContext().getResources().getString(R.string.not_confirmed); ;
+                if(payment.getConfirmed().equals("1")){
+                    confirmed = getApplicationContext().getResources().getString(R.string.confirmed);
+                }else if(payment.getConfirmed().equals("-1")){
+                    confirmed = getApplicationContext().getResources().getString(R.string.disputed);
+                }
+                mPayment.setText(payment.getAmount()+" : "+confirmed);
             }
-            mPayment.setText(payment.getAmount()+" : "+confirmed);
+        }else{
+            if(!mPost.getOwn_price().equals(""))
+                mPayment.setText(mPost.getOwn_price());
         }
+
+
 
     }
 
