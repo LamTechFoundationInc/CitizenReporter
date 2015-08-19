@@ -55,6 +55,7 @@ import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.WordPressDB;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.chat.ChatActivity;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.models.PostLocation;
@@ -73,6 +74,7 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.passcodelock.AppLockManager;
+import org.wordpress.android.wallet.ConfirmPayment;
 import org.wordpress.android.wallet.Payment;
 
 import info.hoang8f.widget.FButton;
@@ -146,6 +148,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     private TextView mPayment;
 
+    private Payment payment;
+    private LinearLayout confirmLayout ;
+    private ImageView confirmIcon;
+    private TextView confirmText;
+
+    private LinearLayout disputeLayout;
+    private ImageView disputeIcon;
+    private TextView disputeText;
+    private RelativeLayout followUpLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,6 +261,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         text_summary = (TextView)findViewById(R.id.text_summary);
         text_template= (TextView)findViewById(R.id.text_template);
 
+        payment = WordPress.wpDB.getPostPayment(mPost.getRemotePostId());
+
         mPayment = (TextView)findViewById(R.id.payment);
         //TODO: if assignment set bounty & disable click
         //TODO: if already paid show paid + show amount info & disable click
@@ -340,7 +353,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void setUpPayment(){
-        Payment payment = WordPress.wpDB.getPostPayment(mPost.getRemotePostId());
 
         if(payment == null){
             mPayment.setText(getResources().getString(R.string.no_payment_yet));
@@ -396,7 +408,100 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void showPaymentDialog(){
+        /*
+            dialog
+                if published
+                    if no payment
+                        - follow up
 
+                    if payed
+                        - confirm/dispute
+
+                    if confirmed/disputed
+
+                        - waiting for admin action
+                else
+                    set own price
+         */
+        final Dialog mDialog = new Dialog(StoryBoard.this);
+        mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mDialog.setContentView(R.layout.payment_row);
+
+
+        ((TextView)mDialog.findViewById(R.id.message_text)).setText(payment.getMessage());
+        confirmLayout = (LinearLayout) mDialog.findViewById(R.id.confirm_layout);
+        confirmIcon = (ImageView) mDialog.findViewById(R.id.confirm_icon);
+        confirmText = (TextView) mDialog.findViewById(R.id.confirm_text);
+
+        disputeLayout = (LinearLayout) mDialog.findViewById(R.id.dispute_layout);
+        disputeIcon = (ImageView) mDialog.findViewById(R.id.dispute_icon);
+        disputeText = (TextView) mDialog.findViewById(R.id.dispute_text);
+        followUpLayout = (RelativeLayout) mDialog.findViewById(R.id.followup_layout);
+
+        if(payment.getConfirmed().equals("1")){
+            paymentConfirmed(payment, true, false);
+        }else if(payment.getConfirmed().equals("-1")){
+            paymentConfirmed(payment, true, false);
+        }else{
+            followUpLayout.setVisibility(View.VISIBLE);
+        }
+        confirmLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentConfirmed(payment, true, true);
+            }
+        });
+
+        disputeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                paymentConfirmed(payment, false, true);
+
+            }
+        });
+
+        followUpLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StoryBoard.this, ChatActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    public void paymentConfirmed(Payment payment, boolean isConfirmed, boolean update){
+
+        if(isConfirmed){
+            confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+            confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
+            disputeLayout.setVisibility(View.GONE);
+            followUpLayout.setVisibility(View.GONE);
+        }else{
+            disputeIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
+            disputeText.setText(getApplicationContext().getResources().getString(R.string.disputed));
+            confirmLayout.setVisibility(View.GONE);
+            //show follow up button: takes user to chatactivity
+            followUpLayout.setVisibility(View.VISIBLE);
+        }
+
+        if(update){
+
+            String confirm;
+
+            if(isConfirmed){
+                confirm = "1";
+                payment.setConfirmed("1");
+                WordPress.wpDB.updatePayment(payment);
+            }else{
+                confirm = "0";
+                payment.setConfirmed("-1");
+                WordPress.wpDB.updatePayment(payment);
+            }
+
+            //send query
+            new ConfirmPayment(payment.getPost(), payment.getRemoteID(), confirm).execute();
+        }
     }
 
     @Override

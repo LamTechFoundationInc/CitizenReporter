@@ -209,51 +209,7 @@ public class PaymentsListActivity extends ActionBarActivity {
             }
 
             //send query
-            new confirmPayment(payment.getPost(), payment.getRemoteID(), confirm).execute();
-        }
-
-    }
-
-    class confirmPayment extends AsyncTask<String, String, String>{
-
-        private String post_id;
-        private String confirm;
-        private String remote_id;
-
-        public confirmPayment(String _post_id, String _remote_id, String _confirm){
-            this.post_id = _post_id;
-            this.confirm = _confirm;
-            this.remote_id = _remote_id;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            confirmPayment(post_id, remote_id, confirm);
-            return null;
+            new ConfirmPayment(payment.getPost(), payment.getRemoteID(), confirm).execute();
         }
     }
-
-    public void confirmPayment(String post_id, String remote_id, String confirm){
-        APIFunctions userFunction = new APIFunctions();
-        JSONObject json = userFunction.confirmPayment(post_id, remote_id, confirm);
-
-        if(json!=null) {
-            String responseMessage = "";
-            try {
-                String res = json.getString("result");
-                if (res.equals("OK")) {
-                    responseMessage = json.getString("message");
-
-                } else {
-                    responseMessage = json.getString("error");
-                }
-
-                Log.d("Confirm payment", responseMessage + "");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
 }
