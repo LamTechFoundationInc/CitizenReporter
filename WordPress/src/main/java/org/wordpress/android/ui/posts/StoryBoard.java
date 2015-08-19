@@ -256,7 +256,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mPrice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    showPaymentDialog();
+                    if(mPost.isLocalDraft())
+                        showPaymentDialog();
             }
         });
         /*
