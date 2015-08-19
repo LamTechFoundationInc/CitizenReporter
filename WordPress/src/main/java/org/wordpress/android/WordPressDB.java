@@ -91,7 +91,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 43;
+    private static final int DATABASE_VERSION = 44;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -262,6 +262,7 @@ public class WordPressDB {
 
     //Remote attatchment links
     private static final String ADD_POST_REMOTE_MEDIAPATHS = "alter table posts add remote_mediapaths text default '';";
+    private static final String ADD_POST_OWN_PRICE = "alter table posts add own_price text default '';";
 
     private SQLiteDatabase db;
 
@@ -421,6 +422,9 @@ public class WordPressDB {
                 currentVersion++;
             case 42:
                 db.execSQL(ADD_POST_REMOTE_MEDIAPATHS);
+                currentVersion++;
+            case 43:
+                db.execSQL(ADD_POST_OWN_PRICE);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -575,12 +579,12 @@ public class WordPressDB {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
 
-                Payment content = new Payment();
-                content.setId(String.valueOf(cursor.getInt(0)));
-                content.setMessage((cursor.getString(1)));
-                content.setReceipt((cursor.getString(2)));
-                content.setPost((cursor.getString(3)));
-                content.setConfirmed((cursor.getString(4)));
+            Payment content = new Payment();
+            content.setId(String.valueOf(cursor.getInt(0)));
+            content.setMessage((cursor.getString(1)));
+            content.setReceipt((cursor.getString(2)));
+            content.setPost((cursor.getString(3)));
+            content.setConfirmed((cursor.getString(4)));
                 content.setRemoteID((cursor.getString(5)));
                 content.setAmount((cursor.getString(6)));
 
@@ -1556,6 +1560,7 @@ public class WordPressDB {
             values.put("qhow", post.getQhow());
             values.put("string_location", post.getStringLocation());
             values.put("remote_mediapaths", post.getRemoteMediaPaths());
+            values.put("own_price", post.getOwn_price());
 
             values.put("localDraft", post.isLocalDraft());
             values.put("mediaPaths", post.getMediaPaths());
@@ -1724,6 +1729,7 @@ public class WordPressDB {
                     post.setQhow(c.getString(c.getColumnIndex("qhow")));
                     post.setStringLocation(c.getString(c.getColumnIndex("string_location")));
                     post.setRemoteMediaPaths(c.getString(c.getColumnIndex("remote_mediapaths")));
+                    post.setOwn_price(c.getString(c.getColumnIndex("own_price")));
                 }
 
                 if(isAssignment){

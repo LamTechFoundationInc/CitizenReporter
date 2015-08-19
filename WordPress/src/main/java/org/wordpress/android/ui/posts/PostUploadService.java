@@ -402,6 +402,13 @@ public class PostUploadService extends Service {
 
             remote_mediapaths.put("value", mPost.getRemoteMediaPaths()+"");
 
+            //own price for story
+            Map<Object, Object> own_price = new HashMap<Object, Object>();
+
+            own_price.put("key", "own_price");
+
+            own_price.put("value", mPost.getOwn_price()+"");
+
             ArrayList<Map<Object, Object>> a = new ArrayList<Map<Object, Object>>();
 
             if(!qhow.isEmpty())
@@ -420,8 +427,10 @@ public class PostUploadService extends Service {
             if(!string_location.isEmpty())
                 a.add(string_location);
 
-            if(!remote_mediapaths.isEmpty())
-                a.add(remote_mediapaths);
+            if(!own_price.isEmpty())
+                a.add(own_price);
+            if(!own_price.isEmpty())
+                a.add(own_price);
 
             Object[] custom_fields = a.toArray();
 

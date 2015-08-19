@@ -147,6 +147,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private boolean mMediaUploadServiceStarted;
 
     private TextView mPayment;
+    private String own_price;
 
     private Payment payment;
     private LinearLayout confirmLayout ;
@@ -265,12 +266,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         mPayment = (TextView)findViewById(R.id.payment);
         //TODO: if assignment set bounty & disable click
-        //TODO: if already paid show paid + show amount info & disable click
         //set own price as custom field
         mPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                       showPaymentDialog();
+                    if(mPost.isLocalDraft()){
+
+                        setPriceDialog();
+
+                    }else{
+
+                        showPaymentDialog();
+                    }
             }
         });
         /*
@@ -352,6 +359,71 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         setUpQuestionnaire();
     }
 
+    public void setPriceDialog(){
+        final Dialog setPriceDialog = new Dialog(StoryBoard.this);
+        setPriceDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        setPriceDialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        setPriceDialog.setContentView(R.layout.fivew_fragment);
+        setPriceDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        final FButton submitButton = (FButton)setPriceDialog.findViewById(R.id.submitButton);
+        submitButton.setEnabled(false);
+
+        final EditText editTextSummary = (EditText)setPriceDialog.findViewById(R.id.editTextSummary);
+
+        //find current value of summary
+        own_price = "" + mPost.getOwn_price();
+        //if it's not default & not empty edit editTextSummary
+        if(!own_price.equals("")){
+            editTextSummary.setText(own_price);
+            submitButton.setEnabled(true);
+        }
+
+        editTextSummary.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                String newSummary = "" + editTextSummary.getText().toString();
+                if (newSummary.length() > 0) {
+                    own_price = newSummary;
+                    submitButton.setEnabled(true);
+                } else {
+                    own_price = "";
+                    submitButton.setEnabled(false);
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        setPriceDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setPriceDialog.dismiss();
+            }
+        });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (own_price.trim().length() > 0) {
+                    mPayment.setText(own_price);
+                    if (!own_price.equals("")) {
+                        mPost.setOwn_price(own_price);
+                    }
+                } else {
+                    mPayment.setText(getResources().getString(R.string.own_price));
+                }
+                setPriceDialog.dismiss();
+            }
+        });
+
+
+        setPriceDialog.show();
+    }
+
     public void setUpPayment(){
 
         if(payment == null){
@@ -425,10 +497,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
          */
         final Dialog mDialog = new Dialog(StoryBoard.this);
         mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         mDialog.setContentView(R.layout.payment_row);
 
 
-        ((TextView)mDialog.findViewById(R.id.message_text)).setText(payment.getMessage());
         confirmLayout = (LinearLayout) mDialog.findViewById(R.id.confirm_layout);
         confirmIcon = (ImageView) mDialog.findViewById(R.id.confirm_icon);
         confirmText = (TextView) mDialog.findViewById(R.id.confirm_text);
@@ -438,13 +510,29 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         disputeText = (TextView) mDialog.findViewById(R.id.dispute_text);
         followUpLayout = (RelativeLayout) mDialog.findViewById(R.id.followup_layout);
 
-        if(payment.getConfirmed().equals("1")){
-            paymentConfirmed(payment, true, false);
-        }else if(payment.getConfirmed().equals("-1")){
-            paymentConfirmed(payment, true, false);
-        }else{
+        if(payment == null){
+            //payment hasn't been made yet!
+            ((TextView)mDialog.findViewById(R.id.message_text)).setText(getResources().getString(R.string.no_payment_yet));
+
+            //hide dispute and confirm
+            confirmLayout.setVisibility(View.GONE);
+            disputeLayout.setVisibility(View.GONE);
+
+            //show followUp
             followUpLayout.setVisibility(View.VISIBLE);
+        }else{
+            ((TextView)mDialog.findViewById(R.id.message_text)).setText(StringUtils.notNullStr(payment.getMessage()));
+            if(payment.getConfirmed().equals("1")){
+                paymentConfirmed(payment, true, false);
+            }else if(payment.getConfirmed().equals("-1")){
+                paymentConfirmed(payment, true, false);
+            }else{
+                followUpLayout.setVisibility(View.VISIBLE);
+                disputeLayout.setVisibility(View.GONE);
+                confirmLayout.setVisibility(View.GONE);
+            }
         }
+
         confirmLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -468,6 +556,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 finish();
             }
         });
+        mDialog.show();
     }
 
     public void paymentConfirmed(Payment payment, boolean isConfirmed, boolean update){

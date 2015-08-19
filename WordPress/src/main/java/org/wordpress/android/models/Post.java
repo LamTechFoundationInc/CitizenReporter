@@ -68,6 +68,16 @@ public class Post implements Serializable {
     private String qwhen;
     private String qhow;
 
+    public String getOwn_price() {
+        return own_price;
+    }
+
+    public void setOwn_price(String own_price) {
+        this.own_price = own_price;
+    }
+
+    private String own_price;
+
     public String getRemoteMediaPaths() {
         return remoteMediaPaths;
     }
