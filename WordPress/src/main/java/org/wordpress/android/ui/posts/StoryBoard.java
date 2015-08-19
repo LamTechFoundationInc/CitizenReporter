@@ -238,6 +238,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         mDemoSlider = (SliderLayout)findViewById(R.id.slider);
         media_map = new HashMap<String, File>();
+        media_map_remote = new HashMap<String, String>();
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
         guidePane = (LinearLayout)findViewById(R.id.guidePane);
         displaySummary = (TextView)findViewById(R.id.displaySummary);
@@ -317,15 +318,16 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
              mIsNewPost = true;
          }
 
-        /*TODO: doesn't work, but will come back to it
+        /*
+        TODO: doesn't work, but will come back to it
         ArrayList<MediaFile> postMedia = WordPress.wpDB.getMediaFilesForPost(mPost);
-
 
         if(postMedia.size()>0){
             for(int i = 0; i<postMedia.size(); i++){
                 generateThumbAndAddToSlider(postMedia.get(i));
             }
-        }*/
+        }
+        */
         if(!mPost.isLocalDraft()) {
             hideEditFeatures();
         }
@@ -351,10 +353,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         if(mediaPaths!=""){
 
-            String[] mediaPaths_parts = mediaPaths.split(":");
+            String[] mediaPaths_parts = mediaPaths.split("-:-");
             for(int i = 0; i<mediaPaths_parts.length; i++){
                 String thisThumb = mediaPaths_parts[i];
-                if(thisThumb.trim()!=""){
+                if(!thisThumb.trim().equals("") && !thisThumb.trim().equals("null")){
                     //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
                     Random randomGenerator = new Random();
 
@@ -381,7 +383,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(!mPost.isLocalDraft()){
+        if(mPost.isLocalDraft()){
             getMenuInflater().inflate(R.menu.storyboard_menu, menu);
         }
         return true;
@@ -584,7 +586,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
             setUpSlider();
             //add thumb to story mediapaths so as to display before upload
-            mPost.setMediaPaths(mPost.getMediaPaths() + ":" + thumb.getAbsolutePath());
+            mPost.setMediaPaths(mPost.getMediaPaths() + "-:-" + thumb.getAbsolutePath());
 
         }
     }
@@ -943,6 +945,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mDemoSlider.addSlider(textSliderView);
             }
         }else{
+
             for(String name : media_map_remote.keySet()){
                 TextSliderView textSliderView = new TextSliderView(this);
                 // initialize a SliderLayout
@@ -969,9 +972,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mDemoSlider.addOnPageChangeListener(this);
 
 
-        if(media_map.size()>0){
+        if(media_map.size()>0 || media_map_remote.size()>0){
             hasMedia = true;
-            if(media_map.size()<2){
+            if(media_map.size()<2 || media_map_remote.size()<2){
                 mDemoSlider.setEnabled(false);
             }else{
                 mDemoSlider.setEnabled(true);
@@ -1087,14 +1090,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if(mimeType.startsWith("image")){
             attachURL = "<a href=\""+file_url+"\"><img class=\"alignnone size-medium wp-image-400\" src=\""+file_url+"\" alt=\""+filename+"\" width=\"300\" height=\"225\" /></a>";
             //For thumbnail
-            mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + ":" + file_url);
+            mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + "-:-" + file_url);
 
         } else if(mimeType.startsWith("video")){
             attachURL = "[video width=\"320\" height=\"240\" mp4=\""+file_url+"\"][/video]";
         }else if(mimeType.startsWith("audio")){
             attachURL = "[audio mp3=\""+file_url+"\"][/audio]";
             //use default audio thumb
-            mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + ":" + BuildConfig.AUDIO_THUMB);
+            mPost.setRemoteMediaPaths(mPost.getRemoteMediaPaths() + "-:-" + BuildConfig.AUDIO_THUMB);
         }
 
 
