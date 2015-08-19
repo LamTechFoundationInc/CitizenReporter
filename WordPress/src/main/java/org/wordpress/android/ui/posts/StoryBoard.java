@@ -440,12 +440,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mPayment.setText(payment.getAmount()+" : "+confirmed);
             }
         }else{
-            if(!mPost.getOwn_price().equals(""))
-                mPayment.setText(mPost.getOwn_price());
+            if(mPost.getOwn_price()!=null)
+                if(mPost.getOwn_price().trim().length()>0) {
+                    mPayment.setText(mPost.getOwn_price());
+                }
         }
-
-
-
     }
 
     public void hideEditFeatures(){

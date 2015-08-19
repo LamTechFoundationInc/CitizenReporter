@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.posts.adapters;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -43,7 +45,10 @@ import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.GeocoderUtils;
 import org.wordpress.android.util.helpers.LocationHelper;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import info.hoang8f.widget.FButton;
 
@@ -87,6 +92,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                 holder.txtContent.setText("");
             }
 
+            holder.datePicker = (TextView)row.findViewById(R.id.pick_date);
+
             holder.filledButton = (ImageView)row.findViewById(R.id.filledButton);
 
             row.setTag(holder);
@@ -121,7 +128,38 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             }
         });
 
+        //if when, show datepicker
+        if(position == 4){
+            holder.datePicker.setVisibility(View.VISIBLE);
+            holder.datePicker.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    datePickerDialog.show();
+                }
+            });
+            setDateTimeField(holder.datePicker);
+        }
+
         return row;
+    }
+
+    private DatePickerDialog datePickerDialog;
+
+    private void setDateTimeField(final TextView datePicker) {
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+
+        Calendar newCalendar = Calendar.getInstance();
+
+        datePickerDialog = new DatePickerDialog(mActivity, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                datePicker.setText(dateFormatter.format(newDate.getTime()));
+            }
+
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
     }
 
     public void showLocationDialog(final QuestionHolder holder, final TextView displaySummary, final ImageView filledButton, final Question question, final int selectedItem){
@@ -272,6 +310,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
         ImageView filledButton;
         String answer;
+
+        TextView datePicker;
     }
 
 

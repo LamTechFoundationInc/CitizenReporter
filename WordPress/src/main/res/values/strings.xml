@@ -947,6 +947,7 @@
         <item>When did this happen?</item>
         <item>How did the events unfold?</item>
     </string-array>
+    <string name="pick_date">Pick date</string>
     <!--sound recorder -->
 
     <!-- Screen title before and during recording -->
