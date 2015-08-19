@@ -68,6 +68,16 @@ public class Post implements Serializable {
     private String qwhen;
     private String qhow;
 
+    public String getQwhen_date() {
+        return qwhen_date;
+    }
+
+    public void setQwhen_date(String qwhen_date) {
+        this.qwhen_date = qwhen_date;
+    }
+
+    private String qwhen_date;
+
     public String getOwn_price() {
         return own_price;
     }

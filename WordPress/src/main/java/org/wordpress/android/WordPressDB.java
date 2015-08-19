@@ -91,7 +91,7 @@ public class WordPressDB {
     private static final String COLUMN_NAME_THUMB               = "thumb";
     private static final String COLUMN_NAME_AVATAR               = "avatar";
 
-    private static final int DATABASE_VERSION = 44;
+    private static final int DATABASE_VERSION = 45;
 
     private static final String CREATE_TABLE_BLOGS = "create table if not exists accounts (id integer primary key autoincrement, "
             + "url text, blogName text, username text, password text, imagePlacement text, centerThumbnail boolean, fullSizeImage boolean, maxImageWidth text, maxImageWidthId integer);";
@@ -244,6 +244,7 @@ public class WordPressDB {
      private static final String ADD_POST_HOW = "alter table posts add qhow text default '';";
     private static final String ADD_POST_WHAT = "alter table posts add qwhat text default '';";
     private static final String ADD_POST_WHEN = "alter table posts add qwhen text default '';";
+    private static final String ADD_POST_WHEN_DATE = "alter table posts add qwhen_date text default '';";
      private static final String ADD_POST_WHO = "alter table posts add qwho text default '';";
     private static final String ADD_POST_WHERE = "alter table posts add qwhere text default '';";
 
@@ -425,6 +426,9 @@ public class WordPressDB {
                 currentVersion++;
             case 43:
                 db.execSQL(ADD_POST_OWN_PRICE);
+                currentVersion++;
+            case 44:
+                db.execSQL(ADD_POST_WHEN_DATE);
         }
         db.setVersion(DATABASE_VERSION);
     }
@@ -1198,6 +1202,8 @@ public class WordPressDB {
                                             values.put("qwhy", customField.get("value").toString());
                                         if (customField.get("key").equals("qwhen"))
                                             values.put("qwhen", customField.get("value").toString());
+                                        if (customField.get("key").equals("qwhen_date"))
+                                            values.put("qwhen_date", customField.get("value").toString());
                                         if (customField.get("key").equals("qhow"))
                                             values.put("qhow", customField.get("value").toString());
                                         if (customField.get("key").equals("remote_mediapaths"))
@@ -1557,6 +1563,7 @@ public class WordPressDB {
 
             values.put("qwhy", post.getQwhy());
             values.put("qwhen", post.getQwhen());
+            values.put("qwhen_date", post.getQwhen_date());
             values.put("qhow", post.getQhow());
             values.put("string_location", post.getStringLocation());
             values.put("remote_mediapaths", post.getRemoteMediaPaths());
@@ -1726,6 +1733,7 @@ public class WordPressDB {
                         post.setAssignment_id(Integer.parseInt(c.getString(c.getColumnIndex("assignment_id"))));
                     post.setQwhy(c.getString(c.getColumnIndex("qwhy")));
                     post.setQwhen(c.getString(c.getColumnIndex("qwhen")));
+                    post.setQwhen_date(c.getString(c.getColumnIndex("qwhen_date")));
                     post.setQhow(c.getString(c.getColumnIndex("qhow")));
                     post.setStringLocation(c.getString(c.getColumnIndex("string_location")));
                     post.setRemoteMediaPaths(c.getString(c.getColumnIndex("remote_mediapaths")));

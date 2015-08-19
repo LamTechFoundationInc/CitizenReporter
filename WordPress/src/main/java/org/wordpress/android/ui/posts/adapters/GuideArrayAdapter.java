@@ -155,7 +155,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                datePicker.setText(dateFormatter.format(newDate.getTime()));
+                String pickedDate = dateFormatter.format(newDate.getTime());
+                datePicker.setText(pickedDate);
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));

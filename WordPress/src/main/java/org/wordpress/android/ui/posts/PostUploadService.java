@@ -377,6 +377,12 @@ public class PostUploadService extends Service {
 
             qwhen.put("value", mPost.getQwhen()+"");
 
+            Map<Object, Object> qwhen_date = new HashMap<Object, Object>();
+
+            qwhen_date.put("key", "qwhen_date");
+
+            qwhen_date.put("value", mPost.getQwhen_date()+"");
+
             Map<Object, Object> qwhy = new HashMap<Object, Object>();
 
             qwhy.put("key", "qwhy");
@@ -431,6 +437,8 @@ public class PostUploadService extends Service {
                 a.add(own_price);
             if(!own_price.isEmpty())
                 a.add(own_price);
+            if(!qwhen_date.isEmpty())
+                a.add(qwhen_date);
 
             Object[] custom_fields = a.toArray();
 
