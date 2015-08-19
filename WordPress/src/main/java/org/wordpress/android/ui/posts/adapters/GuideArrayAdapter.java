@@ -130,11 +130,17 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
         //if when, show datepicker
         if(position == 4){
+
+            if(post.getQwhen_date()!=null){
+                holder.datePicker.setText(post.getQwhen_date());
+            }
+
             holder.datePicker.setVisibility(View.VISIBLE);
             holder.datePicker.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    datePickerDialog.show();
+                    if(post.isLocalDraft())
+                        datePickerDialog.show();
                 }
             });
             setDateTimeField(holder.datePicker);
@@ -157,6 +163,9 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                 newDate.set(year, monthOfYear, dayOfMonth);
                 String pickedDate = dateFormatter.format(newDate.getTime());
                 datePicker.setText(pickedDate);
+
+                post.setQhow(pickedDate);
+                WordPress.wpDB.updatePost(post);
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
