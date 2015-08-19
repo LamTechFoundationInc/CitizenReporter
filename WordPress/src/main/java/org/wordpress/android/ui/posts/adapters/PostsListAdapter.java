@@ -111,7 +111,7 @@ public class PostsListAdapter extends BaseAdapter {
             } else {
                 switch (post.getStatusEnum()) {
                     case DRAFT:
-                        formattedStatus = mContext.getResources().getString(R.string.draft);
+                        formattedStatus = mContext.getResources().getString(R.string.uploaded);
                         break;
                     case PRIVATE:
                         formattedStatus = mContext.getResources().getString(R.string.post_private);
