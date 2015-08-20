@@ -130,7 +130,6 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
         //if when, show datepicker
         if(position == 4){
-
             if(post.getQwhen_date()!=null){
                 holder.datePicker.setText(post.getQwhen_date());
             }
@@ -144,6 +143,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                 }
             });
             setDateTimeField(holder.datePicker);
+        }else{
+
         }
 
         return row;
@@ -164,7 +165,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                 String pickedDate = dateFormatter.format(newDate.getTime());
                 datePicker.setText(pickedDate);
 
-                post.setQhow(pickedDate);
+                post.setQwhen_date(pickedDate);
                 WordPress.wpDB.updatePost(post);
             }
 

@@ -348,6 +348,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
             mProgressFooterView.setVisibility(View.VISIBLE);
         }
 
+
         mCurrentFetchAssignmentsTask = new ApiHelper.FetchAssignmentsTask(new ApiHelper.FetchAssignmentsTask.Callback() {
             @Override
             public void onSuccess(int postCount) {
@@ -410,6 +411,7 @@ public class AssignmentsListFragment extends ListFragment implements EmptyViewAn
 
         mIsFetchingPosts = true;
         mCurrentFetchAssignmentsTask.execute(apiArgs);
+
     }
 
     protected void clear() {

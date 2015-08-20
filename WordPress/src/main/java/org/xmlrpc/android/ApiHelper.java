@@ -1,12 +1,15 @@
 package org.xmlrpc.android;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
 
 import org.wordpress.android.WordPress;
+import org.wordpress.android.chat.Message;
 import org.wordpress.android.datasets.CommentTable;
 import org.wordpress.android.models.Blog;
 import org.wordpress.android.models.BlogIdentifier;
@@ -439,8 +442,8 @@ public class ApiHelper {
                     List<Map<?, ?>> postsList = new ArrayList<Map<?, ?>>();
 
                     if (!loadMore) {
-                        WordPress.wpDB.deleteUploadedPosts(
-                                blog.getLocalTableBlogId(), isPage);
+                        WordPress.wpDB.deleteUploadedAssignments(
+                                blog.getLocalTableBlogId());
                     }
 
                     // If we're loading more posts, only save the posts at the end of the array.
@@ -691,6 +694,98 @@ public class ApiHelper {
             }
         }
     }
+    /*
+        Fetch user messages
+     */
+    public static class FetchMessagesTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
+        public interface Callback extends GenericErrorCallback {
+            public void onSuccess(int postCount);
+        }
+
+        private Callback mCallback;
+        private String mErrorMessage;
+        private int mMessagesCount;
+
+        public FetchMessagesTask(Callback callback) {
+            mCallback = callback;
+        }
+
+        @Override
+        protected Boolean doInBackground(List<?>... params) {
+            List<?> arguments = params[0];
+
+            Blog blog = (Blog) arguments.get(0);
+            if (blog == null)
+                return false;
+
+            boolean isPage = (Boolean) arguments.get(1);
+            int recordCount = (Integer) arguments.get(2);
+            boolean loadMore = (Boolean) arguments.get(3);
+            XMLRPCClientInterface client = XMLRPCFactory.instantiate(blog.getUri(), blog.getHttpuser(),
+                    blog.getHttppassword());
+
+            Object[] result;
+            Object[] xmlrpcParams = { blog.getRemoteBlogId(),
+                    blog.getUsername(),
+                    blog.getPassword(), recordCount };
+            try {
+                result = (Object[]) client.call((isPage) ? "wp.getPages"
+                        : "metaWeblog.getMessages", xmlrpcParams);
+                if (result != null && result.length > 0) {
+                    mMessagesCount = result.length;
+                    
+                    int startPosition = 0;
+
+                    for (int ctr = startPosition; ctr < result.length; ctr++) {
+                        Map<?, ?> postMap = (Map<?, ?>) result[ctr];
+
+                        Message chat = new Message();
+                        chat.setMessage(MapUtils.getMapStr(postMap, "message"));
+                        chat.setIsMine("2");
+                        chat.setUser("admin");
+                        WordPress.wpDB.addMessage(chat);
+
+                    }
+                }
+                return true;
+            } catch (XMLRPCFault e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                if (e.getFaultCode() == 401) {
+                    mErrorType = ErrorType.UNAUTHORIZED;
+                }
+                mErrorMessage = e.getMessage();
+            } catch (XMLRPCException e) {
+                mErrorType = ErrorType.NETWORK_XMLRPC;
+                mErrorMessage = e.getMessage();
+            } catch (IOException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
+                mErrorMessage = e.getMessage();
+            } catch (XmlPullParserException e) {
+                mErrorType = ErrorType.INVALID_RESULT;
+                mErrorMessage = e.getMessage();
+            }
+
+            return false;
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+            mCallback.onFailure(ErrorType.TASK_CANCELLED, mErrorMessage, mThrowable);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (mCallback != null) {
+                if (success) {
+                    mCallback.onSuccess(mMessagesCount);
+                } else {
+                    mCallback.onFailure(mErrorType, mErrorMessage, mThrowable);
+                }
+            }
+        }
+    }
+
     /**
      * Fetch a single lessong or page from the XML-RPC API and save/update it in the DB
      */

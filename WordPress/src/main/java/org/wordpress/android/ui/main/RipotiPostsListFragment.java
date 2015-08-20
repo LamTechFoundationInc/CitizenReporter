@@ -199,7 +199,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                         if (mPostsListAdapter.getCount() > 0) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(0);
                             if (postsListPost != null) {
-                                showPost(postsListPost.getPostId());
+                                showPost(postsListPost.getPostId(), 0);
                                 getListView().setItemChecked(0, true);
                             }
                         }
@@ -209,7 +209,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                         if (selectedPosition != ListView.INVALID_POSITION && selectedPosition < mPostsListAdapter.getCount()) {
                             PostsListPost postsListPost = (PostsListPost) mPostsListAdapter.getItem(selectedPosition);
                             if (postsListPost != null) {
-                                showPost(postsListPost.getPostId());
+                                showPost(postsListPost.getPostId(), 0);
                             }
                         }
                     }
@@ -241,7 +241,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                 if (postsListPost == null)
                     return;
                 if (!mIsFetchingPosts || isLoadingMorePosts()) {
-                    showPost(postsListPost.getPostId());
+                    showPost(postsListPost.getPostId(), position);
                 } else if (isAdded()) {
                     Toast.makeText(getActivity(), mIsPage ? R.string.pages_fetching : R.string.posts_fetching,
                             Toast.LENGTH_SHORT).show();
@@ -271,7 +271,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
         super.onAttach(activity);
         try {
             // check that the containing activity implements our callback
-            mOnPostSelectedListener = (OnPostSelectedListener) activity;
+            //mOnPostSelectedListener = (OnPostSelectedListener) activity;
             mOnSinglePostLoadedListener = (OnSinglePostLoadedListener) activity;
         } catch (ClassCastException e) {
             activity.finish();
@@ -305,7 +305,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
         mSwipeToRefreshHelper.setRefreshing(refreshing);
     }
 
-    private void showPost(long selectedId) {
+    private void showPost(long selectedId, int position) {
         if (WordPress.getCurrentBlog() == null)
             return;
         Post post = WordPress.wpDB.getPostForLocalTablePostId(selectedId, false);
@@ -316,12 +316,21 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
             i.putExtra("selectedId", selectedId);
             startActivity(i);
         } else {
+
+
             if (!getActivity().isFinishing()) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
             }
+
+            /*
+                Quick Dirty Hack
+                //TODO: Why does list require refresh to load remote posts
+             */
+
+
         }
     }
 
