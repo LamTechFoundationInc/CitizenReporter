@@ -254,10 +254,11 @@ public class WordPress extends Application {
     }
 
     public void submitFeedback(Activity mActivity, Dialog mDialog, String email, String feedback, String os_version, String model){
-        if (!NetworkUtils.isNetworkAvailable(this)) {
+        if (!NetworkUtils.isNetworkAvailable(mActivity)) {
             ToastUtils.showToast(mActivity, R.string.error_feedback_no_network, ToastUtils.Duration.SHORT);
         }else{
-            mDialog.cancel();
+            mDialog.dismiss();
+
             new SubmitFeedback(mActivity, email, feedback, os_version, model).execute();
         }
     }
@@ -279,16 +280,22 @@ public class WordPress extends Application {
         }
         @Override
         protected void onPreExecute(){
-            progressDialog = new ProgressDialog(mActivity);
-            progressDialog.setMessage("Submitting feedback");
-            progressDialog.setIndeterminate(false);
-            progressDialog.show();
+            ToastUtils.showToast(mActivity, R.string.submitting_feedback, ToastUtils.Duration.LONG);
+
+            //progressDialog = new ProgressDialog(mActivity);
+            //progressDialog.setMessage("Submitting feedback");
+            //progressDialog.setIndeterminate(false);
+            //progressDialog.show();
         }
 
         @Override
         protected String doInBackground(String... strings) {
 
-            String username = WordPress.getCurrentBlog().getUsername();
+
+            String username = "";
+                    if(WordPress.getCurrentBlog()!=null){
+                        WordPress.getCurrentBlog().getUsername();
+                    }
 
             APIFunctions userFunction = new APIFunctions();
             JSONObject json = userFunction.submitFeedback(username, mEmail, mFeedback, mVersion, mModel);
@@ -313,7 +320,7 @@ public class WordPress extends Application {
 
         @Override
         protected void onPostExecute(String result){
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
             ToastUtils.showToast(mActivity, R.string.feedback_submitted, ToastUtils.Duration.SHORT);
         }
     }
