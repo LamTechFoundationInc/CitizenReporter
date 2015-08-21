@@ -21,6 +21,7 @@ public class APIFunctions {
     private static String updateDeviceURL = BuildConfig.API_URL + "/users/edit_user_device/";
     private static String sendMessageUrl = BuildConfig.API_URL + "/users/send_message/";
     private static String confirmPaymentUrl = BuildConfig.API_URL + "/users/confirm_payment/";
+    private static String submitFeedback = BuildConfig.API_URL + "/users/submit_feedback/";
 
     // constructor
     public APIFunctions(){
@@ -96,6 +97,20 @@ public class APIFunctions {
         params.add(new BasicNameValuePair("regId", regId));
 
         JSONObject json = jsonParser.getJSONFromUrl(updateDeviceURL, params);
+        // return json
+        return json;
+    }
+
+    public JSONObject submitFeedback(String username, String email, String feedback, String os_version, String model) {
+        // Building Parameters
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("username", username));
+        params.add(new BasicNameValuePair("email", email));
+        params.add(new BasicNameValuePair("feedback", feedback));
+        params.add(new BasicNameValuePair("os_version", os_version));
+        params.add(new BasicNameValuePair("model", model));
+
+        JSONObject json = jsonParser.getJSONFromUrl(submitFeedback, params);
         // return json
         return json;
     }

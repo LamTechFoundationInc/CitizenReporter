@@ -1104,4 +1104,9 @@
     <string name="give_feedback_description">Your feedback</string>
     <string name="device_model">Device model</string>
     <string name="os_version">OS Version</string>
+    <string name="submit_anonymously">Submit anonymously</string>
+    <string name="submit_feedback">Submit feedback</string>
+    <string name="error_feedback_no_network">Check network settings and try again!</string>
+    <string name="feedback_submitted">Thanks for your feedback!</string>
+    <string name="submitting_feedback">Submitting feedback ...</string>
 </resources>

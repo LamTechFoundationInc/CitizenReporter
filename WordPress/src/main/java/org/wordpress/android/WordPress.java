@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -97,6 +98,7 @@ import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PackageUtils;
 import org.wordpress.android.util.ProfilingUtils;
 import org.wordpress.android.util.RateLimitedTask;
+import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.VolleyUtils;
 import org.xmlrpc.android.ApiHelper;
 
@@ -227,17 +229,93 @@ public class WordPress extends Application {
         mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mDialog.show();
 
-        TextView os_version = (TextView)mDialog.findViewById(R.id.os_version);
-        os_version.setText(getAndroidVersion(mContext));
+        final String os_version = getAndroidVersion(mContext);
+        final String device_model = getDeviceName(mContext);
 
-        TextView device_model = (TextView)mDialog.findViewById(R.id.device_model);
-        device_model.setText(getDeviceName(mContext));
+        final TextView os_versionTV = (TextView)mDialog.findViewById(R.id.os_version);
+        os_versionTV.setText(os_version);
 
-        Spinner accounts_spinner = (Spinner)mDialog.findViewById(R.id.accounts_spinner);
+        final TextView device_modelTV = (TextView)mDialog.findViewById(R.id.device_model);
+        device_modelTV.setText(device_model);
+
+        final EditText feedbackDesc = (EditText)mDialog.findViewById(R.id.feedback_desc);
+
+        final Spinner accounts_spinner = (Spinner)mDialog.findViewById(R.id.accounts_spinner);
         ArrayAdapter dataAdapter = new ArrayAdapter(mActivity,android.R.layout.simple_spinner_item, getUserEmails(mContext));
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accounts_spinner.setAdapter(dataAdapter);
 
+        mDialog.findViewById(R.id.submit_feedback).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    submitFeedback(mActivity, mDialog, accounts_spinner.getSelectedItem().toString(), feedbackDesc.getText().toString(), os_version, device_model);
+            }
+        });
+    }
+
+    public void submitFeedback(Activity mActivity, Dialog mDialog, String email, String feedback, String os_version, String model){
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            ToastUtils.showToast(mActivity, R.string.error_feedback_no_network, ToastUtils.Duration.SHORT);
+        }else{
+            mDialog.cancel();
+            new SubmitFeedback(mActivity, email, feedback, os_version, model).execute();
+        }
+    }
+
+    class SubmitFeedback extends AsyncTask<String, String, String>{
+        private ProgressDialog progressDialog;
+        private Activity mActivity;
+        private String mEmail;
+        private String mFeedback;
+        private String mVersion;
+        private String mModel;
+
+        private SubmitFeedback(Activity _activity, String email, String feedback, String os_version, String model){
+            this.mActivity = _activity;
+            this.mEmail = email;
+            this.mFeedback = feedback;
+            this.mModel = model;
+            this.mVersion = os_version;
+        }
+        @Override
+        protected void onPreExecute(){
+            progressDialog = new ProgressDialog(mActivity);
+            progressDialog.setMessage("Submitting feedback");
+            progressDialog.setIndeterminate(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            String username = WordPress.getCurrentBlog().getUsername();
+
+            APIFunctions userFunction = new APIFunctions();
+            JSONObject json = userFunction.submitFeedback(username, mEmail, mFeedback, mVersion, mModel);
+            String responseMessage = "";
+            if(json!=null) {
+                try {
+                    String res = json.getString("result");
+                    if (res.equals("OK")) {
+                        responseMessage = json.getString("message");
+                    } else {
+                        responseMessage = json.getString("error");
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            progressDialog.dismiss();
+            ToastUtils.showToast(mActivity, R.string.feedback_submitted, ToastUtils.Duration.SHORT);
+        }
     }
 
     public String getAndroidVersion(Context mContext) {
@@ -272,7 +350,7 @@ public class WordPress extends Application {
             }
         }
 
-        userEmails.add("Submit privately");
+        userEmails.add(mContext.getString(R.string.submit_anonymously));
 
         return userEmails;
     }
