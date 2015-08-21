@@ -1101,4 +1101,7 @@
 
     <!--App feedback-->
     <string name="give_feedback">Report Problem/Give Feedback</string>
+    <string name="give_feedback_description">Your feedback</string>
+    <string name="device_model">Device model</string>
+    <string name="os_version">OS Version</string>
 </resources>

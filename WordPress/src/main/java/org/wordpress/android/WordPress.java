@@ -1,5 +1,7 @@
 package org.wordpress.android;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,6 +27,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -48,6 +52,7 @@ import com.wordpress.rest.RestRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.analytics.AnalyticsTrackerMixpanel;
@@ -104,6 +109,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -111,6 +117,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import de.greenrobot.event.EventBus;
 import io.fabric.sdk.android.Fabric;
@@ -220,6 +227,64 @@ public class WordPress extends Application {
         mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mDialog.setTitle(mActivity.getResources().getString(R.string.give_feedback));
         mDialog.show();
+
+        TextView os_version = (TextView)mDialog.findViewById(R.id.os_version);
+        os_version.setText(getAndroidVersion());
+
+        TextView device_model = (TextView)mDialog.findViewById(R.id.device_model);
+        device_model.setText(getDeviceName());
+
+        Spinner accounts_spinner = (Spinner)mDialog.findViewById(R.id.accounts_spinner);
+        ArrayAdapter dataAdapter = new ArrayAdapter(mActivity,android.R.layout.simple_spinner_item, getUserEmails());
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        accounts_spinner.setAdapter(dataAdapter);
+
+    }
+
+    public String getAndroidVersion() {
+        String release = Build.VERSION.RELEASE;
+        int sdkVersion = Build.VERSION.SDK_INT;
+        String versionPrompt = getApplicationContext().getResources().getString(R.string.os_version);
+        return versionPrompt + " : " + sdkVersion + " (" + release +")";
+    }
+
+    public String getDeviceName() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        String modelPrompt = getApplicationContext().getResources().getString(R.string.device_model);
+        if (model.startsWith(manufacturer)) {
+            return modelPrompt + capitalize(model);
+        } else {
+            return modelPrompt + " : " + capitalize(manufacturer) + " " + model;
+        }
+    }
+
+    public ArrayList<String> getUserEmails(){
+
+        ArrayList<String> userEmails = new ArrayList<>();
+
+        Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+        Account[] accounts = AccountManager.get(getApplicationContext()).getAccounts();
+        for (Account account : accounts) {
+            if (emailPattern.matcher(account.name).matches()) {
+                String possibleEmail = account.name;
+                userEmails.add(possibleEmail);
+            }
+        }
+
+        return userEmails;
+    }
+
+    private String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
     }
 
     public void startOverlayCamera(final Activity activity, Context context, final int mode){
