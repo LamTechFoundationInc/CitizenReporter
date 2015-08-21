@@ -1098,4 +1098,7 @@
     <string name="media_types">Media Types</string>
     <string name="empty_payments_list">No payments made yet!</string>
     <string name="no_payment_yet">No payment yet!</string>
+
+    <!--App feedback-->
+    <string name="give_feedback">Report Problem/Give Feedback</string>
 </resources>

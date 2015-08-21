@@ -4,22 +4,16 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +22,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -37,20 +30,14 @@ import com.simperium.client.Bucket;
 import com.simperium.client.BucketObjectMissingException;
 
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.Constants;
 import org.wordpress.android.GCMConfigORG;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
-import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.models.CommentStatus;
 import org.wordpress.android.models.Note;
 import org.wordpress.android.models.Post;
 import org.wordpress.android.networking.SelfSignedSSLCertsManager;
-import org.wordpress.android.overlaycamera.OverlayCameraActivity;
-import org.wordpress.android.passcodelock.AbstractAppLock;
-import org.wordpress.android.passcodelock.AppLockManager;
-import org.wordpress.android.passcodelock.DefaultAppLock;
 import org.wordpress.android.ripoti.ui.main.UserMenuActivity;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.RequestCodes;
@@ -60,9 +47,9 @@ import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
 import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
-import org.wordpress.android.ui.posts.StoryBoard;
 import org.wordpress.android.ui.posts.ViewAssignmentFragment;
 import org.wordpress.android.ui.posts.ViewPostFragmentRipoti;
+import org.wordpress.android.ui.posts.ViewPostFragmentRipoti.OnDetailPostActionListener;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.reader.ReaderEvents;
@@ -74,7 +61,6 @@ import org.wordpress.android.util.CoreEvents;
 import org.wordpress.android.util.CoreEvents.MainViewPagerScrolled;
 import org.wordpress.android.util.CoreEvents.UserSignedOutCompletely;
 import org.wordpress.android.util.CoreEvents.UserSignedOutWordPressCom;
-import org.wordpress.android.util.DeviceUtils;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -83,8 +69,6 @@ import org.wordpress.android.widgets.WPAlertDialogFragment;
 import org.wordpress.android.widgets.WPMainViewPager;
 
 import de.greenrobot.event.EventBus;
-
-import org.wordpress.android.ui.posts.ViewPostFragmentRipoti.OnDetailPostActionListener;
 
 /**
  * Main activity which hosts sites, reader, me and notifications tabs
@@ -306,6 +290,7 @@ public class RipotiMainActivity extends ActionBarActivity
         i.putExtra(EditPostActivity.EXTRA_IS_NEW_POST, true);
         startActivityForResult(i, RequestCodes.EDIT_POST);
     }
+
     public void requestPosts() {
         if (WordPress.getCurrentBlog() == null) {
             return;

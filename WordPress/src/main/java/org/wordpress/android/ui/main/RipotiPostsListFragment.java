@@ -326,8 +326,8 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
             }
 
             /*
-                Quick Dirty Hack
-                //TODO: Why does list require refresh to load remote posts
+             *  Quick Dirty Hack
+             *  TODO: Why does list require refresh to load remote posts
              */
 
 

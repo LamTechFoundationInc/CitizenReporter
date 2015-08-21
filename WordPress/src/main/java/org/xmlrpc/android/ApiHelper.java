@@ -697,6 +697,7 @@ public class ApiHelper {
     /*
         Fetch user messages
      */
+
     public static class FetchMessagesTask extends HelperAsyncTask<java.util.List<?>, Boolean, Boolean> {
         public interface Callback extends GenericErrorCallback {
             public void onSuccess(int postCount);
@@ -733,7 +734,7 @@ public class ApiHelper {
                         : "metaWeblog.getMessages", xmlrpcParams);
                 if (result != null && result.length > 0) {
                     mMessagesCount = result.length;
-                    
+
                     int startPosition = 0;
 
                     for (int ctr = startPosition; ctr < result.length; ctr++) {

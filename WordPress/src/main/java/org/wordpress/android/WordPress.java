@@ -213,6 +213,15 @@ public class WordPress extends Application {
         }
     }
 
+    public void giveFeedbackDialog(final Activity mActivity, Context mContext){
+        final Dialog mDialog = new Dialog(mActivity);
+        mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        mDialog.setContentView(R.layout.feedback_dialog);
+        mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mDialog.setTitle(mActivity.getResources().getString(R.string.give_feedback));
+        mDialog.show();
+    }
+
     public void startOverlayCamera(final Activity activity, Context context, final int mode){
 
         final Dialog mDialog = new Dialog(activity);

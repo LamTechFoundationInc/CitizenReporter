@@ -105,6 +105,13 @@ public class HelpActivity extends ActionBarActivity {
                 HelpshiftHelper.getInstance().showFAQ(HelpActivity.this, origin);
             }
         });
+
+        findViewById(R.id.give_feedback).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                (new WordPress()).giveFeedbackDialog(HelpActivity.this, getApplicationContext());
+            }
+        });
     }
 
     private void initDefaultLayout() {
