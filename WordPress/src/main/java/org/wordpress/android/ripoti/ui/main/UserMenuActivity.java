@@ -110,7 +110,8 @@ public class UserMenuActivity extends ActionBarActivity{
             }
         });
 
-        findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.row_stats).setVisibility(View.GONE);
+                findViewById(R.id.row_stats).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(UserMenuActivity.this, Stats.class);
