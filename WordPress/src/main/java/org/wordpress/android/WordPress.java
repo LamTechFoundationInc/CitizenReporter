@@ -225,33 +225,32 @@ public class WordPress extends Application {
         mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         mDialog.setContentView(R.layout.feedback_dialog);
         mDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mDialog.setTitle(mActivity.getResources().getString(R.string.give_feedback));
         mDialog.show();
 
         TextView os_version = (TextView)mDialog.findViewById(R.id.os_version);
-        os_version.setText(getAndroidVersion());
+        os_version.setText(getAndroidVersion(mContext));
 
         TextView device_model = (TextView)mDialog.findViewById(R.id.device_model);
-        device_model.setText(getDeviceName());
+        device_model.setText(getDeviceName(mContext));
 
         Spinner accounts_spinner = (Spinner)mDialog.findViewById(R.id.accounts_spinner);
-        ArrayAdapter dataAdapter = new ArrayAdapter(mActivity,android.R.layout.simple_spinner_item, getUserEmails());
+        ArrayAdapter dataAdapter = new ArrayAdapter(mActivity,android.R.layout.simple_spinner_item, getUserEmails(mContext));
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accounts_spinner.setAdapter(dataAdapter);
 
     }
 
-    public String getAndroidVersion() {
+    public String getAndroidVersion(Context mContext) {
         String release = Build.VERSION.RELEASE;
         int sdkVersion = Build.VERSION.SDK_INT;
-        String versionPrompt = getApplicationContext().getResources().getString(R.string.os_version);
+        String versionPrompt = mContext.getResources().getString(R.string.os_version);
         return versionPrompt + " : " + sdkVersion + " (" + release +")";
     }
 
-    public String getDeviceName() {
+    public String getDeviceName(Context mContext) {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
-        String modelPrompt = getApplicationContext().getResources().getString(R.string.device_model);
+        String modelPrompt = mContext.getResources().getString(R.string.device_model);
         if (model.startsWith(manufacturer)) {
             return modelPrompt + capitalize(model);
         } else {
@@ -259,18 +258,21 @@ public class WordPress extends Application {
         }
     }
 
-    public ArrayList<String> getUserEmails(){
+    public List<String> getUserEmails(Context mContext){
 
-        ArrayList<String> userEmails = new ArrayList<>();
+        List<String> userEmails = new ArrayList<>();
 
         Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(getApplicationContext()).getAccounts();
+        Account[] accounts = AccountManager.get(mContext).getAccounts();
         for (Account account : accounts) {
             if (emailPattern.matcher(account.name).matches()) {
                 String possibleEmail = account.name;
-                userEmails.add(possibleEmail);
+                if(!userEmails.contains(possibleEmail))
+                    userEmails.add(possibleEmail);
             }
         }
+
+        userEmails.add("Submit privately");
 
         return userEmails;
     }
