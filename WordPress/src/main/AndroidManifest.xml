@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.wordpress.android"
+    package="org.codeforafrica.citizenreporter.starreports"
     android:installLocation="auto" >
 
     <supports-screens
@@ -47,7 +47,7 @@
         android:required="false" />
 
     <application
-        android:name="WordPress"
+        android:name=".WordPress"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@drawable/app_icon"
@@ -135,7 +135,7 @@
             android:label="@string/add_new_category"
             android:theme="@style/WordPress.Dialog" />
         <activity
-            android:name=".editor.legacy.EditLinkActivity"
+            android:name="org.wordpress.android.editor.legacy.EditLinkActivity"
             android:label="@string/create_a_link"
             android:theme="@style/WordPress.Dialog"
             android:windowSoftInputMode="stateVisible" />
@@ -198,7 +198,7 @@
             android:name=".ui.main.RipotiMainActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
-            android:name=".ripoti.ui.main.UserMenuActivity"
+            android:name=".main.UserMenuActivity"
             android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.posts.PagesActivity"
@@ -330,18 +330,18 @@
 
         <!--  Passcode lock activities -->
         <activity
-            android:name=".passcodelock.PasscodeUnlockActivity"
+            android:name="org.wordpress.passcodelock.PasscodeUnlockActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name=".passcodelock.PasscodePreferencesActivity"
+            android:name="org.wordpress.passcodelock.PasscodePreferencesActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Holo.Light"
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name=".passcodelock.PasscodeManagePasswordActivity"
+            android:name="org.wordpress.passcodelock.PasscodeManagePasswordActivity"
             android:theme="@android:style/Theme.Holo.Light.NoActionBar"
             android:windowSoftInputMode="stateHidden" >
         </activity>
@@ -411,7 +411,7 @@
             android:label="Reader Comment Service"
             android:exported="false"/>
         <!--
-        <service android:name="org.wordpress.android.GCMIntentService"/>
+        <service android:name="org.codeforafrica.citizenreporter.starreports.GCMIntentService"/>
         -->
         <service android:name=".GCMIntentService"/>
 
@@ -434,7 +434,7 @@
                 <!-- Receives the registration id. -->
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="org.wordpress.android" />
+                <category android:name="org.codeforafrica.citizenreporter.starreports" />
             </intent-filter>
         </receiver>
         <receiver

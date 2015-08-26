@@ -39,7 +39,8 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 
-import org.wordpress.android.R;
+import org.codeforafrica.citizenreporter.starreports.R;
+
 
 public class RecorderService extends Service implements MediaRecorder.OnErrorListener {
 

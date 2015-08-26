@@ -59,7 +59,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.wordpress.android.R;
+import org.codeforafrica.citizenreporter.starreports.R;
+
 
 public class SoundRecorder extends Activity implements Button.OnClickListener,
         Recorder.OnStateChangedListener {

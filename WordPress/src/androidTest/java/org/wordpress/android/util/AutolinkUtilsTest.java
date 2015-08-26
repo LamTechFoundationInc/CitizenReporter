@@ -2,6 +2,8 @@ package org.wordpress.android.util;
 
 import android.test.InstrumentationTestCase;
 
+import org.wordpress.android.util.AutolinkUtils;
+
 public class AutolinkUtilsTest extends InstrumentationTestCase {
     @Override
     protected void setUp() throws Exception {

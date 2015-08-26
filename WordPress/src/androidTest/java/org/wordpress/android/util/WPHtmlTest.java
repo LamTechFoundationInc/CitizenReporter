@@ -3,6 +3,7 @@ package org.wordpress.android.util;
 import android.test.InstrumentationTestCase;
 import android.text.SpannableStringBuilder;
 
+//import org.wordpress.android.util.HtmlToSpannedConverter;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 

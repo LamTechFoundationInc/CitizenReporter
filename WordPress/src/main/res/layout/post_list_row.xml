@@ -25,7 +25,7 @@
     android:layout_height="wrap_content"
     android:minHeight="50dp">
 
-    <org.wordpress.android.widgets.WPTextView
+    <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
         android:id="@+id/post_list_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_gravity="center_vertical"
         style="@style/ReaderTextView.Post.Title" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
         android:id="@+id/post_list_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/reader_divider_grey" />
-        <org.wordpress.android.widgets.WPTextView
+        <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
             android:id="@+id/post_list_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

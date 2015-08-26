@@ -18,15 +18,14 @@ import com.wordpress.rest.RestRequest.Listener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wordpress.android.WordPress;
-import org.wordpress.android.models.Note;
+import org.codeforafrica.citizenreporter.starreports.WordPress;
+import org.codeforafrica.citizenreporter.starreports.models.Note;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class WPRestClient {

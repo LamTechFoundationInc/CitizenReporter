@@ -1,25 +1,23 @@
 package org.xmlrpc.android;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.Xml;
 
 import com.google.gson.Gson;
 
-import org.wordpress.android.WordPress;
-import org.wordpress.android.chat.Message;
-import org.wordpress.android.datasets.CommentTable;
-import org.wordpress.android.models.Blog;
-import org.wordpress.android.models.BlogIdentifier;
-import org.wordpress.android.models.Comment;
-import org.wordpress.android.models.CommentList;
-import org.wordpress.android.models.FeatureSet;
-import org.wordpress.android.ui.main.AssignmentsListFragment;
-import org.wordpress.android.ui.media.MediaGridFragment.Filter;
-import org.wordpress.android.ui.posts.LessonsListFragment;
-import org.wordpress.android.ui.posts.PostsListFragment;
+import org.codeforafrica.citizenreporter.starreports.WordPress;
+import org.codeforafrica.citizenreporter.starreports.chat.Message;
+import org.codeforafrica.citizenreporter.starreports.datasets.CommentTable;
+import org.codeforafrica.citizenreporter.starreports.models.Blog;
+import org.codeforafrica.citizenreporter.starreports.models.BlogIdentifier;
+import org.codeforafrica.citizenreporter.starreports.models.Comment;
+import org.codeforafrica.citizenreporter.starreports.models.CommentList;
+import org.codeforafrica.citizenreporter.starreports.models.FeatureSet;
+import org.codeforafrica.citizenreporter.starreports.ui.main.AssignmentsListFragment;
+import org.codeforafrica.citizenreporter.starreports.ui.media.MediaGridFragment.Filter;
+import org.codeforafrica.citizenreporter.starreports.ui.posts.LessonsListFragment;
+import org.codeforafrica.citizenreporter.starreports.ui.posts.PostsListFragment;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DateTimeUtils;

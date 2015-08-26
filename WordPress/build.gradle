@@ -30,7 +30,7 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "org.wordpress.android"
+        applicationId "org.codeforafrica.citizenreporter.starreports"
         versionName "4.2.0"
         versionCode 188
         minSdkVersion 16
