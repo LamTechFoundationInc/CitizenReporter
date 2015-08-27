@@ -246,7 +246,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         text_summary = (TextView)findViewById(R.id.text_summary);
         text_template= (TextView)findViewById(R.id.text_template);
 
-        payment = WordPress.wpDB.getPostPayment(mPost.getRemotePostId());
+        if(mPost !=null)
+            payment = WordPress.wpDB.getPostPayment(mPost.getRemotePostId());
 
         mPayment = (TextView)findViewById(R.id.payment);
         //TODO: if assignment set bounty & disable click
