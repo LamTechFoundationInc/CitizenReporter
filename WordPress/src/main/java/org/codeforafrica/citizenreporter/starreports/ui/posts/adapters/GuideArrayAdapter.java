@@ -621,6 +621,8 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
     private void updateLocationText(String locationName) {
         mLocationText.setText(locationName);
+        mLocationEditText.setText(locationName);
+
         post.setStringLocation(locationName);
         WordPress.wpDB.updatePost(post);
     }

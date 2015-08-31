@@ -447,8 +447,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mediaPaths = StringUtils.notNullStr(mPost.getRemoteMediaPaths());
         }
 
-        Log.d("media paths", mediaPaths);
-
         if(mediaPaths!=""){
 
             String[] mediaPaths_parts = mediaPaths.split("-:-");
