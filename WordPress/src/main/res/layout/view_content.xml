@@ -5,7 +5,15 @@
     android:layout_height="match_parent"
     android:padding="5dp"
     android:background="@color/light_gray">
-
+    <TextView
+        android:id="@+id/dateOption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/date_options"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/content_text"
         android:layout_width="match_parent"
@@ -13,10 +21,13 @@
         android:textColor="@color/grey_darken_20"
         android:textSize="20sp"
         android:text="@string/empty_answer"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_alignLeft="@+id/pick_date"
+        android:layout_alignStart="@+id/pick_date"
+        android:layout_below="@+id/dateOption"/>
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/pick_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +38,9 @@
         android:layout_margin="5dp"
         android:textSize="18sp"
         android:textColor="@color/grey_darken_10"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:visibility="gone"/>
+
+
 
 </RelativeLayout>

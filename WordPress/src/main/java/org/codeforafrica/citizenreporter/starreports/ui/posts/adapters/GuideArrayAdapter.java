@@ -84,6 +84,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             holder = new QuestionHolder();
             holder.txtTitle = (TextView)row.findViewById(R.id.header_text);
             holder.txtContent = (TextView)row.findViewById(R.id.content_text);
+            holder.dateOptions = (TextView)row.findViewById(R.id.dateOption);
             //if post is local draft change prompt
             if(!post.isLocalDraft()){
                 holder.txtContent.setText("");
@@ -132,6 +133,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
             }
 
             holder.datePicker.setVisibility(View.VISIBLE);
+            holder.dateOptions.setVisibility(View.VISIBLE);
             holder.datePicker.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -139,7 +141,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                         datePickerDialog.show();
                 }
             });
-            setDateTimeField(holder.datePicker, finalHolder.filledButton, finalHolder.txtContent);
+            setDateTimeField(holder.datePicker, finalHolder.filledButton);
         }else{
 
         }
@@ -149,7 +151,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
     private DatePickerDialog datePickerDialog;
 
-    private void setDateTimeField(final TextView datePicker, final ImageView filledButton, final TextView tapToFill) {
+    private void setDateTimeField(final TextView datePicker, final ImageView filledButton) {
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
         Calendar newCalendar = Calendar.getInstance();
@@ -163,8 +165,6 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                 datePicker.setText(pickedDate);
 
                 filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
-
-                tapToFill.setText(tapToFill.getText().toString() + " (optional)");
 
                 post.setQwhen_date(pickedDate);
                 WordPress.wpDB.updatePost(post);
@@ -319,6 +319,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
     {
         TextView txtTitle;
         TextView txtContent;
+        TextView dateOptions;
 
         ImageView filledButton;
         String answer;

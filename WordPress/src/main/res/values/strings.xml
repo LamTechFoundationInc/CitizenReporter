@@ -940,6 +940,7 @@
     <string name="title_required">You have to write a summary</string>
     <string name="own_price">Set own price</string>
 
+
     <string-array name="fivew_and_h">
         <item>Provide your story summary</item>
         <item>Why did this happen?</item>
@@ -949,6 +950,7 @@
         <item>How did the events unfold?</item>
     </string-array>
     <string name="pick_date">Pick date</string>
+    <string name="date_options">You can use the datepicker and/or tap to fill</string>
     <!--sound recorder -->
 
     <!-- Screen title before and during recording -->
