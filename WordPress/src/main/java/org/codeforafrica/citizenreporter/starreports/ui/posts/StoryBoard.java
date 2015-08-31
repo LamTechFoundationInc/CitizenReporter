@@ -42,6 +42,7 @@ import org.codeforafrica.citizenreporter.starreports.BuildConfig;
 import org.codeforafrica.citizenreporter.starreports.Constants;
 import org.codeforafrica.citizenreporter.starreports.R;
 import org.codeforafrica.citizenreporter.starreports.WordPress;
+import org.w3c.dom.Text;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.codeforafrica.citizenreporter.starreports.chat.ChatActivity;
 import org.codeforafrica.citizenreporter.starreports.models.Blog;
@@ -908,7 +909,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if(TextUtils.isEmpty(mPost.getQwhy())){
             hasEmpty = true;
         }
-        if(TextUtils.isEmpty(mPost.getQwhen())){
+        if(TextUtils.isEmpty(mPost.getQwhen()) && (TextUtils.isEmpty(mPost.getQwhen_date()))){
             hasEmpty = true;
         }
         if(TextUtils.isEmpty(mPost.getKeywords())) {
@@ -1119,8 +1120,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     public void setUpSlider(){
         mDemoSlider.removeAllSliders();
-
-        int p = 0;
 
         if(mPost.isLocalDraft()){
             for(String name : media_map.keySet()){
