@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -138,7 +139,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                         datePickerDialog.show();
                 }
             });
-            setDateTimeField(holder.datePicker);
+            setDateTimeField(holder.datePicker, finalHolder.filledButton, finalHolder.txtContent);
         }else{
 
         }
@@ -148,7 +149,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
 
     private DatePickerDialog datePickerDialog;
 
-    private void setDateTimeField(final TextView datePicker) {
+    private void setDateTimeField(final TextView datePicker, final ImageView filledButton, final TextView tapToFill) {
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
         Calendar newCalendar = Calendar.getInstance();
@@ -160,6 +161,10 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
                 newDate.set(year, monthOfYear, dayOfMonth);
                 String pickedDate = dateFormatter.format(newDate.getTime());
                 datePicker.setText(pickedDate);
+
+                filledButton.setColorFilter(mActivity.getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+
+                tapToFill.setText(tapToFill.getText().toString() + " (optional)");
 
                 post.setQwhen_date(pickedDate);
                 WordPress.wpDB.updatePost(post);
@@ -630,6 +635,7 @@ public class GuideArrayAdapter extends ArrayAdapter<Question> implements
     /*
      * changes the left drawable on the location text to match the passed status
      */
+
     private void setLocationStatus(LocationStatus status) {
 
 
