@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -446,13 +447,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             mediaPaths = StringUtils.notNullStr(mPost.getRemoteMediaPaths());
         }
 
+        Log.d("mediapaths", mediaPaths);
+
         if(mediaPaths!=""){
 
             String[] mediaPaths_parts = mediaPaths.split("-:-");
             for(int i = 0; i<mediaPaths_parts.length; i++){
                 String thisThumb = mediaPaths_parts[i];
                 if(!thisThumb.trim().equals("") && !thisThumb.trim().equals("null")){
-                    //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+                    //TODO: set caption
                     Random randomGenerator = new Random();
 
                     if(mPost.isLocalDraft()){
@@ -472,21 +475,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
 
     public void showPaymentDialog(){
-        /*
-            dialog
-                if published
-                    if no payment
-                        - follow up
-
-                    if payed
-                        - confirm/dispute
-
-                    if confirmed/disputed
-
-                        - waiting for admin action
-                else
-                    set own price
-         */
         final Dialog mDialog = new Dialog(StoryBoard.this);
         mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         mDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -750,6 +738,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
      */
     public void generateThumbAndAddToSlider(MediaFile mediaFile){
 
+
         String mimeType = mediaFile.getMimeType();
 
         File file = new File(mediaFile.getFilePath());
@@ -786,7 +775,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
 
         if (thumb.exists()) {
-            //TODO: set caption on slider media_map.put(mPost.getTitle(), file);
+            //TODO:
             Random randomGenerator = new Random();
             media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
             setUpSlider();
@@ -1133,6 +1122,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     public void setUpSlider(){
         mDemoSlider.removeAllSliders();
 
+        int p = 0;
+
         if(mPost.isLocalDraft()){
             for(String name : media_map.keySet()){
                 TextSliderView textSliderView = new TextSliderView(this);
@@ -1146,9 +1137,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 //add your extra information
                 textSliderView.bundle(new Bundle());
                 textSliderView.getBundle()
-                        .putString("extra",name);
+                        .putString("extra", name);
 
                 mDemoSlider.addSlider(textSliderView);
+
             }
         }else{
 
