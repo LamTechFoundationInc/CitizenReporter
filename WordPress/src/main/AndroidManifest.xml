@@ -72,17 +72,17 @@
         <activity
         android:name=".ui.accounts.RegisterActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
-        android:windowSoftInputMode="adjustResize"
+        android:windowSoftInputMode="stateAlwaysHidden"
         android:theme="@style/SignInTheme" />
         <activity
         android:name=".ui.accounts.EditProfileActivity"
         android:configChanges="orientation|keyboardHidden|screenSize"
-        android:windowSoftInputMode="adjustResize"
+        android:windowSoftInputMode="stateAlwaysHidden"
         android:theme="@style/Calypso.NoActionBar" />
         <activity
             android:name=".ui.accounts.SignInActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@style/SignInTheme" />
         <activity android:name=".ui.accounts.NewAccountActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
