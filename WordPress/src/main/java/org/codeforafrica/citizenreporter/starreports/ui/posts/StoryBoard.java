@@ -919,7 +919,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     }
     private boolean allEmptyContentFields() {
         boolean allEmpty;
-        if ((TextUtils.isEmpty(mPost.getTitle())) && (TextUtils.isEmpty(mPost.getStringLocation())) && (TextUtils.isEmpty(mPost.getQhow())) && (TextUtils.isEmpty(mPost.getQwhy())) && (TextUtils.isEmpty(mPost.getQwhen())) && (TextUtils.isEmpty(mPost.getKeywords()))) {
+        if ((TextUtils.isEmpty(mPost.getTitle())) && (TextUtils.isEmpty(mPost.getStringLocation())) && (TextUtils.isEmpty(mPost.getQhow())) && (TextUtils.isEmpty(mPost.getQwhy()) || TextUtils.isEmpty(mPost.getQwhen_date())) && (TextUtils.isEmpty(mPost.getQwhen())) && (TextUtils.isEmpty(mPost.getKeywords()))) {
             allEmpty = true;
         }else{
             allEmpty = false;
