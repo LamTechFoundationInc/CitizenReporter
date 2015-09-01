@@ -451,20 +451,20 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if(mediaPaths!=""){
 
             String[] mediaPaths_parts = mediaPaths.split("-:-");
-            for(int i = 0; i<mediaPaths_parts.length; i++){
-                String thisThumb = mediaPaths_parts[i];
-                if(!thisThumb.trim().equals("") && !thisThumb.trim().equals("null")){
+            //for(int i = 0; i<mediaPaths_parts.length; i++){
+            for(String mediaPath : mediaPaths_parts)
+                if(!mediaPath.trim().equals("") && !mediaPath.trim().equals("null")){
                     //TODO: set caption
                     Random randomGenerator = new Random();
 
                     if(mPost.isLocalDraft()){
-                        File thumb = new File(thisThumb);
+                        File thumb = new File(mediaPath);
                         if (thumb.exists()) {
                             media_map.put(String.valueOf(randomGenerator.nextInt(10000)), thumb);
                             setUpSlider();
                         }
                     }else{
-                            media_map_remote.put(String.valueOf(randomGenerator.nextInt(10000)), thisThumb);
+                            media_map_remote.put(String.valueOf(randomGenerator.nextInt(10000)), mediaPath);
                             setUpSlider();
                     }
 
@@ -780,6 +780,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             setUpSlider();
             //add thumb to story mediapaths so as to display before upload
             mPost.setMediaPaths(mPost.getMediaPaths() + "-:-" + thumb.getAbsolutePath());
+            Log.d("set media path", mPost.getMediaPaths() + "");
 
         }
     }
