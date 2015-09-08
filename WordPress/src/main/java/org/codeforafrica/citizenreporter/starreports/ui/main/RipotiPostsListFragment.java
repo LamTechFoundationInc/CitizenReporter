@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,8 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
         return new RipotiPostsListFragment();
     }
 
+    private boolean retry_click = false;
+    private int retry_click_position;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -209,9 +212,15 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                             }
                         }
                     }
+
+                    if(retry_click){
+                        PostsListPost postsListPost = (PostsListPost) getPostListAdapter().getItem(retry_click_position);
+                        showPost(postsListPost.getPostId(), -1);
+                    }
                 }
             };
             mPostsListAdapter = new PostsListAdapter(getActivity(), mIsPage, loadMoreListener, postsLoadedListener);
+
         }
 
         return mPostsListAdapter;
@@ -312,19 +321,21 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
             i.putExtra("selectedId", selectedId);
             startActivity(i);
         } else {
+            mSwipedToRefresh = true;
 
+            retry_click = true;
 
-            if (!getActivity().isFinishing()) {
+            retry_click_position = position;
+
+            if ((!getActivity().isFinishing())&& retry_click_position == -1) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 WPAlertDialogFragment alert = WPAlertDialogFragment.newAlertDialog(getString(R.string.post_not_found));
                 ft.add(alert, "alert");
                 ft.commitAllowingStateLoss();
+            }else{
+                refreshPosts((RipotiMainActivity) getActivity());
             }
 
-            /*
-             *  Quick Dirty Hack
-             *  TODO: Why does list require refresh to load remote posts
-             */
 
 
         }
@@ -362,6 +373,7 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
         }
 
         mCurrentFetchPostsTask = new ApiHelper.FetchPostsTask(new ApiHelper.FetchPostsTask.Callback() {
+
             @Override
             public void onSuccess(int postCount) {
                 mCurrentFetchPostsTask = null;
@@ -387,6 +399,8 @@ public class RipotiPostsListFragment extends ListFragment implements EmptyViewAn
                 }
 
                 getPostListAdapter().loadPosts();
+
+
             }
 
             @Override

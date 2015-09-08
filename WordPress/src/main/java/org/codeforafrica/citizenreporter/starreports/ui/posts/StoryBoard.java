@@ -1169,13 +1169,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mDemoSlider.setDuration(4000);
         mDemoSlider.addOnPageChangeListener(this);
 
-
         if(media_map.size()>0 || media_map_remote.size()>0){
             hasMedia = true;
-            if(media_map.size()<2 || media_map_remote.size()<2){
-                mDemoSlider.setEnabled(false);
-            }else{
-                mDemoSlider.setEnabled(true);
+            if(media_map.size()<2 && media_map_remote.size()<2){
+                mDemoSlider.setDuration(100000);
             }
         }
 

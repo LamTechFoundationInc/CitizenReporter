@@ -151,9 +151,6 @@ public class RipotiMainActivity extends ActionBarActivity
 
 
     public void closePost(){
-        if(viewPostFragment != null)
-            getFragmentManager().beginTransaction().remove(viewPostFragment).commit();
-
         if(viewAssignmentFragment != null)
             getFragmentManager().beginTransaction().remove(viewAssignmentFragment).commit();
 
