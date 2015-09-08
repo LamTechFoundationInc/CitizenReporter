@@ -449,7 +449,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
 
         if(mediaPaths!=""){
-
             String[] mediaPaths_parts = mediaPaths.split("-:-");
             //for(int i = 0; i<mediaPaths_parts.length; i++){
             for(String mediaPath : mediaPaths_parts)
@@ -470,8 +469,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
                 }
             }
-        }
     }
+
 
     public void showPaymentDialog(){
         final Dialog mDialog = new Dialog(StoryBoard.this);
@@ -683,7 +682,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         }
     }
-    private void queueFileForUpload(File file) {
+    private void queueFileForUpload(File file, boolean isVideoThumb) {
         // Invalid file path
         if (TextUtils.isEmpty(file.getAbsolutePath())) {
             Toast.makeText(this, R.string.editor_toast_invalid_path, Toast.LENGTH_SHORT).show();
@@ -721,11 +720,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 mediaFile.setMimeType(mimeType);
             }
 
-            //attach object to post
-            attachObjectToPost(mimeType, file);
+                //attach object to post
+                attachObjectToPost(mimeType, file);
 
-            //Add thumbnail to slider and refresh
-            generateThumbAndAddToSlider(mediaFile);
+            if(!isVideoThumb){
+                //Add thumbnail to slider and refresh
+                generateThumbAndAddToSlider(mediaFile);
+
+            }
 
             WordPress.wpDB.saveMediaFile(mediaFile);
             startMediaUploadService();
@@ -780,8 +782,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             setUpSlider();
             //add thumb to story mediapaths so as to display before upload
             mPost.setMediaPaths(mPost.getMediaPaths() + "-:-" + thumb.getAbsolutePath());
-            Log.d("set media path", mPost.getMediaPaths() + "");
-
         }
     }
     public String generateThumb(File file, String mimeType, long mediaCreationTime){
@@ -825,7 +825,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 out.close();
 
                 //upload video thumbnail
-                queueFileForUpload(new File(filename));
+                if(mimeType.startsWith("video")){
+                    queueFileForUpload(new File(filename), true);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -856,7 +858,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             return false;
         }
 
-        queueFileForUpload(file);
+        queueFileForUpload(file, false);
 
         //mEditorFragment.appendMediaFile(mediaFile, mediaFile.getFilePath(), WordPress.imageLoader);
         return true;
