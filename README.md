@@ -1,10 +1,8 @@
 # CitizenReporter #
 
-An Open Source citizen journalism tool based on Wordpress
+An Open Source citizen journalism tool based on Wordpress Android
 
-[![Build Status](https://travis-ci.org/wordpress-mobile/WordPress-Android.svg?branch=develop)](https://travis-ci.org/wordpress-mobile/WordPress-Android)
-
-If you're just looking to install WordPress for Android, you can find
+If you're just looking to install CitizenReporter, you can find
 it on [Google Play][1]. If you're a developer wanting to contribute,
 read on.
 
@@ -79,10 +77,6 @@ You can read more about [Code Style Guidelines](CODESTYLE.md) we adopted, and
 how we're organizing branches in our repository in the
 [Contribution Guide](CONTRIBUTING.md).
 
-## Need help to build or hack? ##
-
-Say hello on our [Slack][4] channel: `#mobile`.
-
 ## Alternative Build Instructions ##
 
 WordPress-Android can be compiled with [Buck][8], an alternative to Gradle,
@@ -116,10 +110,9 @@ WordPress for Android is an Open Source project covered by the
 in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
-[1]: https://play.google.com/store/apps/details?id=org.wordpress.android
+[1]: https://play.google.com/apps/testing/org.codeforafrica.citizenreporter.starreports
 [2]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [3]: http://developer.android.com/sdk/installing/studio.html
-[4]: https://make.wordpress.org/chat/
 [5]: https://developer.wordpress.com/apps/
 [6]: https://developer.wordpress.com/docs/oauth2/
 [7]: https://developer.wordpress.com/docs/api/
