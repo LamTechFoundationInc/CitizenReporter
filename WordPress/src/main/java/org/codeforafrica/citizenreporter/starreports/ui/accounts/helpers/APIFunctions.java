@@ -14,13 +14,13 @@ import android.util.Log;
 public class APIFunctions {
 
     private JSONParser jsonParser;
-    private static String registerURL = BuildConfig.API_URL + "/users/register/";
-    private static String updateURL = BuildConfig.API_URL + "/users/editprofile/";
-    private static String userURL = BuildConfig.API_URL + "/users/user/";
-    private static String updateDeviceURL = BuildConfig.API_URL + "/users/edit_user_device/";
-    private static String sendMessageUrl = BuildConfig.API_URL + "/users/send_message/";
-    private static String confirmPaymentUrl = BuildConfig.API_URL + "/users/confirm_payment/";
-    private static String submitFeedback = BuildConfig.API_URL + "/users/submit_feedback/";
+    private static final String registerURL = BuildConfig.API_URL + "/register/";
+    private static final String updateURL = BuildConfig.API_URL + "/editprofile/";
+    private static final String userURL = BuildConfig.API_URL + "/user/";
+    private static final String updateDeviceURL = BuildConfig.API_URL + "/edit_user_device/";
+    private static final String sendMessageUrl = BuildConfig.API_URL + "/send_message/";
+    private static final String confirmPaymentUrl = BuildConfig.API_URL + "/confirm_payment/";
+    private static final String submitFeedback = BuildConfig.API_URL + "/submit_feedback/";
 
     // constructor
     public APIFunctions(){
