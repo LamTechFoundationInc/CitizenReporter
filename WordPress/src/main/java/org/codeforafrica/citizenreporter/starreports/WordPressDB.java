@@ -508,9 +508,8 @@ public class WordPressDB {
         values.put(COLUMN_PAYMENT_RECEIPT, payment.getReceipt());
         values.put(COLUMN_PAYMENT_POST, payment.getPost());
         values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
-        values.put(COLUMN_PAYMENT_CONFIRMED, payment.getConfirmed());
         values.put(COLUMN_PAYMENT_AMOUNT, payment.getAmount());
-
+        values.put(COLUMN_PAYMENT_REMOTE_ID, payment.getRemoteID());
         db.insert(TABLE_PAYMENTS, null, values);
 
     }
