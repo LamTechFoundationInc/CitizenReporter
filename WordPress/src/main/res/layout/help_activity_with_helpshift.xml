@@ -102,7 +102,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="60dp"
                     android:layout_margin="10dp"
-                    android:id="@+id/imageView5"
+                    android:id="@+id/bottom_logo"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/c4a_white"/>
             </LinearLayout>

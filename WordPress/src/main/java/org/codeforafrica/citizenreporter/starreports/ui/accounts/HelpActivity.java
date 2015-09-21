@@ -112,6 +112,15 @@ public class HelpActivity extends ActionBarActivity {
                 (new WordPress()).giveFeedbackDialog(HelpActivity.this, getApplicationContext());
             }
         });
+        findViewById(R.id.bottom_logo).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW); i.setData(Uri.parse(getResources().getString(R.string.website_url)));
+                startActivity(i);
+            }
+        });
+
     }
 
     private void initDefaultLayout() {

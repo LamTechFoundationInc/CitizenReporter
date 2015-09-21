@@ -1111,4 +1111,5 @@
     <string name="error_feedback_no_network">Check network settings and try again!</string>
     <string name="feedback_submitted">Thanks for your feedback!</string>
     <string name="submitting_feedback">Submitting feedback ...</string>
+    <string name="website_url">http://codeforafrica.org</string>
 </resources>

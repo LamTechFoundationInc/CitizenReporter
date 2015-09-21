@@ -214,6 +214,15 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
             mPasswordEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_PASSWORD);
         }
 
+        rootView.findViewById(R.id.bottom_logo).setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_VIEW); i.setData(Uri.parse(getActivity().getResources().getString(R.string.website_url)));
+                getActivity().startActivity(i);
+            }
+        });
+
         return rootView;
     }
 
