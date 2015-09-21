@@ -311,7 +311,7 @@
 
     <!-- new account view -->
     <string name="signing_in">Signing in…</string>
-    <string name="no_site_error">Couldn\'t connect to the WordPress site</string>
+    <string name="no_site_error">Couldn\'t connect to the site</string>
 
     <!-- media selection -->
     <string name="select_photo">Select a photo from gallery</string>
