@@ -120,7 +120,7 @@ public class APIFunctions {
         params.add(new BasicNameValuePair("post_id", post_id));
         params.add(new BasicNameValuePair("confirm", confirm));
         params.add(new BasicNameValuePair("remote_id", remoteID));
-        
+
         JSONObject json = jsonParser.getJSONFromUrl(confirmPaymentUrl, params);
         // return json
         return json;

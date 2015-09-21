@@ -27,7 +27,8 @@ public class ABTestingUtils {
     public static boolean isFeatureEnabled(Feature feature) {
         switch (feature) {
             case HELPSHIFT:
-                return getBooleanRemoteControlField("feedback-enabled", false);
+                //return getBooleanRemoteControlField("feedback-enabled", false);
+                return false;
         }
         return false;
     }
