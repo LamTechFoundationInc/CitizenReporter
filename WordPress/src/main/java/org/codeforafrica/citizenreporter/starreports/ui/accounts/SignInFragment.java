@@ -209,10 +209,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         mUrlEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_URL);
         //autofill sign in details if app is in debug mode
-        if (BuildConfig.DEBUG) {
+        /*if (BuildConfig.DEBUG) {
             mUsernameEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_USERNAME);
             mPasswordEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_PASSWORD);
-        }
+        }*/
 
         rootView.findViewById(R.id.bottom_logo).setOnClickListener(new View.OnClickListener(){
 

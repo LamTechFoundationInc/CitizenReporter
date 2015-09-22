@@ -27,11 +27,11 @@ public class HelpActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
+        //if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
             initHelpshiftLayout();
-        } else {
-            initDefaultLayout();
-        }
+       // } else {
+       //     initDefaultLayout();
+       // }
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
