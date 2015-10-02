@@ -72,7 +72,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignInFragment extends AbstractFragment implements TextWatcher {
-    private static final String DOT_COM_BASE_URL = "http://starreports.codeforafrica.net/wp";
+    private static final String DOT_COM_BASE_URL = BuildConfig.DEFAULT_URL;
     private static final String FORGOT_PASSWORD_RELATIVE_URL = "/wp-login.php?action=lostpassword";
     private static final int WPCOM_ERRONEOUS_LOGIN_THRESHOLD = 3;
     private static final String FROM_LOGIN_SCREEN_KEY = "FROM_LOGIN_SCREEN_KEY";

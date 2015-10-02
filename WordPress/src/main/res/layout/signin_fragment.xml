@@ -125,7 +125,7 @@
                     style="@style/WordPress.NUXEditText"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/username_email"
+                    android:hint="@string/username"
                     android:inputType="textEmailAddress"
                     app:persistenceEnabled="true" />
 
