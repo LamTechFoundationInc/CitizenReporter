@@ -16,7 +16,7 @@ our example:
 
     $ echo "sdk.dir=YOUR_SDK_DIR" > local.properties
     $ cp ./WordPress/gradle.properties-example ./WordPress/gradle.properties
-    $ cp ./libs/PassCodeLock/library/gradle.properties-example ./libs/PassCodeLock/library/gradle.properties
+    $ cp ./libs/PasscodeLock/library/gradle.properties-example ./libs/PasscodeLock/library/gradle.properties
 
 Note: this is the default `./WordPress/gradle.properties` file. If you
 want to use WordPress.com functions (login to a WordPress.com account,
