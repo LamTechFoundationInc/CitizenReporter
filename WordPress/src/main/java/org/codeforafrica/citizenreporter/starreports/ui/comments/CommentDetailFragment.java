@@ -211,6 +211,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         mLayoutButtons = (ViewGroup) inflater.inflate(R.layout.comment_action_footer, null, false);
         mBtnLikeComment = mLayoutButtons.findViewById(R.id.btn_like);
+        mLayoutButtons.setVisibility(View.GONE);
         mBtnLikeIcon = (ImageView)mLayoutButtons.findViewById(R.id.btn_like_icon);
         mBtnLikeTextView = (TextView)mLayoutButtons.findViewById(R.id.btn_like_text);
         mBtnModerateComment = mLayoutButtons.findViewById(R.id.btn_moderate);
@@ -412,7 +413,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
                 mOnCommentChangeListener.onCommentChanged(ChangedFrom.COMMENT_DETAIL, ChangeType.EDITED);
         }
     }
-
+/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -432,6 +433,7 @@ public class CommentDetailFragment extends Fragment implements NotificationFragm
 
         return super.onOptionsItemSelected(item);
     }
+    */
 
     private boolean hasComment() {
         return (mComment != null);
