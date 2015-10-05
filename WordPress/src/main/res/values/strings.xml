@@ -1112,4 +1112,10 @@
     <string name="feedback_submitted">Thanks for your feedback!</string>
     <string name="submitting_feedback">Submitting feedback ...</string>
     <string name="website_url">http://codeforafrica.org</string>
+
+    <!--Storyboard questionnaire -->
+    <string name="storyboard_summary">Summary</string>
+    <string name="storyboard_date">Date</string>
+    <string name="storyboard_location">Location</string>
+    <string name="storyboard_who">Who\'s involved</string>
 </resources>
