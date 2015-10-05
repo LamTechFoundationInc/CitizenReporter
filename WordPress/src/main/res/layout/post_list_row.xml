@@ -1,61 +1,44 @@
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_post_root"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:stateListAnimator="@anim/pressed_card"
-    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-    card_view:cardElevation="@dimen/card_elevation"
-    card_view:cardUseCompatPadding="true">
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/margin_extra_large"
+    android:paddingRight="@dimen/margin_extra_large"
+    android:paddingTop="@dimen/margin_medium"
+    android:paddingBottom="@dimen/margin_medium"
+    android:background="?android:selectableItemBackground">
 
     <LinearLayout
-        android:id="@+id/row_post_root"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:paddingLeft="@dimen/margin_extra_large"
-        android:paddingRight="@dimen/margin_extra_large"
-        android:paddingTop="@dimen/margin_medium"
-        android:paddingBottom="@dimen/margin_medium"
-        android:background="@color/translucent_grey_lighten_30"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="50dp">
+        <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
+            android:id="@+id/post_list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_gravity="center_vertical"
+            style="@style/ReaderTextView.Post.Title" />
 
-    <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
-        android:id="@+id/post_list_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:layout_gravity="center_vertical"
-        style="@style/ReaderTextView.Post.Title" />
+        <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
+            android:id="@+id/post_list_date"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_marginTop="@dimen/margin_medium"
+            style="@style/ReaderTextView.Date"/>
+    </LinearLayout>
 
     <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
         android:id="@+id/post_list_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_marginTop="8dp"
         android:textColor="@color/grey_darken_10"
-        android:textSize="@dimen/text_sz_small"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-</RelativeLayout>
-
-    <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/reader_divider_grey" />
-        <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
-            android:id="@+id/post_list_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_medium"
-            style="@style/ReaderTextView.Date"/>
-
+        android:textSize="@dimen/text_sz_small"/>
 
 </LinearLayout>
-    </android.support.v7.widget.CardView>
