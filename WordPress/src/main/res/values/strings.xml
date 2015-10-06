@@ -1114,8 +1114,9 @@
     <string name="website_url">http://codeforafrica.org</string>
 
     <!--Storyboard questionnaire -->
-    <string name="storyboard_summary">Summary</string>
-    <string name="storyboard_date">Date</string>
-    <string name="storyboard_location">Location</string>
-    <string name="storyboard_who">Who\'s involved</string>
+    <string name="storyboard_summary">Provide a brief precise summary of your story.</string>
+    <string name="storyboard_date">When did this happen?</string>
+    <string name="storyboard_location">Where did this happen?</string>
+    <string name="storyboard_who">Which people or orgs are involved?</string>
+    <string name="storyboard_cause">What caused the event?</string>
 </resources>

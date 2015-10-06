@@ -146,7 +146,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.story_board);
+        setContentView(R.layout.story_board_icons);
         //get post
         long selectedId = getIntent().getLongExtra("selectedId", 0);
         Bundle extras = getIntent().getExtras();
@@ -345,7 +345,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         getAndSetThumbnails();
 
-        setUpQuestionnaire();
+        //setUpQuestionnaire();
     }
 
     public void setPriceDialog(){
