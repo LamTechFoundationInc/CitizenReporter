@@ -86,23 +86,22 @@
             android:paddingRight="16dp" />
     </LinearLayout>
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_datepicker"
+        android:id="@+id/use_datepicker"
+        android:layout_below="@+id/editTextSummary"
+        android:visibility="gone"/>
+
     <DatePicker
         android:id="@+id/datePicker"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
-        android:visibility="gone"
-        android:layout_below="@+id/locationGroup"/>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/use_datepicker"
-        android:id="@+id/use_datepicker"
+        android:layout_below="@+id/use_datepicker"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/locationGroup"
-        android:layout_alignStart="@+id/locationGroup"
         android:visibility="gone"/>
 
 </RelativeLayout>
