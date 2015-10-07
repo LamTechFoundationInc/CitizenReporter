@@ -1248,6 +1248,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         final EditText editTextSummary = (EditText)questionDialog.findViewById(R.id.editTextSummary);
 
+        //show location button
+        final LinearLayout locationGroup = (LinearLayout)questionDialog.findViewById(R.id.locationGroup);
+        if(question_id != 1){
+            locationGroup.setVisibility(View.VISIBLE);
+        }
+
         //find current value of summary
         String current_answer = "" + textView.getText().toString();
 

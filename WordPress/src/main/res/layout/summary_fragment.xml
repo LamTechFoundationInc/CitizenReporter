@@ -57,7 +57,8 @@
         android:id="@+id/locationGroup"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:visibility="invisible">
 
         <ViewStub
             android:id="@+id/stub_post_location_settings"
