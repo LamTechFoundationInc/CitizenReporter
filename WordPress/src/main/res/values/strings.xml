@@ -1113,11 +1113,20 @@
     <string name="submitting_feedback">Submitting feedback …</string>
     <string name="website_url">http://codeforafrica.org</string>
 
-    <!--Storyboard questionnaire -->
     <string name="storyboard_summary">Provide a brief, precise summary of your story.</string>
     <string name="storyboard_date">Attach a date.</string>
     <string name="storyboard_location">Where is this?</string>
     <string name="storyboard_who">Any people or orgs involved?</string>
     <string name="storyboard_cause">What caused this?</string>
+
+    <!--Storyboard questionnaire -->
+    <string-array name="storyboard_prompts">
+        <item>@string/storyboard_summary</item>
+        <item>@string/storyboard_location</item>
+        <item>@string/storyboard_who</item>
+        <item>@string/storyboard_date</item>
+        <item>@string/storyboard_cause</item>
+    </string-array>
+
 
 </resources>

@@ -179,7 +179,8 @@
                                     <TextView
                                         style="@style/QuestionnaireTextView"
                                         android:text="@string/storyboard_summary"
-                                        android:layout_toRightOf="@+id/imageView5"/>
+                                        android:layout_toRightOf="@+id/imageView5"
+                                        android:id="@+id/displaySummary"/>
                                 </RelativeLayout>
 
                             </android.support.v7.widget.CardView>
@@ -195,7 +196,7 @@
                             android:layout_weight="1">
                             <android.support.v7.widget.CardView
                                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                                android:id="@+id/dateButton"
+                                android:id="@+id/locationButton"
                                 android:layout_width="0dp"
                                 android:layout_weight="1"
                                 android:layout_height="match_parent"
@@ -219,7 +220,8 @@
                                     <TextView
                                         style="@style/QuestionnaireTextView"
                                         android:text="@string/storyboard_location"
-                                        android:layout_toRightOf="@+id/imageView7"/>
+                                        android:layout_toRightOf="@+id/imageView7"
+                                        android:id="@+id/displayLocation"/>
                                 </RelativeLayout>
                             </android.support.v7.widget.CardView>
                             <android.support.v7.widget.CardView
@@ -248,7 +250,8 @@
                                     <TextView
                                         style="@style/QuestionnaireTextView"
                                         android:text="@string/storyboard_who"
-                                        android:layout_toRightOf="@+id/imageView8"/>
+                                        android:layout_toRightOf="@+id/imageView8"
+                                        android:id="@+id/displayWho"/>
                                 </RelativeLayout>
                             </android.support.v7.widget.CardView>
                         </LinearLayout>
@@ -262,7 +265,7 @@
 
                     <android.support.v7.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/locationButton"
+                        android:id="@+id/dateButton"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="match_parent"
@@ -286,7 +289,8 @@
                             <TextView
                                 style="@style/QuestionnaireTextView"
                                 android:text="@string/storyboard_date"
-                                android:layout_toRightOf="@+id/imageView6"/>
+                                android:layout_toRightOf="@+id/imageView6"
+                                android:id="@+id/displayDate"/>
                         </RelativeLayout>
                     </android.support.v7.widget.CardView>
                     <android.support.v7.widget.CardView
@@ -315,7 +319,8 @@
                             <TextView
                                 style="@style/QuestionnaireTextView"
                                 android:text="@string/storyboard_cause"
-                                android:layout_toRightOf="@+id/imageView9"/>
+                                android:layout_toRightOf="@+id/imageView9"
+                                android:id="@+id/displayCause"/>
                         </RelativeLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>

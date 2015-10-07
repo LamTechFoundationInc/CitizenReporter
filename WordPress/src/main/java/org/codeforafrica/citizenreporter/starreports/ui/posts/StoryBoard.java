@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -88,9 +89,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private LinearLayout guidePane;
 
     private TextView displaySummary;
-    private EditText editTextSummary;
+    private TextView displayDate;
+    private TextView displayWho;
+    private TextView displayLocation;
+    private TextView displayCause;
 
-    private String summary="";
     private RelativeLayout yesMedia;
     private RelativeLayout noMedia;
 
@@ -102,7 +105,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     private FButton enableLocation;
 
-    private Dialog summaryDialog;
+    private Dialog questionDialog;
 
     public static final String EXTRA_POSTID = "selectedId";
     public static final String EXTRA_IS_PAGE = "isPage";
@@ -240,7 +243,12 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         summaryPane = (LinearLayout)findViewById(R.id.summaryPane);
         guidePane = (LinearLayout)findViewById(R.id.guidePane);
+
         displaySummary = (TextView)findViewById(R.id.displaySummary);
+        displayWho = (TextView)findViewById(R.id.displayWho);
+        displayLocation = (TextView)findViewById(R.id.displayLocation);
+        displayDate = (TextView)findViewById(R.id.displayDate);
+        displayCause = (TextView)findViewById(R.id.displayCause);
 
         yesMedia = (RelativeLayout)findViewById(R.id.yesMediaPane);
         noMedia = (RelativeLayout)findViewById(R.id.noMediaPane);
@@ -314,6 +322,44 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
             }
         });
+
+        //set up questionnaire
+        CardView summaryButton = (CardView)findViewById(R.id.summaryButton);
+        summaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAnswerQuestionDialog(0, displaySummary);
+            }
+        });
+        CardView locationButton = (CardView)findViewById(R.id.locationButton);
+        locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAnswerQuestionDialog(1, displayLocation);
+            }
+        });
+        CardView entitiesButton = (CardView)findViewById(R.id.entitiesButton);
+        entitiesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAnswerQuestionDialog(2, displayWho);
+            }
+        });
+        CardView dateButton = (CardView)findViewById(R.id.dateButton);
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAnswerQuestionDialog(3, displayDate);
+            }
+        });
+        CardView howButton = (CardView)findViewById(R.id.howButton);
+        howButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showAnswerQuestionDialog(4, displayCause);
+            }
+        });
+
 
 
         //TODO: need for checking twice?
@@ -1188,38 +1234,38 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             noMedia.setVisibility(View.VISIBLE);
         }
     }
-/*
-    public void showCreateSummaryDialog(){
 
-        summaryDialog = new Dialog(StoryBoard.this);
-        summaryDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        summaryDialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-        summaryDialog.setContentView(R.layout.summary_fragment);
-        summaryDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    public void showAnswerQuestionDialog(int question_id, final TextView textView){
 
-        final FButton submitButton = (FButton)summaryDialog.findViewById(R.id.submitButton);
+        questionDialog = new Dialog(StoryBoard.this);
+        questionDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        questionDialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        questionDialog.setContentView(R.layout.summary_fragment);
+        questionDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
+        final FButton submitButton = (FButton)questionDialog.findViewById(R.id.submitButton);
         submitButton.setEnabled(false);
 
-        final EditText editTextSummary = (EditText)summaryDialog.findViewById(R.id.editTextSummary);
+        final EditText editTextSummary = (EditText)questionDialog.findViewById(R.id.editTextSummary);
 
         //find current value of summary
-        summary = "" + displaySummary.getText().toString();
+        String current_answer = "" + textView.getText().toString();
+
+        //find the prompt for this question
+        final String prompt = getResources().getStringArray(R.array.storyboard_prompts)[question_id];
+
         //if it's not default & not empty edit editTextSummary
-        if(!summary.equals(getResources().getString(R.string.summary_prompt)) && (!summary.equals(""))){
-            editTextSummary.setText(summary);
+        if(!current_answer.equals(prompt) && (!current_answer.equals(""))){
+            editTextSummary.setText(current_answer);
             submitButton.setEnabled(true);
-        }else{
-            summary = "";
         }
 
         editTextSummary.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                String newSummary = "" + editTextSummary.getText().toString();
-                if (newSummary.length() > 0) {
-                    summary = newSummary;
+                String new_answer = "" + editTextSummary.getText().toString();
+                if (new_answer.length() > 0) {
                     submitButton.setEnabled(true);
                 } else {
-                    summary = "";
                     submitButton.setEnabled(false);
                 }
             }
@@ -1231,29 +1277,30 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             }
         });
 
-        summaryDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
+        questionDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                summaryDialog.dismiss();
+                questionDialog.dismiss();
             }
         });
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (summary.trim().length() > 0) {
-                    displaySummary.setText(summary);
-                    if(!summary.equals(getResources().getString(R.string.summary_prompt))){
-                        mPost.setTitle(summary);
+                String  new_answer = editTextSummary.getText().toString();
+                if (new_answer.trim().length() > 0) {
+                    textView.setText(new_answer);
+                    if (!new_answer.equals(prompt)) {
+                        mPost.setTitle(new_answer);
                     }
                 } else {
-                    displaySummary.setText(getResources().getString(R.string.summary_prompt));
+                    textView.setText(prompt);
                 }
-                summaryDialog.dismiss();
+                questionDialog.dismiss();
             }
         });
-
-        enableLocation = (FButton)summaryDialog.findViewById(R.id.enableLocation);
+        /*
+        enableLocation = (FButton)questionDialog.findViewById(R.id.enableLocation);
         enableLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -1263,10 +1310,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         });
 
         initLocation();
+        */
 
-        summaryDialog.show();
+        questionDialog.show();
     }
-*/
+
 
     public void attachObjectToPost(String mimeType, File file){
         String attachURL = "";
@@ -1305,8 +1353,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         super.onResume();
 
         //TODO: use onactivityresult?
-        /*if(summaryDialog !=null) {
-            if (summaryDialog.isShowing()) {
+        /*if(questionDialog !=null) {
+            if (questionDialog.isShowing()) {
                 //resuming from enable location settings?
                 initLocation();
             }
