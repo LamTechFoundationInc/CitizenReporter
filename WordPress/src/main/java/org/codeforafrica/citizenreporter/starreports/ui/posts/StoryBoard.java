@@ -1235,7 +1235,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
     }
 
-    public void showAnswerQuestionDialog(int question_id, final TextView textView){
+    public void showAnswerQuestionDialog(final int question_id, final TextView textView){
 
         questionDialog = new Dialog(StoryBoard.this);
         questionDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -1291,7 +1291,24 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 if (new_answer.trim().length() > 0) {
                     textView.setText(new_answer);
                     if (!new_answer.equals(prompt)) {
-                        mPost.setTitle(new_answer);
+                        //save answer
+                        switch(question_id){
+                            case 0:
+                                mPost.setTitle(new_answer);
+                                break;
+                            case 1:
+                                mPost.setStringLocation(new_answer);
+                                break;
+                            case 2:
+                                mPost.setKeywords(new_answer);
+                                break;
+                            case 3:
+                                mPost.setQwhen(new_answer);
+                                break;
+                            case 4:
+                                mPost.setQwhy(new_answer);
+                                break;
+                        }
                     }
                 } else {
                     textView.setText(prompt);
