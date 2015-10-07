@@ -34,6 +34,9 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1275,6 +1278,22 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
             initLocation();
         }
+        //show date button
+        final DatePicker datePicker = (DatePicker)questionDialog.findViewById(R.id.datePicker);
+        if(question_id == 3){
+            CheckBox useDatePicker = (CheckBox)questionDialog.findViewById(R.id.use_datepicker);
+            useDatePicker.setVisibility(View.VISIBLE);
+            useDatePicker.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (b) {
+                        datePicker.setVisibility(View.VISIBLE);
+                    } else {
+                        datePicker.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
 
         //find current value of summary
         String current_answer = "" + textView.getText().toString();
@@ -1547,10 +1566,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         public void afterTextChanged(Editable s) {
             String buttonText;
             if (s.length() > 0) {
-                submitButton.setEnabled(true);
                 buttonText = getApplicationContext().getResources().getString(R.string.search_location);
             } else {
-                submitButton.setEnabled(false);
                 buttonText = getApplicationContext().getResources().getString(R.string.search_current_location);
             }
             mButtonSearchLocation.setText(buttonText);

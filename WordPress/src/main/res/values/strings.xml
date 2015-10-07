@@ -1128,5 +1128,6 @@
         <item>@string/storyboard_cause</item>
     </string-array>
 
+    <string name="use_datepicker">Use DatePicker</string>
 
 </resources>
