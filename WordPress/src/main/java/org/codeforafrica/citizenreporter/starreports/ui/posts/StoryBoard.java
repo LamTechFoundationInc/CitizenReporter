@@ -1250,8 +1250,19 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //show location button
         final LinearLayout locationGroup = (LinearLayout)questionDialog.findViewById(R.id.locationGroup);
-        if(question_id != 1){
+        if(question_id == 1){
             locationGroup.setVisibility(View.VISIBLE);
+
+            enableLocation = (FButton)questionDialog.findViewById(R.id.enableLocation);
+            enableLocation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(callGPSSettingIntent);
+                }
+            });
+
+            initLocation();
         }
 
         //find current value of summary
@@ -1322,18 +1333,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 questionDialog.dismiss();
             }
         });
-        /*
-        enableLocation = (FButton)questionDialog.findViewById(R.id.enableLocation);
-        enableLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(callGPSSettingIntent);
-            }
-        });
-
-        initLocation();
-        */
 
         questionDialog.show();
     }
