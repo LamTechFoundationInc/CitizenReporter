@@ -1288,8 +1288,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     if (b) {
                         datePicker.setVisibility(View.VISIBLE);
+                        submitButton.setEnabled(true);
                     } else {
                         datePicker.setVisibility(View.GONE);
+                        if (editTextSummary.getText().toString().length() > 0) {
+                            submitButton.setEnabled(true);
+                        } else {
+                            submitButton.setEnabled(false);
+                        }
                     }
                 }
             });
