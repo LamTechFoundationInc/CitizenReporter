@@ -610,7 +610,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     public void paymentConfirmed(Payment payment, boolean isConfirmed, boolean update){
 
         if(isConfirmed){
-            confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+            confirmIcon.setColorFilter(getApplicationContext().getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
             confirmText.setText(getApplicationContext().getResources().getString(R.string.confirmed));
             disputeLayout.setVisibility(View.GONE);
             followUpLayout.setVisibility(View.GONE);
@@ -1387,7 +1387,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 break;
                         }
                         textView.setText(new_answer);
-                        questionThumb.setColorFilter(getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
                     }
                 }else {
                     textView.setText(prompt);
@@ -1400,7 +1400,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         string_date += " : " + new_answer;
 
                     textView.setText(string_date);
-                    questionThumb.setColorFilter(getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+                    questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
 
                 }
 
