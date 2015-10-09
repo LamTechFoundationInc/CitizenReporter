@@ -1355,6 +1355,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 String string_date="";
 
                 if (new_answer.trim().length() > 0) {
+
                     if (!new_answer.equals(prompt)) {
                         //save answer;
 
@@ -1369,17 +1370,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 mPost.setKeywords(new_answer);
                                 break;
                             case 3:
-                                if(useDatePicker.isChecked()){
-
-                                    int day = datePicker.getDayOfMonth();
-                                    int month = datePicker.getMonth() + 1;
-                                    int year = datePicker.getYear();
-
-                                    string_date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
-
-                                    mPost.setQwhen_date(string_date);
-                                }
-
                                 mPost.setQwhen(new_answer);
                                 break;
                             case 4:
@@ -1394,13 +1384,24 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     questionThumb.setColorFilter(getResources().getColor(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
 
-                if(question_id == 3 && string_date.trim().length()>0) {
-                    //if asking for date, check if date picker is used
-                    if (new_answer.trim().length() > 0)
-                        string_date += " : " + new_answer;
+                if(question_id == 3 ) {
+                    if(useDatePicker.isChecked()){
 
-                    textView.setText(string_date);
-                    questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        int day = datePicker.getDayOfMonth();
+                        int month = datePicker.getMonth() + 1;
+                        int year = datePicker.getYear();
+
+                        string_date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
+                        mPost.setQwhen_date(string_date);
+
+                        //if asking for date, check if date picker is used
+                        if (new_answer.trim().length() > 0)
+                            string_date += " : " + new_answer;
+
+                        textView.setText(string_date);
+                        questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
+
+                    }
 
                 }
 
