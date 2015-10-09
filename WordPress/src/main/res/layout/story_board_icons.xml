@@ -175,11 +175,11 @@
                                         android:layout_alignParentBottom="true"
                                         android:padding="10dp"
                                         android:background="@color/grey_lighten_20"
-                                        android:id="@+id/imageView5" />
+                                        android:id="@+id/thumbSummary" />
                                     <TextView
                                         style="@style/QuestionnaireTextView"
                                         android:text="@string/storyboard_summary"
-                                        android:layout_toRightOf="@+id/imageView5"
+                                        android:layout_toRightOf="@+id/thumbSummary"
                                         android:id="@+id/displaySummary"/>
                                 </RelativeLayout>
 
@@ -216,11 +216,11 @@
                                         android:layout_alignParentBottom="true"
                                         android:padding="10dp"
                                         android:background="@color/grey_lighten_20"
-                                        android:id="@+id/imageView7" />
+                                        android:id="@+id/thumbLocation" />
                                     <TextView
                                         style="@style/QuestionnaireTextView"
                                         android:text="@string/storyboard_location"
-                                        android:layout_toRightOf="@+id/imageView7"
+                                        android:layout_toRightOf="@+id/thumbLocation"
                                         android:id="@+id/displayLocation"/>
                                 </RelativeLayout>
                             </android.support.v7.widget.CardView>
@@ -246,11 +246,11 @@
                                         android:layout_alignParentBottom="true"
                                         android:padding="10dp"
                                         android:background="@color/grey_lighten_20"
-                                        android:id="@+id/imageView8" />
+                                        android:id="@+id/thumbWho" />
                                     <TextView
                                         style="@style/QuestionnaireTextView"
                                         android:text="@string/storyboard_who"
-                                        android:layout_toRightOf="@+id/imageView8"
+                                        android:layout_toRightOf="@+id/thumbWho"
                                         android:id="@+id/displayWho"/>
                                 </RelativeLayout>
                             </android.support.v7.widget.CardView>
@@ -285,11 +285,11 @@
                                 android:layout_alignParentBottom="true"
                                 android:padding="10dp"
                                 android:background="@color/grey_lighten_20"
-                                android:id="@+id/imageView6" />
+                                android:id="@+id/thumbDate" />
                             <TextView
                                 style="@style/QuestionnaireTextView"
                                 android:text="@string/storyboard_date"
-                                android:layout_toRightOf="@+id/imageView6"
+                                android:layout_toRightOf="@+id/thumbDate"
                                 android:id="@+id/displayDate"/>
                         </RelativeLayout>
                     </android.support.v7.widget.CardView>
@@ -315,11 +315,11 @@
                                 android:layout_alignParentBottom="true"
                                 android:padding="10dp"
                                 android:background="@color/grey_lighten_20"
-                                android:id="@+id/imageView9" />
+                                android:id="@+id/thumbCause" />
                             <TextView
                                 style="@style/QuestionnaireTextView"
                                 android:text="@string/storyboard_cause"
-                                android:layout_toRightOf="@+id/imageView9"
+                                android:layout_toRightOf="@+id/thumbCause"
                                 android:id="@+id/displayCause"/>
                         </RelativeLayout>
                     </android.support.v7.widget.CardView>

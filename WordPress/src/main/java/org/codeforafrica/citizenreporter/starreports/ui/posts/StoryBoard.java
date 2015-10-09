@@ -103,10 +103,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private LinearLayout guidePane;
 
     private TextView displaySummary;
+    private ImageView thumbSummary;
     private TextView displayDate;
+    private ImageView thumbDate;
     private TextView displayWho;
+    private ImageView thumbWho;
     private TextView displayLocation;
+    private ImageView thumbLocation;
     private TextView displayCause;
+    private ImageView thumbCause;
 
     private RelativeLayout yesMedia;
     private RelativeLayout noMedia;
@@ -259,10 +264,15 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         guidePane = (LinearLayout)findViewById(R.id.guidePane);
 
         displaySummary = (TextView)findViewById(R.id.displaySummary);
+        thumbSummary = (ImageView)findViewById(R.id.thumbSummary);
         displayWho = (TextView)findViewById(R.id.displayWho);
+        thumbWho = (ImageView)findViewById(R.id.thumbWho);
         displayLocation = (TextView)findViewById(R.id.displayLocation);
+        thumbLocation = (ImageView)findViewById(R.id.thumbLocation);
         displayDate = (TextView)findViewById(R.id.displayDate);
+        thumbDate = (ImageView)findViewById(R.id.thumbDate);
         displayCause = (TextView)findViewById(R.id.displayCause);
+        thumbCause = (ImageView)findViewById(R.id.thumbCause);
 
         yesMedia = (RelativeLayout)findViewById(R.id.yesMediaPane);
         noMedia = (RelativeLayout)findViewById(R.id.noMediaPane);
@@ -342,35 +352,35 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         summaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAnswerQuestionDialog(0, displaySummary);
+                showAnswerQuestionDialog(0, displaySummary, thumbSummary);
             }
         });
         CardView locationButton = (CardView)findViewById(R.id.locationButton);
         locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAnswerQuestionDialog(1, displayLocation);
+                showAnswerQuestionDialog(1, displayLocation, thumbLocation);
             }
         });
         CardView entitiesButton = (CardView)findViewById(R.id.entitiesButton);
         entitiesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAnswerQuestionDialog(2, displayWho);
+                showAnswerQuestionDialog(2, displayWho, thumbWho);
             }
         });
         CardView dateButton = (CardView)findViewById(R.id.dateButton);
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAnswerQuestionDialog(3, displayDate);
+                showAnswerQuestionDialog(3, displayDate, thumbDate);
             }
         });
         CardView howButton = (CardView)findViewById(R.id.howButton);
         howButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showAnswerQuestionDialog(4, displayCause);
+                showAnswerQuestionDialog(4, displayCause, thumbCause);
             }
         });
 
@@ -1249,7 +1259,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
     }
 
-    public void showAnswerQuestionDialog(final int question_id, final TextView textView){
+    public void showAnswerQuestionDialog(final int question_id, final TextView textView, final ImageView questionThumb){
 
         questionDialog = new Dialog(StoryBoard.this);
         questionDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -1377,9 +1387,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 break;
                         }
                         textView.setText(new_answer);
+                        questionThumb.setColorFilter(getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
                     }
                 }else {
                     textView.setText(prompt);
+                    questionThumb.setColorFilter(getResources().getColor(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
 
                 if(question_id == 3 && string_date.trim().length()>0) {
@@ -1388,8 +1400,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         string_date += " : " + new_answer;
 
                     textView.setText(string_date);
+                    questionThumb.setColorFilter(getResources().getColor(R.color.alert_green), android.graphics.PorterDuff.Mode.MULTIPLY);
+
                 }
-                
+
                 questionDialog.dismiss();
             }
         });
