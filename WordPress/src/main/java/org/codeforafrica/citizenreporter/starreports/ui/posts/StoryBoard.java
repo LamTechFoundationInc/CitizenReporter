@@ -1280,8 +1280,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         }
         //show date button
         final DatePicker datePicker = (DatePicker)questionDialog.findViewById(R.id.datePicker);
+        final CheckBox useDatePicker = (CheckBox)questionDialog.findViewById(R.id.use_datepicker);
         if(question_id == 3){
-            CheckBox useDatePicker = (CheckBox)questionDialog.findViewById(R.id.use_datepicker);
             useDatePicker.setVisibility(View.VISIBLE);
             useDatePicker.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -1341,10 +1341,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             @Override
             public void onClick(View v) {
                 String  new_answer = editTextSummary.getText().toString();
+
+                String string_date="";
+
                 if (new_answer.trim().length() > 0) {
-                    textView.setText(new_answer);
                     if (!new_answer.equals(prompt)) {
-                        //save answer
+                        //save answer;
+
                         switch(question_id){
                             case 0:
                                 mPost.setTitle(new_answer);
@@ -1356,16 +1359,37 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 mPost.setKeywords(new_answer);
                                 break;
                             case 3:
+                                if(useDatePicker.isChecked()){
+
+                                    int day = datePicker.getDayOfMonth();
+                                    int month = datePicker.getMonth() + 1;
+                                    int year = datePicker.getYear();
+
+                                    string_date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
+
+                                    mPost.setQwhen_date(string_date);
+                                }
+
                                 mPost.setQwhen(new_answer);
                                 break;
                             case 4:
                                 mPost.setQwhy(new_answer);
                                 break;
                         }
+                        textView.setText(new_answer);
                     }
-                } else {
+                }else {
                     textView.setText(prompt);
                 }
+
+                if(question_id == 3 && string_date.trim().length()>0) {
+                    //if asking for date, check if date picker is used
+                    if (new_answer.trim().length() > 0)
+                        string_date += " : " + new_answer;
+
+                    textView.setText(string_date);
+                }
+                
                 questionDialog.dismiss();
             }
         });
