@@ -107,15 +107,14 @@
                     android:visibility="gone"/>
 
                 <org.codeforafrica.citizenreporter.starreports.widgets.WPTextView
+                    android:textColor="@color/grey_darken_30"
                     android:id="@+id/text_template"
                     style="@style/ReaderTextView.TogglePane_Active"
                     tools:text="text_template"
                     android:text="@string/template"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:drawableLeft="@drawable/ic_template"
-                    android:drawableStart="@drawable/ic_template"
-                    android:padding="3dp"
+                    android:paddingLeft="10dp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/payment"
@@ -130,7 +129,7 @@
                     android:layout_height="match_parent"
                     android:drawableLeft="@drawable/ic_bounty"
                     android:drawableStart="@drawable/ic_bounty"
-                    android:padding="3dp"
+                    android:paddingRight="10dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
