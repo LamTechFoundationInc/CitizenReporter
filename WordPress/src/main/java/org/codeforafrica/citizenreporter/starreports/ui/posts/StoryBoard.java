@@ -1419,6 +1419,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 mPost.setKeywords(new_answer);
                                 break;
                             case 3:
+                                textView.setVisibility(View.VISIBLE);
                                 mPost.setQwhen(new_answer);
                                 break;
                             case 4:
@@ -1430,18 +1431,24 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     }
                 }else {
 
-                    if(question_id == 3 &&useDatePicker.isChecked()) {
-                        //if date calendar is set, we can set textview to blank
-                        textView.setText("");
+                    if(question_id == 3) {
 
-                        int day = datePicker.getDayOfMonth();
-                        int month = datePicker.getMonth() + 1;
-                        int year = datePicker.getYear();
+                        if(useDatePicker.isChecked()) {
+                            //if date calendar is set, we can set textview to blank
+                            textView.setVisibility(View.GONE);
 
-                        string_date = String.format("%02d", month) + "/" + String.format("%02d", day) + "/" + year ;
-                        mPost.setQwhen_date(string_date);
+                            int day = datePicker.getDayOfMonth();
+                            int month = datePicker.getMonth() + 1;
+                            int year = datePicker.getYear();
 
-                        displayDate_Calendar.setText(string_date);
+                            string_date = String.format("%02d", month) + "/" + String.format("%02d", day) + "/" + year;
+                            mPost.setQwhen_date(string_date);
+
+                            displayDate_Calendar.setText(string_date);
+                        }else{
+                            mPost.setQwhen_date("");
+                            displayDate_Calendar.setText("");
+                        }
 
 
                     }else{
