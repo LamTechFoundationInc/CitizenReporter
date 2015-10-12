@@ -165,6 +165,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private ImageView disputeIcon;
     private TextView disputeText;
     private RelativeLayout followUpLayout;
+    private LinearLayout locationGroup;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1273,7 +1274,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         editTextSummary = (EditText)questionDialog.findViewById(R.id.editTextSummary);
 
         //show location button
-        final LinearLayout locationGroup = (LinearLayout)questionDialog.findViewById(R.id.locationGroup);
+        locationGroup = (LinearLayout)questionDialog.findViewById(R.id.locationGroup);
         if(question_id == 1){
             locationGroup.setVisibility(View.VISIBLE);
 
@@ -1450,12 +1451,14 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         super.onResume();
 
         //TODO: use onactivityresult?
-        /*if(questionDialog !=null) {
-            if (questionDialog.isShowing()) {
-                //resuming from enable location settings?
-                initLocation();
+        if(questionDialog !=null) {
+            if (questionDialog.isShowing() && locationGroup !=null) {
+                if(locationGroup.getVisibility() == View.VISIBLE) {
+                    //resuming from enable location settings?
+                    initLocation();
+                }
             }
-        }*/
+        }
     }
 
     @Override
