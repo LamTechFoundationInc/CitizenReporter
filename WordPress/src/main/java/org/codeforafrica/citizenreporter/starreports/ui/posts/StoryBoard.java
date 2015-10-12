@@ -1349,7 +1349,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
                     if (dateParts.length == 3) {
 
-                        int month = Integer.parseInt(dateParts[0]);
+                        int month = Integer.parseInt(dateParts[0]) - 1;
                         int day = Integer.parseInt(dateParts[1]);
                         int year = Integer.parseInt(dateParts[2]);
 
