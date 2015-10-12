@@ -105,6 +105,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private TextView displaySummary;
     private ImageView thumbSummary;
     private TextView displayDate;
+    private TextView displayDate_Calendar;
     private ImageView thumbDate;
     private TextView displayWho;
     private ImageView thumbWho;
@@ -270,6 +271,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         displayLocation = (TextView)findViewById(R.id.displayLocation);
         thumbLocation = (ImageView)findViewById(R.id.thumbLocation);
         displayDate = (TextView)findViewById(R.id.displayDate);
+        displayDate_Calendar = (TextView)findViewById(R.id.displayDate_Calendar);
         thumbDate = (ImageView)findViewById(R.id.thumbDate);
         displayCause = (TextView)findViewById(R.id.displayCause);
         thumbCause = (ImageView)findViewById(R.id.thumbCause);
@@ -1137,9 +1139,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
             if(!(p.getQwhy() == null) && !p.getQwhy().equals(""))
                 displayCause.setText(p.getQwhy());
 
-            if((!(p.getQwhen() == null) && !p.getQwhen().equals(""))||(!(p.getQwhen_date() == null) && !p.getQwhen_date().equals("")))
-                displayDate.setText(p.getQwhen() + ":" + p.getQwhen_date());
-            
+            if(!(p.getQwhen() == null) && !p.getQwhen().equals("")){
+                displayDate.setText(p.getQwhen());
+            }
+
+            if(!(p.getQwhen_date() == null) && !p.getQwhen_date().equals("")) {
+                displayDate_Calendar.setText(p.getQwhen_date());
+                if(p.getQwhen() == null || p.getQwhen().equals("")){
+                    displayDate.setText("");
+                }
+            }
+
         }
     }
 
@@ -1327,6 +1337,25 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     }
                 }
             });
+
+            //check if has calendar date
+            if(mPost.getQwhen_date().trim().length()>0){
+
+                useDatePicker.setVisibility(View.VISIBLE);
+
+                String[] dateParts = mPost.getQwhen_date().split("/");
+
+                if(dateParts.length == 3) {
+
+                    int year = Integer.parseInt(dateParts[0]);
+                    int month = Integer.parseInt(dateParts[1]);
+                    int day = Integer.parseInt(dateParts[2]);
+
+                    datePicker.updateDate(year, month, day);
+                }
+
+            }
+
         }
 
         //find current value of summary
@@ -1389,6 +1418,18 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 break;
                             case 3:
                                 mPost.setQwhen(new_answer);
+                                if(useDatePicker.isChecked()){
+
+                                    int day = datePicker.getDayOfMonth();
+                                    int month = datePicker.getMonth() + 1;
+                                    int year = datePicker.getYear();
+
+                                    string_date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
+                                    mPost.setQwhen_date(string_date);
+
+                                    displayDate_Calendar.setText(string_date);
+                                }
+
                                 break;
                             case 4:
                                 mPost.setQwhy(new_answer);
@@ -1398,30 +1439,17 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                         questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
                     }
                 }else {
-                    textView.setText(prompt);
+
+                    if(question_id == 3 && string_date.trim().length() > 0) {
+                        //if date calendar is set, we can set textview to blank
+                        textView.setText("");
+                    }else{
+                        textView.setText(prompt);
+                    }
+
                     questionThumb.setColorFilter(getResources().getColor(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
 
-                if(question_id == 3 ) {
-                    if(useDatePicker.isChecked()){
-
-                        int day = datePicker.getDayOfMonth();
-                        int month = datePicker.getMonth() + 1;
-                        int year = datePicker.getYear();
-
-                        string_date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
-                        mPost.setQwhen_date(string_date);
-
-                        //if asking for date, check if date picker is used
-                        if (new_answer.trim().length() > 0)
-                            string_date += " : " + new_answer;
-
-                        textView.setText(string_date);
-                        questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
-
-                    }
-
-                }
 
                 questionDialog.dismiss();
             }
