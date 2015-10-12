@@ -1145,8 +1145,10 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
             if(!(p.getQwhen_date() == null) && !p.getQwhen_date().equals("")) {
                 displayDate_Calendar.setText(p.getQwhen_date());
+                displayDate_Calendar.setVisibility(View.VISIBLE);
                 if(p.getQwhen() == null || p.getQwhen().equals("")){
                     displayDate.setText("");
+
                 }
             }
 
@@ -1431,31 +1433,32 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     }
                 }else {
 
-                    if(question_id == 3) {
-
-                        if(useDatePicker.isChecked()) {
-                            //if date calendar is set, we can set textview to blank
-                            textView.setVisibility(View.GONE);
-
-                            int day = datePicker.getDayOfMonth();
-                            int month = datePicker.getMonth() + 1;
-                            int year = datePicker.getYear();
-
-                            string_date = String.format("%02d", month) + "/" + String.format("%02d", day) + "/" + year;
-                            mPost.setQwhen_date(string_date);
-
-                            displayDate_Calendar.setText(string_date);
-                        }else{
-                            mPost.setQwhen_date("");
-                            displayDate_Calendar.setText("");
-                        }
-
-
-                    }else{
-                        textView.setText(prompt);
-                    }
+                    textView.setText(prompt);
 
                     questionThumb.setColorFilter(getResources().getColor(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
+                }
+
+                if(question_id == 3) {
+
+                    if(useDatePicker.isChecked()) {
+                        //if date calendar is set, we can set textview to blank
+                        textView.setVisibility(View.GONE);
+
+                        int day = datePicker.getDayOfMonth();
+                        int month = datePicker.getMonth() + 1;
+                        int year = datePicker.getYear();
+
+                        string_date = String.format("%02d", month) + "/" + String.format("%02d", day) + "/" + year;
+                        mPost.setQwhen_date(string_date);
+
+                        displayDate_Calendar.setText(string_date);
+                        displayDate_Calendar.setVisibility(View.VISIBLE);
+                    }else{
+                        mPost.setQwhen_date("");
+                        displayDate_Calendar.setText("");
+                        displayDate_Calendar.setVisibility(View.GONE);
+                    }
+
                 }
 
                 WordPress.wpDB.savePost(mPost);
