@@ -979,23 +979,26 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private boolean hasEmptyContentFields() {
         boolean hasEmpty = false;
         if(TextUtils.isEmpty(mPost.getTitle())){
+            thumbSummary.setColorFilter(getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
             hasEmpty = true;
         }
         if(TextUtils.isEmpty(mPost.getStringLocation())){
-            hasEmpty = true;
-        }
-        if(TextUtils.isEmpty(mPost.getQhow())){
-            hasEmpty = true;
-        }
-        if(TextUtils.isEmpty(mPost.getQwhy())){
+            thumbLocation.setColorFilter(getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
             hasEmpty = true;
         }
         if(TextUtils.isEmpty(mPost.getQwhen()) && (TextUtils.isEmpty(mPost.getQwhen_date()))){
+            thumbDate.setColorFilter(getResources().getColor(R.color.alert_red), android.graphics.PorterDuff.Mode.MULTIPLY);
             hasEmpty = true;
         }
+        /*
         if(TextUtils.isEmpty(mPost.getKeywords())) {
             hasEmpty = true;
         }
+
+        if(TextUtils.isEmpty(mPost.getQwhy())){
+            hasEmpty = true;
+        }
+        */
         return hasEmpty;
     }
     private boolean allEmptyContentFields() {
@@ -1069,7 +1072,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         //ToastUtils.showToast(this, R.string.editor_toast_changes_saved);
         if (hasEmptyContentFields()) {
-            ToastUtils.showToast(this, R.string.error_all_fields_required, ToastUtils.Duration.SHORT);
+            ToastUtils.showToast(this, R.string.missing_required_fields, ToastUtils.Duration.SHORT);
 
         }else if (!NetworkUtils.isNetworkAvailable(this)) {
             ToastUtils.showToast(this, R.string.error_publish_no_network, ToastUtils.Duration.SHORT);
@@ -1454,10 +1457,13 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
                         displayDate_Calendar.setText(string_date);
                         displayDate_Calendar.setVisibility(View.VISIBLE);
+                        questionThumb.setColorFilter(getResources().getColor(R.color.color_primary), android.graphics.PorterDuff.Mode.MULTIPLY);
                     }else{
                         mPost.setQwhen_date("");
                         displayDate_Calendar.setText("");
                         displayDate_Calendar.setVisibility(View.GONE);
+                        if(new_answer.trim().length() < 1)
+                            questionThumb.setColorFilter(getResources().getColor(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                     }
 
                 }
@@ -1826,8 +1832,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private void updateLocationText(String locationName) {
         mLocationText.setText(locationName);
         mLocationEditText.setText(locationName);
-        mPost.setStringLocation(locationName);
-        editTextSummary.setText(locationName);
+
+        if(!locationName.equals(getApplicationContext().getResources().getText(R.string.location_not_found)) && !(locationName.equals(getApplicationContext().getResources().getText(R.string.loading)))) {
+            mPost.setStringLocation(locationName);
+            editTextSummary.setText(locationName);
+        }
     }
 
     /*
