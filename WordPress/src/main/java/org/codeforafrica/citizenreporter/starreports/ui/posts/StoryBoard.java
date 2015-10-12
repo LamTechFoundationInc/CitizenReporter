@@ -1441,8 +1441,9 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 if(question_id == 3) {
 
                     if(useDatePicker.isChecked()) {
-                        //if date calendar is set, we can set textview to blank
-                        textView.setVisibility(View.GONE);
+                        //if date calendar is set, we can set textview to blank if empty
+                        if(new_answer.trim().length() < 1)
+                            textView.setVisibility(View.GONE);
 
                         int day = datePicker.getDayOfMonth();
                         int month = datePicker.getMonth() + 1;
