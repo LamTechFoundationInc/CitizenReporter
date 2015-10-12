@@ -165,7 +165,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
     private ImageView disputeIcon;
     private TextView disputeText;
     private RelativeLayout followUpLayout;
-    private LinearLayout locationGroup;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -685,7 +684,11 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         if (data != null || ((requestCode == RequestCodes.TAKE_PHOTO ||
                 requestCode == RequestCodes.TAKE_VIDEO || requestCode == RequestCodes.OVERLAY_CAMERA))) {
+
+            Log.d("result", "" + data + ":" + requestCode + ":" + resultCode);
+
             switch (requestCode) {
+
                 case RequestCodes.OVERLAY_CAMERA:
                     if(resultCode == 1){
                         WordPressMediaUtils.launchCamera(this, new WordPressMediaUtils.LaunchCameraCallback() {
@@ -751,6 +754,8 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                      }
                     break;
             }
+        }else if(requestCode == RequestCodes.START_LOCATION_SERVICE){
+            initLocation();
         }
     }
     private void queueFileForUpload(File file, boolean isVideoThumb) {
@@ -1122,7 +1127,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if(p != null){
             if(!p.getTitle().equals(""))
                 displaySummary.setText("" + p.getTitle());
-
         }
     }
 
@@ -1274,7 +1278,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         editTextSummary = (EditText)questionDialog.findViewById(R.id.editTextSummary);
 
         //show location button
-        locationGroup = (LinearLayout)questionDialog.findViewById(R.id.locationGroup);
+        final LinearLayout locationGroup = (LinearLayout)questionDialog.findViewById(R.id.locationGroup);
         if(question_id == 1){
             locationGroup.setVisibility(View.VISIBLE);
 
@@ -1283,7 +1287,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 @Override
                 public void onClick(View view) {
                     Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(callGPSSettingIntent);
+                    startActivityForResult(callGPSSettingIntent, RequestCodes.START_LOCATION_SERVICE);
                 }
             });
 
@@ -1446,20 +1450,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         mPost.setDescription(old_description + "\n" + attachURL);
     }
 
-    @Override
-    protected void onResume(){
-        super.onResume();
-
-        //TODO: use onactivityresult?
-        if(questionDialog !=null) {
-            if (questionDialog.isShowing() && locationGroup !=null) {
-                if(locationGroup.getVisibility() == View.VISIBLE) {
-                    //resuming from enable location settings?
-                    initLocation();
-                }
-            }
-        }
-    }
 
     @Override
     protected void onStop() {
