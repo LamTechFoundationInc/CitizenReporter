@@ -1320,6 +1320,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         final DatePicker datePicker = (DatePicker)questionDialog.findViewById(R.id.datePicker);
         final CheckBox useDatePicker = (CheckBox)questionDialog.findViewById(R.id.use_datepicker);
         if(question_id == 3){
+
             useDatePicker.setVisibility(View.VISIBLE);
             useDatePicker.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -1338,23 +1339,24 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                 }
             });
 
+
             //check if has calendar date
-            if(mPost.getQwhen_date().trim().length()>0){
+                if (displayDate_Calendar.getText().toString().trim().length() > 0) {
 
-                useDatePicker.setVisibility(View.VISIBLE);
+                    useDatePicker.setChecked(true);
 
-                String[] dateParts = mPost.getQwhen_date().split("/");
+                    String[] dateParts = displayDate_Calendar.getText().toString().trim().split("/");
 
-                if(dateParts.length == 3) {
+                    if (dateParts.length == 3) {
 
-                    int year = Integer.parseInt(dateParts[0]);
-                    int month = Integer.parseInt(dateParts[1]);
-                    int day = Integer.parseInt(dateParts[2]);
+                        int month = Integer.parseInt(dateParts[0]);
+                        int day = Integer.parseInt(dateParts[1]);
+                        int year = Integer.parseInt(dateParts[2]);
 
-                    datePicker.updateDate(year, month, day);
+                        datePicker.updateDate(year, month, day);
+                    }
+
                 }
-
-            }
 
         }
 
@@ -1418,18 +1420,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                                 break;
                             case 3:
                                 mPost.setQwhen(new_answer);
-                                if(useDatePicker.isChecked()){
-
-                                    int day = datePicker.getDayOfMonth();
-                                    int month = datePicker.getMonth() + 1;
-                                    int year = datePicker.getYear();
-
-                                    string_date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
-                                    mPost.setQwhen_date(string_date);
-
-                                    displayDate_Calendar.setText(string_date);
-                                }
-
                                 break;
                             case 4:
                                 mPost.setQwhy(new_answer);
@@ -1440,9 +1430,20 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     }
                 }else {
 
-                    if(question_id == 3 && string_date.trim().length() > 0) {
+                    if(question_id == 3 &&useDatePicker.isChecked()) {
                         //if date calendar is set, we can set textview to blank
                         textView.setText("");
+
+                        int day = datePicker.getDayOfMonth();
+                        int month = datePicker.getMonth() + 1;
+                        int year = datePicker.getYear();
+
+                        string_date = String.format("%02d", month) + "/" + String.format("%02d", day) + "/" + year ;
+                        mPost.setQwhen_date(string_date);
+
+                        displayDate_Calendar.setText(string_date);
+
+
                     }else{
                         textView.setText(prompt);
                     }
@@ -1450,6 +1451,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
                     questionThumb.setColorFilter(getResources().getColor(R.color.white), android.graphics.PorterDuff.Mode.MULTIPLY);
                 }
 
+                WordPress.wpDB.savePost(mPost);
 
                 questionDialog.dismiss();
             }
