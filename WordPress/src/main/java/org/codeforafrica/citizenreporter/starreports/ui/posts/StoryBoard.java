@@ -1127,6 +1127,19 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
         if(p != null){
             if(!p.getTitle().equals(""))
                 displaySummary.setText("" + p.getTitle());
+
+            if(!(p.getKeywords() == null) && !p.getKeywords().equals(""))
+                displayWho.setText(p.getKeywords());
+
+            if(!(p.getStringLocation() == null) && !p.getStringLocation().equals(""))
+                displayLocation.setText(p.getStringLocation());
+
+            if(!(p.getQwhy() == null) && !p.getQwhy().equals(""))
+                displayCause.setText(p.getQwhy());
+
+            if((!(p.getQwhen() == null) && !p.getQwhen().equals(""))||(!(p.getQwhen_date() == null) && !p.getQwhen_date().equals("")))
+                displayDate.setText(p.getQwhen() + ":" + p.getQwhen_date());
+            
         }
     }
 
