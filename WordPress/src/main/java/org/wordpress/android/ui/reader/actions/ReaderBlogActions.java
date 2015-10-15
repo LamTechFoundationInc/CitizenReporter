@@ -50,7 +50,9 @@ public class ReaderBlogActions {
         ReaderPostTable.setFollowStatusForPostsInBlog(blogId, isAskingToFollow);
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -166,7 +168,9 @@ public class ReaderBlogActions {
         }
 
         if (isAskingToFollow) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_SITE);
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_FOLLOWED);
+        } else {
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
@@ -381,7 +385,13 @@ public class ReaderBlogActions {
                 } else {
                     statusCode = VolleyUtils.statusCodeFromVolleyError(volleyError);
                 }
-                urlListener.onFailed(statusCode);
+                // Volley treats a 301 redirect as a failure here, we should treat it as
+                // success since it means the blog url is reachable
+                if (statusCode == 301) {
+                    urlListener.onSuccess();
+                } else {
+                    urlListener.onFailed(statusCode);
+                }
             }
         };
 

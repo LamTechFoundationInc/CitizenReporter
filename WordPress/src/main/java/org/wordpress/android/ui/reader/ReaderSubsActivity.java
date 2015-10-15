@@ -2,12 +2,12 @@ package org.wordpress.android.ui.reader;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderBlogAdapter.ReaderBlogType
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService;
 import org.wordpress.android.ui.reader.services.ReaderUpdateService.UpdateTask;
+import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
@@ -65,14 +66,12 @@ public class ReaderSubsActivity extends AppCompatActivity
     private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
 
-    private boolean mTagsChanged;
-    private boolean mBlogsChanged;
     private String mLastAddedTagName;
     private boolean mHasPerformedUpdate;
 
-    static final String KEY_TAGS_CHANGED        = "tags_changed";
-    static final String KEY_BLOGS_CHANGED       = "blogs_changed";
-    static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
+    private static final String KEY_LAST_ADDED_TAG_NAME = "last_added_tag_name";
+
+    private static final int NUM_TABS = 3;
 
     private static final int TAB_IDX_FOLLOWED_TAGS = 0;
     private static final int TAB_IDX_FOLLOWED_BLOGS = 1;
@@ -86,6 +85,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         restoreState(savedInstanceState);
 
         mViewPager = (WPViewPager) findViewById(R.id.viewpager);
+        mViewPager.setOffscreenPageLimit(NUM_TABS - 1);
         mViewPager.setAdapter(getPageAdapter());
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -104,8 +104,13 @@ public class ReaderSubsActivity extends AppCompatActivity
                 onBackPressed();
             }
         });
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // Shadow removed on Activities with a tab toolbar
+            actionBar.setElevation(0.0f);
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         mEditAdd = (EditText) findViewById(R.id.edit_add);
         mEditAdd.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -167,18 +172,19 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedTagsChanged event) {
-        mTagsChanged = true;
+        AppLog.d(AppLog.T.READER, "reader subs > followed tags changed");
         getPageAdapter().refreshFollowedTagFragment();
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.FollowedBlogsChanged event) {
-        mBlogsChanged = true;
+        AppLog.d(AppLog.T.READER, "reader subs > followed blogs changed");
         getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(ReaderEvents.RecommendedBlogsChanged event) {
+        AppLog.d(AppLog.T.READER, "reader subs > recommended blogs changed");
         getPageAdapter().refreshBlogFragments(ReaderBlogType.RECOMMENDED);
     }
 
@@ -197,8 +203,6 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     private void restoreState(Bundle state) {
         if (state != null) {
-            mTagsChanged = state.getBoolean(KEY_TAGS_CHANGED);
-            mBlogsChanged = state.getBoolean(KEY_BLOGS_CHANGED);
             mLastAddedTagName = state.getString(KEY_LAST_ADDED_TAG_NAME);
             mHasPerformedUpdate = state.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED);
         }
@@ -224,8 +228,6 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(@Nonnull Bundle outState) {
-        outState.putBoolean(KEY_TAGS_CHANGED, mTagsChanged);
-        outState.putBoolean(KEY_BLOGS_CHANGED, mBlogsChanged);
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, mHasPerformedUpdate);
         if (mLastAddedTagName != null) {
             outState.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
@@ -235,22 +237,9 @@ public class ReaderSubsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mTagsChanged || mBlogsChanged) {
-            Bundle bundle = new Bundle();
-            if (mTagsChanged) {
-                bundle.putBoolean(KEY_TAGS_CHANGED, true);
-                if (mLastAddedTagName != null && ReaderTagTable.isFollowedTagName(mLastAddedTagName)) {
-                    bundle.putString(KEY_LAST_ADDED_TAG_NAME, mLastAddedTagName);
-                }
-            }
-            if (mBlogsChanged) {
-                bundle.putBoolean(KEY_BLOGS_CHANGED, true);
-            }
-            Intent intent = new Intent();
-            intent.putExtras(bundle);
-            setResult(RESULT_OK, intent);
+        if (!TextUtils.isEmpty(mLastAddedTagName)) {
+            EventBus.getDefault().postSticky(new ReaderEvents.TagAdded(mLastAddedTagName));
         }
-
         super.onBackPressed();
     }
 
@@ -351,8 +340,7 @@ public class ReaderSubsActivity extends AppCompatActivity
         ReaderTag tag = new ReaderTag(tagName, ReaderTagType.FOLLOWED);
 
         if (ReaderTagActions.performTagAction(tag, TagAction.ADD, actionListener)) {
-            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_FOLLOWED_READER_TAG);
-            mTagsChanged = true;
+            AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED);
             mLastAddedTagName = tag.getTagName();
             // make sure addition is reflected on followed tags
             getPageAdapter().refreshFollowedTagFragment();
@@ -465,8 +453,7 @@ public class ReaderSubsActivity extends AppCompatActivity
      */
     @Override
     public void onTagDeleted(ReaderTag tag) {
-        mTagsChanged = true;
-        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_UNFOLLOWED_READER_TAG);
+        AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED);
         if (mLastAddedTagName != null && mLastAddedTagName.equalsIgnoreCase(tag.getTagName())) {
             mLastAddedTagName = null;
         }

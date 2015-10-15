@@ -1,7 +1,6 @@
 
 package org.wordpress.android;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
@@ -25,8 +25,7 @@ import org.wordpress.android.ui.notifications.NotificationDismissBroadcastReceiv
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
 import org.wordpress.android.ui.notifications.utils.NotificationsUtils;
-import org.wordpress.android.util.ABTestingUtils;
-import org.wordpress.android.util.ABTestingUtils.Feature;
+import org.wordpress.android.ui.notifications.utils.SimperiumUtils;
 import org.wordpress.android.models.AccountHelper;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -55,6 +54,12 @@ public class GCMIntentService extends GCMBaseIntentService {
     private static long mPreviousNoteTime = 0L;
     private static final int mMaxInboxItems = 5;
 
+    private static final String PUSH_ARG_USER = "user";
+    private static final String PUSH_ARG_TYPE = "type";
+    private static final String PUSH_ARG_TITLE = "title";
+    private static final String PUSH_ARG_MSG = "msg";
+    private static final String PUSH_ARG_NOTE_ID = "note_id";
+
     private static final String PUSH_TYPE_COMMENT = "c";
     private static final String PUSH_TYPE_LIKE = "like";
     private static final String PUSH_TYPE_COMMENT_LIKE = "comment_like";
@@ -76,17 +81,18 @@ public class GCMIntentService extends GCMBaseIntentService {
     }
 
     private void handleDefaultPush(Context context, Bundle extras) {
-        long wpcomUserID = AccountHelper.getDefaultAccount().getUserId();
-        String userIDFromPN = extras.getString("user");
-        // userIDFromPN is always set server side, but better to double check it here.
-        if (userIDFromPN != null) {
-            if (!String.valueOf(wpcomUserID).equals(userIDFromPN)) {
-                AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
-                return;
-            }
+        // Ensure Simperium is running so that notes sync
+        SimperiumUtils.configureSimperium(context, AccountHelper.getDefaultAccount().getAccessToken());
+
+        long wpcomUserId = AccountHelper.getDefaultAccount().getUserId();
+        String pushUserId = extras.getString(PUSH_ARG_USER);
+        // pushUserId is always set server side, but better to double check it here.
+        if (!String.valueOf(wpcomUserId).equals(pushUserId)) {
+            AppLog.e(T.NOTIFS, "wpcom userId found in the app doesn't match with the ID in the PN. Aborting.");
+            return;
         }
 
-        String noteType = StringUtils.notNullStr(extras.getString("type"));
+        String noteType = StringUtils.notNullStr(extras.getString(PUSH_ARG_TYPE));
 
         // Check for wpcom auth push, if so we will process this push differently
         if (noteType.equals(PUSH_TYPE_PUSH_AUTH)) {
@@ -94,12 +100,12 @@ public class GCMIntentService extends GCMBaseIntentService {
             return;
         }
 
-        String title = StringEscapeUtils.unescapeHtml(extras.getString("title"));
+        String title = StringEscapeUtils.unescapeHtml(extras.getString(PUSH_ARG_TITLE));
         if (title == null) {
             title = getString(R.string.app_name);
         }
-        String message = StringEscapeUtils.unescapeHtml(extras.getString("msg"));
-        String noteId = extras.getString("note_id");
+        String message = StringEscapeUtils.unescapeHtml(extras.getString(PUSH_ARG_MSG));
+        String noteId = extras.getString(PUSH_ARG_NOTE_ID, "");
 
         /*
          * if this has the same note_id as the previous notification, and the previous notification
@@ -126,10 +132,19 @@ public class GCMIntentService extends GCMBaseIntentService {
         mPreviousNoteId = noteId;
         mPreviousNoteTime = thisTime;
 
-        // Get a unique Id per notification
-        int pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
+        // Update notification content for the same noteId if it is already showing
+        int pushId = 0;
+        for (int id : mActiveNotificationsMap.keySet()) {
+            Bundle noteBundle = mActiveNotificationsMap.get(id);
+            if (noteBundle.getString(PUSH_ARG_NOTE_ID, "").equals(noteId)) {
+                pushId = id;
+                mActiveNotificationsMap.put(pushId, extras);
+                break;
+            }
+        }
 
-        if (noteId != null && !mActiveNotificationsMap.containsKey(noteId)) {
+        if (pushId == 0) {
+            pushId = PUSH_NOTIFICATION_ID + mActiveNotificationsMap.size();
             mActiveNotificationsMap.put(pushId, extras);
         }
 
@@ -198,29 +213,27 @@ public class GCMIntentService extends GCMBaseIntentService {
             builder.setLargeIcon(largeIconBitmap);
         }
 
-        // Increment Id by the note count as it must be unique for stacked notifications on wearables
         showNotificationForBuilder(builder, context, pushId);
 
-        // When we have multiple notifications, add an inbox style notification for non-wearable devices
+        // Also add a group summary notification, which is required for non-wearable devices
         if (mActiveNotificationsMap.size() > 1) {
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-
             int noteCtr = 1;
             for (Bundle pushBundle : mActiveNotificationsMap.values()) {
                 // InboxStyle notification is limited to 5 lines
                 if (noteCtr > mMaxInboxItems) {
                     break;
                 }
-                if (pushBundle.getString("msg") == null) {
+                if (pushBundle.getString(PUSH_ARG_MSG) == null) {
                     continue;
                 }
 
-                if (pushBundle.getString("type", "").equals(PUSH_TYPE_COMMENT)) {
-                    String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString("title")));
-                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString("msg")));
+                if (pushBundle.getString(PUSH_ARG_TYPE, "").equals(PUSH_TYPE_COMMENT)) {
+                    String pnTitle = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_TITLE)));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
                     inboxStyle.addLine(pnTitle + ": " + pnMessage);
                 } else {
-                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString("msg")));
+                    String pnMessage = StringEscapeUtils.unescapeHtml((pushBundle.getString(PUSH_ARG_MSG)));
                     inboxStyle.addLine(pnMessage);
                 }
 
@@ -233,21 +246,24 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             String subject = String.format(getString(R.string.new_notifications), mActiveNotificationsMap.size());
-
             NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.notification_icon)
                     .setColor(getResources().getColor(R.color.blue_wordpress))
-                    .setContentTitle(getString(R.string.app_name))
-                    .setContentText(subject)
                     .setGroup(NOTIFICATION_GROUP_KEY)
                     .setGroupSummary(true)
-                    .setTicker(message)
                     .setAutoCancel(true)
+                    .setTicker(message)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText(subject)
                     .setStyle(inboxStyle);
 
             showNotificationForBuilder(groupBuilder, context, GROUP_NOTIFICATION_ID);
+        } else {
+            // Set the individual notification we've already built as the group summary
+            builder.setGroupSummary(true);
+            showNotificationForBuilder(builder, context, GROUP_NOTIFICATION_ID);
         }
-
+        
         EventBus.getDefault().post(new NotificationEvents.NotificationsChanged());
     }
 
@@ -292,8 +308,7 @@ public class GCMIntentService extends GCMBaseIntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, notificationId, resultIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationId, builder.build());
     }
 
@@ -336,8 +351,7 @@ public class GCMIntentService extends GCMBaseIntentService {
                 PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(AUTH_PUSH_NOTIFICATION_ID, builder.build());
     }
 
@@ -392,10 +406,7 @@ public class GCMIntentService extends GCMBaseIntentService {
             }
 
             NotificationsUtils.registerDeviceForPushNotifications(context, regId);
-
-            if (ABTestingUtils.isFeatureEnabled(Feature.HELPSHIFT)) {
-                HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
-            }
+            HelpshiftHelper.getInstance().registerDeviceToken(context, regId);
             AnalyticsTracker.registerPushNotificationToken(regId);
         }
     }
@@ -422,11 +433,32 @@ public class GCMIntentService extends GCMBaseIntentService {
         }
     }
 
-    public static void clearNotificationsMap() {
+    public static void clearNotifications() {
         mActiveNotificationsMap.clear();
     }
 
-    public static ArrayMap<Integer, Bundle> getNotificationsMap() {
-        return mActiveNotificationsMap;
+    public static int getNotificationsCount() {
+        return mActiveNotificationsMap.size();
+    }
+
+    public static boolean hasNotifications() {
+        return !mActiveNotificationsMap.isEmpty();
+    }
+
+    public static void removeNotification(int notificationId) {
+        mActiveNotificationsMap.remove(notificationId);
+    }
+
+    // Removes all app notifications from the system bar
+    public static void removeAllNotifications(Context context) {
+        if (context == null || !hasNotifications()) return;
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        for (Integer pushId : mActiveNotificationsMap.keySet()) {
+            notificationManager.cancel(pushId);
+        }
+        notificationManager.cancel(GCMIntentService.GROUP_NOTIFICATION_ID);
+
+        clearNotifications();
     }
 }

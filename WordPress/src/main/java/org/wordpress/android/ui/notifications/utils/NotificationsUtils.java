@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.text.Layout;
@@ -33,7 +32,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.BuildConfig;
-import org.wordpress.android.Constants;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -78,6 +76,8 @@ public class NotificationsUtils {
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
 
+    private static final String WPCOM_SETTINGS_ENDPOINT = "/me/notifications/settings/";
+
     private static boolean mSnackbarDidUndo;
 
     public static void getPushNotificationSettings(Context context, RestRequest.Listener listener,
@@ -86,26 +86,17 @@ public class NotificationsUtils {
             return;
         }
 
-        String gcmToken = GCMRegistrar.getRegistrationId(context);
-        if (TextUtils.isEmpty(gcmToken)) {
+        if (TextUtils.isEmpty(GCMRegistrar.getRegistrationId(context))) {
             AppLog.e(T.NOTIFS, "can't get push notification settings, gcm token is null.");
-            if (errorListener != null) {
-                errorListener.onErrorResponse(new VolleyError("Notifications: Invalid gcm token."));
-            }
-            return;
         }
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
         String deviceID = settings.getString(WPCOM_PUSH_DEVICE_SERVER_ID, null);
-        if (TextUtils.isEmpty(deviceID)) {
-            AppLog.e(T.NOTIFS, "device_ID is null in preferences. Get device settings skipped.");
-            if (errorListener != null) {
-                errorListener.onErrorResponse(new VolleyError("Notifications: No device ID found."));
-            }
-            return;
+        String settingsEndpoint = WPCOM_SETTINGS_ENDPOINT;
+        if (!TextUtils.isEmpty(deviceID)) {
+            settingsEndpoint += "?device_id=" + deviceID;
         }
-
-        WordPress.getRestClientUtilsV1_1().get("/me/notifications/settings/?device_id=" + deviceID, listener, errorListener);
+        WordPress.getRestClientUtilsV1_1().get(settingsEndpoint, listener, errorListener);
     }
 
     public static void registerDeviceForPushNotifications(final Context ctx, String token) {
@@ -469,15 +460,15 @@ public class NotificationsUtils {
         };
 
         mSnackbarDidUndo = false;
-        Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
-                .setAction(R.string.undo, undoListener)
-                .show();
+        Snackbar snackbar = Snackbar.make(parentView, message, Snackbar.LENGTH_LONG)
+                .setAction(R.string.undo, undoListener);
 
         // Deleted notifications in Simperium never come back, so we won't
         // make the request until the undo bar fades away
-        new Handler().postDelayed(new Runnable() {
+        snackbar.setCallback(new Snackbar.Callback() {
             @Override
-            public void run() {
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
                 if (mSnackbarDidUndo) {
                     return;
                 }
@@ -492,7 +483,9 @@ public class NotificationsUtils {
                             }
                         });
             }
-        }, Constants.SNACKBAR_LONG_DURATION_MS);
+        });
+
+        snackbar.show();
     }
 
     /**

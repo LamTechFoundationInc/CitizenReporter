@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.ui.reader.ReaderConstants;
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ImageSizeMap;
 import org.wordpress.android.ui.reader.utils.ReaderImageScanner;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
@@ -55,9 +56,6 @@ public class ReaderPost {
     public boolean isVideoPress;
     public boolean isJetpack;
 
-    public boolean isLikesEnabled;
-    public boolean isSharingEnabled;    // currently unused
-
     private String attachmentsJson;
     private String discoverJson;
 
@@ -94,9 +92,6 @@ public class ReaderPost {
         post.isExternal = JSONUtils.getBool(json, "is_external");
         post.isPrivate = JSONUtils.getBool(json, "site_is_private");
         post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
-
-        post.isLikesEnabled = JSONUtils.getBool(json, "likes_enabled");
-        post.isSharingEnabled = JSONUtils.getBool(json, "sharing_enabled");
 
         JSONObject jsonDiscussion = json.optJSONObject("discussion");
         if (jsonDiscussion != null) {
@@ -509,8 +504,20 @@ public class ReaderPost {
                 && post.numReplies == this.numReplies
                 && post.isFollowedByCurrentUser == this.isFollowedByCurrentUser
                 && post.isLikedByCurrentUser == this.isLikedByCurrentUser
-                && post.isCommentsOpen == this.isCommentsOpen
-                && post.isLikesEnabled == this.isLikesEnabled;
+                && post.isCommentsOpen == this.isCommentsOpen;
+    }
+
+    public boolean hasIds(ReaderBlogIdPostId ids) {
+        return ids != null
+                && ids.getBlogId() == this.blogId
+                && ids.getPostId() == this.postId;
+    }
+
+    /*
+     * liking is enabled for all wp.com and jp posts with the exception of discover posts
+     */
+    public boolean canLikePost() {
+        return (isWP() || isJetpack) && (!isDiscoverPost());
     }
 
     /****

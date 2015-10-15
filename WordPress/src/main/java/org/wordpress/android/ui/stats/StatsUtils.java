@@ -6,6 +6,7 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.VolleyError;
 
+import org.apache.commons.lang.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wordpress.android.R;
@@ -171,7 +172,7 @@ public class StatsUtils {
            UTC-0:30   ----> -1.0
         */
 
-        AppLog.d(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
+        AppLog.v(T.STATS, "Parsing the following Timezone received from WP: " + blogTimeZoneOption);
         String timezoneNormalized;
         if (blogTimeZoneOption.equals("0") || blogTimeZoneOption.equals("0.0")) {
             timezoneNormalized = "GMT";
@@ -192,7 +193,7 @@ public class StatsUtils {
             }
         }
 
-        AppLog.d(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
+        AppLog.v(T.STATS, "Setting the following Timezone: " + timezoneNormalized);
         gmtDf.setTimeZone(TimeZone.getTimeZone(timezoneNormalized));
         return gmtDf.format(date);
     }
@@ -318,6 +319,22 @@ public class StatsUtils {
         return statsAuthenticatedUser;
     }
 
+    public static int getLocalBlogIdFromRemoteBlogId(int remoteBlogID) {
+        // workaround: There are 2 entries in the DB for each Jetpack blog linked with
+        // the current wpcom account. We need to load the correct localID here, otherwise options are
+        // blank
+        int localId = WordPress.wpDB.getLocalTableBlogIdForJetpackRemoteID(
+                remoteBlogID,
+                null);
+        if (localId == 0) {
+            localId = WordPress.wpDB.getLocalTableBlogIdForRemoteBlogId(
+                    remoteBlogID
+            );
+        }
+
+        return localId;
+    }
+
     /**
      * Return the remote blogId as stored on the wpcom backend.
      * <p>
@@ -331,10 +348,31 @@ public class StatsUtils {
         if (currentBlog == null) {
             return null;
         }
-        if (currentBlog.isDotcomFlag()) {
-            return String.valueOf(currentBlog.getRemoteBlogId());
+        return getBlogId(currentBlog);
+    }
+    public static String getBlogId(Blog blog) {
+        if (blog == null) {
+            return null;
+        }
+        if (blog.isDotcomFlag()) {
+            return String.valueOf(blog.getRemoteBlogId());
         } else {
-            return currentBlog.getApi_blogid();
+            String remoteID =  blog.getApi_blogid();
+            // Self-hosted blogs edge cases.
+            if (StringUtils.isEmpty(remoteID)) {
+               return null;
+            }
+            try {
+                int parsedBlogID = Integer.parseInt(remoteID);
+                // remote blogID is always > 1 for Jetpack blogs
+                if (parsedBlogID < 1) {
+                    return null;
+                }
+            } catch (NumberFormatException e) {
+                AppLog.e(T.STATS, "The remote blog ID stored in options isn't valid: " + remoteID);
+                return null;
+            }
+            return remoteID;
         }
     }
 
@@ -351,6 +389,20 @@ public class StatsUtils {
             }
         }
         AppLog.e(T.STATS, "Volley Error Message: " + volleyError.getMessage(), volleyError);
+    }
+
+    public static synchronized boolean isRESTDisabledError(final Serializable error) {
+        if (error == null || !(error instanceof com.android.volley.AuthFailureError)) {
+            return false;
+        }
+        com.android.volley.AuthFailureError volleyError = (com.android.volley.AuthFailureError) error;
+        if (volleyError.networkResponse != null && volleyError.networkResponse.data != null) {
+            String errorMessage = new String(volleyError.networkResponse.data).toLowerCase();
+            return errorMessage.contains("api calls") && errorMessage.contains("disabled");
+        } else {
+            AppLog.e(T.STATS, "Network response is null in Volley. Can't check if it is a Rest Disabled error.");
+            return false;
+        }
     }
 
     public static synchronized Serializable parseResponse(StatsService.StatsEndpointsEnum endpointName, String blogID, JSONObject response)
@@ -435,8 +487,7 @@ public class StatsUtils {
             if (itemID == 0) {
                 ReaderActivityLauncher.showReaderBlogPreview(
                         ctx,
-                        blogID,
-                        null
+                        blogID
                 );
             } else {
                 ReaderActivityLauncher.showReaderPostDetail(
@@ -448,8 +499,7 @@ public class StatsUtils {
         } else if (itemType.equals(StatsConstants.ITEM_TYPE_HOME_PAGE)) {
             ReaderActivityLauncher.showReaderBlogPreview(
                     ctx,
-                    blogID,
-                    null
+                    blogID
             );
         } else {
             AppLog.d(AppLog.T.UTILS, "Opening the in-app browser: " + itemURL);
