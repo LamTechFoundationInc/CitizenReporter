@@ -1,7 +1,5 @@
 package org.codeforafrica.citizenreporter.starreports.overlaycamera;
 
-import java.io.IOException;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,6 +28,8 @@ import com.larvalabs.svgandroid.SVG;
 import com.larvalabs.svgandroid.SVGParser;
 
 import org.codeforafrica.citizenreporter.starreports.BuildConfig;
+
+import java.io.IOException;
 
 
 public class OverlayCameraActivity extends ActionBarActivity implements Callback, SwipeInterface
