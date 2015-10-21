@@ -49,7 +49,7 @@ public class CommentsActivity extends ActionBarActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.tab_comments));
+        getSupportActionBar().setTitle(getString(R.string.feedback));
 
         restoreSavedInstance(savedInstanceState);
     }

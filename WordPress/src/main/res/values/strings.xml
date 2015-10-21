@@ -169,6 +169,7 @@
 
     <!-- tab titles -->
     <string name="tab_comments">Feedback</string>
+    <string name="feedback">Feedback</string>
 
     <!-- themes -->
     <string name="themes_live_preview">Live preview</string>
