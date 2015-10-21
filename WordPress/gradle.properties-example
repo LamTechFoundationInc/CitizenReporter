@@ -15,3 +15,4 @@ wp.default.password = wordpress
 wp.url.tos = http://en.wordpress.com/tos
 wp.api.url = wordpress
 wp.audio.thumb = wordpress
+wp.is.demo.app = 0
