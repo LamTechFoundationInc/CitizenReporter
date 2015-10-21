@@ -112,7 +112,7 @@ WordPress for Android is an Open Source project covered by the
 in the `libs/` directory comes from external libraries, which might
 be covered by a different license compatible with the GPLv2.
 
-[1]: https://play.google.com/apps/testing/org.codeforafrica.citizenreporter.starreports
+[1]: https://play.google.com/store/apps/details?id=org.codeforafrica.citizenreporter.starreports
 [2]: http://tools.android.com/tech-docs/new-build-system/user-guide
 [3]: http://developer.android.com/sdk/installing/studio.html
 [5]: https://developer.wordpress.com/apps/
