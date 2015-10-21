@@ -864,6 +864,7 @@
     <string name="two_step_sms_sent">Check your text messages for the verification code.</string>
     <string name="sign_in_jetpack">Sign in to your WordPress.com account to connect to Jetpack.</string>
     <string name="auth_required">Sign in again to continue.</string>
+    <string name="demo_user_cant_forget_password">You cannot request new password as a demo user.</string>
 
     <!-- Help view -->
     <string name="help">Help</string>

@@ -209,10 +209,10 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
 
         mUrlEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_URL);
         //autofill sign in details if app is in debug mode
-        /*if (BuildConfig.DEBUG) {
+        if (BuildConfig.IS_DEMO_APP.equals("1")) {
             mUsernameEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_USERNAME);
             mPasswordEditText.setText(org.codeforafrica.citizenreporter.starreports.BuildConfig.DEFAULT_PASSWORD);
-        }*/
+        }
 
         rootView.findViewById(R.id.bottom_logo).setOnClickListener(new View.OnClickListener(){
 
@@ -373,8 +373,12 @@ public class SignInFragment extends AbstractFragment implements TextWatcher {
     private final View.OnClickListener mForgotPasswordListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
-            startActivity(intent);
+            if (BuildConfig.IS_DEMO_APP.equals("1")) {
+                ToastUtils.showToast(getActivity(), R.string.demo_user_cant_forget_password);
+            }else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getForgotPasswordURL()));
+                startActivity(intent);
+            }
         }
     };
 
