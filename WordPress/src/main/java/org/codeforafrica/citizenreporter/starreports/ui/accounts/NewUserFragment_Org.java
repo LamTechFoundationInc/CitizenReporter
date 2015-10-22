@@ -38,6 +38,7 @@ import android.widget.Toast;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 
 import org.apache.commons.lang.NumberUtils;
+import org.codeforafrica.citizenreporter.starreports.WordPress;
 import org.codeforafrica.citizenreporter.starreports.models.UserLocation;
 import org.codeforafrica.citizenreporter.starreports.ui.RequestCodes;
 import org.json.JSONException;
@@ -86,6 +87,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         mEmailChecker = new EmailChecker();
     }
 
+    private EditText mLocationETDialog;
     @Override
     public void afterTextChanged(Editable s) {
     }
@@ -657,7 +659,23 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
 
         FButton enableLocation = (FButton) locationDialog.findViewById(R.id.enableLocation);
 
+        mLocationETDialog = (EditText)locationDialog.findViewById(R.id.editTextSummary);
+        final FButton submitButton = (FButton)locationDialog.findViewById(R.id.submitButton);
+
         locationDialog.show();
+
+
+        //set default location
+
+        final String prompt = getActivity().getResources().getString(R.string.location_prompt);
+
+        String current_location = mLocation.getText().toString();
+        if(!current_location.equals(prompt) && (!current_location.equals(""))){
+            mLocationETDialog.setText(current_location);
+            submitButton.setEnabled(true);
+        }else{
+            submitButton.setEnabled(false);
+        }
 
         // show the location views if a provider was found and this is a post on a blog that has location enabled
         if (hasLocationProvider()) {
@@ -705,6 +723,38 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         locationDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                locationDialog.dismiss();
+            }
+        });
+
+        //detect
+        mLocationETDialog.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                String new_answer = "" + mLocationETDialog.getText().toString();
+                if (new_answer.length() > 0) {
+                    submitButton.setEnabled(true);
+                } else {
+                    submitButton.setEnabled(false);
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        //submit button
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String  set_location = mLocationETDialog.getText().toString();
+
+                if(set_location.trim().length() > 0){
+                    mLocation.setText(set_location);
+                }
+
                 locationDialog.dismiss();
             }
         });
@@ -824,6 +874,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
         if(!locationName.equals(getActivity().getApplicationContext().getResources().getText(R.string.location_not_found)) && !(locationName.equals(getActivity().getApplicationContext().getResources().getText(R.string.loading)))) {
             //mUser.setStringLocation(locationName);
            mLocation.setText(locationName);
+           mLocationETDialog.setText(locationName);
         }
     }
 

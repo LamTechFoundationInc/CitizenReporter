@@ -198,7 +198,7 @@
                     android:layout_height="wrap_content"
                     style="@style/WordPress.NUXEditText"
                     android:inputType="textUri"
-                    android:hint="Location"
+                    android:hint="@string/location_prompt"
                     app:persistenceEnabled="true"/>
 
                 <ImageView
