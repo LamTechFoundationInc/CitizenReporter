@@ -769,7 +769,7 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
         if (!file.exists()) {
             Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-            
+
         }else{
 
             Blog blog = WordPress.getCurrentBlog();
@@ -1531,9 +1531,6 @@ public class StoryBoard extends ActionBarActivity implements BaseSliderView.OnSl
 
     @Override
     public void onPageScrollStateChanged(int state) {}
-
-
-
 
 
     /**

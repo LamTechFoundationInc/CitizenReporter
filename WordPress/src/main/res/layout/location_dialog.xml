@@ -4,17 +4,18 @@
     xmlns:fbutton="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@color/grey_light">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/closeDialog"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:src="@drawable/ic_close_grey600_24dp"
-        android:layout_above="@+id/editTextSummary" />
+        android:layout_above="@+id/editTextSummary"
+        android:layout_alignLeft="@+id/editTextSummary"
+        android:layout_alignStart="@+id/editTextSummary" />
     <info.hoang8f.widget.FButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,8 +28,8 @@
         android:padding="2dp"
         style="?android:attr/borderlessButtonStyle"
         android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignRight="@+id/locationGroup"
+        android:layout_alignEnd="@+id/locationGroup" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -41,8 +42,12 @@
         android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/submitButton"
         android:layout_alignEnd="@+id/submitButton"
-        android:minLines="4"
-        android:background="@color/white">
+        android:minLines="2"
+        android:background="@color/white"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        >
         <requestFocus/>
     </EditText>
 
@@ -53,10 +58,11 @@
         android:minHeight="50dp"
         android:padding="5dp"
         android:id="@+id/locationGroup"
-        android:visibility="gone"
         android:layout_below="@+id/editTextSummary"
+        android:gravity="center"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_margin="5dp">
 
         <ViewStub
             android:id="@+id/stub_post_location_settings"
@@ -83,23 +89,5 @@
             android:paddingLeft="8dp"
             android:paddingRight="16dp" />
     </LinearLayout>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/use_datepicker"
-        android:id="@+id/use_datepicker"
-        android:layout_below="@+id/editTextSummary"
-        android:visibility="gone"/>
-
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_below="@+id/use_datepicker"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone"/>
 
 </RelativeLayout>
