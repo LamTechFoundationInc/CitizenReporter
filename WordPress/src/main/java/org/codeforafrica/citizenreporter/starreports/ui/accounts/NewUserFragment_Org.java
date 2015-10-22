@@ -649,7 +649,7 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
      * to location if enabled for this blog, and retrieve the current location if necessary
      */
     private void initLocation() {
-        Dialog locationDialog = new Dialog(getActivity());
+        final Dialog locationDialog = new Dialog(getActivity());
         locationDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         locationDialog.getWindow().setLayout(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         locationDialog.setContentView(R.layout.location_dialog);
@@ -700,6 +700,14 @@ public class NewUserFragment_Org extends AbstractFragment implements TextWatcher
                 }
             });
         }
+
+        //close dialog
+        locationDialog.findViewById(R.id.closeDialog).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationDialog.dismiss();
+            }
+        });
     }
 
     private boolean hasLocationProvider() {
